@@ -26,6 +26,9 @@ const DEFAULT_CONFIG = {
   refAdsNeeded: 5,
   refBonus: 100,
   refCommissionPct: 10,
+  botUsername: 'MeawQuestBot',
+  miniAppShortName: 'meaw',
+  notifyEndpoint: '/api/notify',
   minWithdraw: 1000,
   coinPerDollar: 5000,
   wdAdsNeeded: 5,
@@ -108,4 +111,4 @@ export default async function handler(req, res) {
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
-  }
+      }
