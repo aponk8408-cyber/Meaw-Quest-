@@ -728,6 +728,12 @@ const DEFAULT_CONFIG = {
   refAdsNeeded: 5,
   refBonus: 100,
   refCommissionPct: 10,
+  // Bot username + Telegram Mini App short name, used to build direct
+  // referral links like https://t.me/<botUsername>/<miniAppShortName>?startapp=ref_xxx
+  botUsername: 'MeawQuestBot',
+  miniAppShortName: 'meaw',
+  // Same-origin relative path — works automatically once deployed
+  notifyEndpoint: '/api/notify',
   minWithdraw: 1000,
   coinPerDollar: 5000,
   wdAdsNeeded: 5,
@@ -823,15 +829,15 @@ async function checkChannelMembership(channelLink){
     try{
       const res = await fetch(CFG.verifyEndpoint + '?user_id=' + encodeURIComponent(USER_ID) + '&channel=' + encodeURIComponent(username));
       const data = await res.json();
-      return !!data.joined;
+      return { joined: !!data.joined, debug: data.error ? `[${data.status||res.status}] ${data.error}` : `status: ${data.status||'ok'}` };
     }catch(e){
       console.error('verify endpoint error', e);
-      return false;
+      return { joined:false, debug: 'network/fetch error: '+e.message };
     }
   }
   // Demo fallback (no backend configured yet) — simulates a short bot-check delay
   await new Promise(r=>setTimeout(r, 900));
-  return true;
+  return { joined:true, debug:'demo mode (no verifyEndpoint set)' };
 }
 
 /* ---------------- INIT ---------------- */
@@ -876,6 +882,9 @@ async function init(){
   if(STATE.totalCommissionEarned === undefined) STATE.totalCommissionEarned = 0;
   if(STATE.totalAdsWatchedEver === undefined) STATE.totalAdsWatchedEver = 0;
   if(CFG.refCommissionPct === undefined) CFG.refCommissionPct = 10;
+  if(!CFG.botUsername) CFG.botUsername = 'MeawQuestBot';
+  if(!CFG.miniAppShortName) CFG.miniAppShortName = 'meaw';
+  if(CFG.notifyEndpoint === undefined) CFG.notifyEndpoint = '/api/notify';
   // migrate legacy index-based tasksDone (numbers) to stable id-based (strings)
   STATE.tasksDone = (STATE.tasksDone||[]).map(t=>{
     if(typeof t === 'number'){ return CFG.missions[t] ? CFG.missions[t].id : null; }
@@ -890,7 +899,7 @@ async function init(){
 
   document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
   document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
-  document.getElementById('refLinkText').textContent = 'https://t.me/MeawQuestBot?start=' + STATE.refCode;
+  document.getElementById('refLinkText').textContent = 'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
   await registerReferralIfNeeded();
 
@@ -975,14 +984,14 @@ async function verifyChannel(i){
   joinChecking = i;
   document.getElementById('joinErr').textContent = '';
   renderJoinList();
-  const ok = await checkChannelMembership(CFG.channels[i].link);
+  const result = await checkChannelMembership(CFG.channels[i].link);
   joinChecking = -1;
-  if(ok){
+  if(result.joined){
     STATE.channelsVerified[i] = true;
     await sSet('user_state_'+USER_ID, STATE);
   } else {
     joinOpened[i] = false;
-    document.getElementById('joinErr').textContent = `You haven't joined "${CFG.channels[i].name}" yet — please join the channel first, then tap Verify.`;
+    document.getElementById('joinErr').textContent = `You haven't joined "${CFG.channels[i].name}" yet — please join the channel first, then tap Verify. (${result.debug})`;
   }
   renderJoinList();
 }
@@ -1084,14 +1093,14 @@ async function verifyMission(id){
   if(!m) return;
   taskMissionChecking = id;
   renderTask();
-  const ok = await checkChannelMembership(m.link);
+  const result = await checkChannelMembership(m.link);
   taskMissionChecking = -1;
-  if(ok){
+  if(result.joined){
     await completeMission(id);
   } else {
     missionOpened[id] = false;
     renderTask();
-    alert(`You haven't joined "${m.name}" yet — please join then tap Verify again.`);
+    alert(`You haven't joined "${m.name}" yet — please join then tap Verify again. (${result.debug})`);
   }
 }
 async function completeMission(id){
@@ -1196,12 +1205,14 @@ function shareRefLink(){
 
 /*
   ---------------- REFERRAL SYSTEM (real tracking + 10% lifetime commission) ----------------
-  When a friend opens the Mini App through a "?start=ref_<yourId>" link, Telegram
-  passes that as start_param. On first launch we register them under the
-  referrer's own saved state (best-effort — this demo uses the same shared
-  key/value storage as everything else, so it works as long as the referrer has
-  opened the app at least once; a production system should do this server-side
-  against a real database instead).
+  Works with BOTH classic bot deep links (t.me/BotName?start=ref_xxx) AND
+  Telegram Mini App direct links (t.me/BotName/shortname?startapp=ref_xxx) —
+  Telegram delivers either one to tg.initDataUnsafe.start_param the same way.
+  On first launch we register the referral under the referrer's own saved
+  state (best-effort — this demo uses the same shared key/value storage as
+  everything else, so it works as long as the referrer has opened the app at
+  least once; a production system should do this server-side against a real
+  database instead).
 */
 async function registerReferralIfNeeded(){
   if(STATE.referredBy) return; // already linked to a referrer
@@ -1236,8 +1247,27 @@ async function creditReferrerCommission(amount){
   await sSet('user_state_'+STATE.referredBy, refState, false);
 }
 
+/* Sends a Telegram bot message to the referrer via the backend (bot token
+   stays server-side). Silently does nothing if notifyEndpoint isn't set,
+   or if Telegram refuses (e.g. referrer never opened a chat with the bot). */
+async function notifyReferrerActive(referrerId, referredName, reward, totalBonus){
+  if(!CFG.notifyEndpoint) return;
+  try{
+    await fetch(CFG.notifyEndpoint, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        chat_id: referrerId,
+        type: 'referral_active',
+        data: { name: referredName, reward, totalBonus }
+      })
+    });
+  }catch(e){ console.error('notify failed', e); }
+}
+
 /* Once this user has watched enough ads (CFG.refAdsNeeded, lifetime), the
-   referrer gets marked "Active" for them and receives the one-time refBonus. */
+   referrer gets marked "Active" for them, receives the one-time refBonus,
+   and gets a Telegram notification about it. */
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -1251,6 +1281,12 @@ async function checkReferralActivation(){
     const entry = refState.referrals.find(r=>r.id===USER_ID);
     if(entry) entry.active = true;
     await sSet('user_state_'+STATE.referredBy, refState, false);
+    await notifyReferrerActive(
+      STATE.referredBy,
+      tgUser.first_name || 'Player',
+      CFG.refBonus,
+      (refState.totalReferralBonus||0) + (refState.totalCommissionEarned||0)
+    );
   }
 }
 
