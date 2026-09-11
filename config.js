@@ -34,12 +34,12 @@ const DEFAULT_CONFIG = {
   // deployed in this same Vercel project. No manual URL editing needed.
   verifyEndpoint: '/api/verify-join',
   channels: [
-    { name: 'JackFruit Quest Official', link: 'https://t.me/JackFruitQuest_Official' },
-    { name: 'JackFruit Quest Payout', link: 'https://t.me/JackFruitQuest_Payout' },
-    { name: 'Crypto Learn 90', link: 'https://t.me/Crypto_Learn90' }
+    { name: 'Meaw Quest Official', link: 'https://t.me/MeawQuestOfficial' },
+    { name: 'Meaw Quest Support', link: 'https://t.me/MeawQuestSupport' },
+    { name: 'Meaw Quest Payout', link: 'https://t.me/MeawQuestPayout' }
   ],
   missions: [
-    { id: 'm_tg_1', name: 'Follow Telegram Channel', reward: 50, category: 'telegram', link: 'https://t.me/JackFruitQuest_Official' },
+    { id: 'm_tg_1', name: 'Follow Telegram Channel', reward: 50, category: 'telegram', link: 'https://t.me/MeawQuestOfficial' },
     { id: 'm_tw_1', name: 'Follow on Twitter/X', reward: 50, category: 'twitter', link: 'https://twitter.com/' },
     { id: 'm_ms_1', name: 'Visit Partner Website (30s)', reward: 30, category: 'mission', link: 'https://example.com' }
   ],
@@ -56,14 +56,15 @@ const DEFAULT_CONFIG = {
     { name: 'USDT (TON)', icon: '💵' }
   ],
   spinPrizes: [
-    { value: 20, weight: 28, color: '#e05a4e' },
-    { value: 50, weight: 24, color: '#f4c430' },
-    { value: 10, weight: 20, color: '#5fbf6b' },
-    { value: 100, weight: 12, color: '#4a86c8' },
-    { value: 30, weight: 18, color: '#c8871a' },
-    { value: 250, weight: 6, color: '#8a5cf6' },
-    { value: 15, weight: 20, color: '#e08a4e' },
-    { value: 1000, weight: 2, color: '#ff5ecb' }
+    { value: 2, weight: 22, color: '#e05a4e' },
+    { value: 5, weight: 20, color: '#f4c430' },
+    { value: 3, weight: 22, color: '#5fbf6b' },
+    { value: 7, weight: 14, color: '#4a86c8' },
+    { value: 10, weight: 10, color: '#c8871a' },
+    { value: 20, weight: 5, color: '#8a5cf6' },
+    { value: 50, weight: 2, color: '#e08a4e' },
+    { value: 12, weight: 8, color: '#ff5ecb' },
+    { value: 4, weight: 17, color: '#66c2ff' }
   ]
 };
 
@@ -107,4 +108,4 @@ export default async function handler(req, res) {
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
-}
+  }
