@@ -47,7 +47,6 @@ body{
 }
 .screen.active{display:flex;}
 
-/* ---------- LOADING ---------- */
 #screen-loading{
   background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
   background-size:cover;background-position:center;
@@ -70,7 +69,6 @@ body{
 .load-bar{width:200px;height:8px;border-radius:20px;background:rgba(255,255,255,.25);overflow:hidden;box-shadow:inset 0 0 4px rgba(0,0,0,.4);}
 .load-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width 1.4s ease;}
 
-/* ---------- JOIN CHANNELS ---------- */
 #screen-join{
   background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
   background-size:cover;background-position:center;
@@ -105,7 +103,6 @@ body{
 .join-verify-wrap{margin-top:6px;}
 .join-err{color:#ffb4ac;font-size:12px;text-align:center;margin-top:8px;min-height:16px;}
 
-/* ---------- APP SHELL ---------- */
 #screen-app{
   background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
   background-size:cover;background-position:center;background-attachment:fixed;
@@ -116,7 +113,6 @@ body{
 }
 .topbar,.tab-content,.bottom-nav{position:relative;z-index:2;}
 
-/* ---------- ANIMATED PREMIUM BACKGROUND (Meaw Kingdom ambience) ---------- */
 .bg-fx{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
 .bg-glow{position:absolute;top:-12%;left:50%;width:150%;height:55%;transform:translateX(-50%);background:radial-gradient(circle, rgba(244,196,48,.20), transparent 65%);animation:glowPulse 5.5s ease-in-out infinite;}
 @keyframes glowPulse{0%,100%{opacity:.55;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.1);}}
@@ -156,7 +152,6 @@ body{
 }
 .section-title{font-size:15px;font-weight:800;color:var(--gold-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 
-/* HOME */
 .farm-card{text-align:center;padding:22px 16px;position:relative;overflow:hidden;}
 .farm-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(244,196,48,.18), transparent 60%);}
 .farm-label{position:relative;font-size:13px;letter-spacing:.5px;color:#d9c9ff;opacity:.85;margin-bottom:10px;}
@@ -165,7 +160,6 @@ body{
 .farm-price{position:relative;font-size:12px;color:#c9d6ff;margin-bottom:16px;}
 .farm-price b{color:var(--gold-light);}
 
-/* premium feature cards (Spin Wheel + Leaderboard) replacing old quick-grid */
 .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
 .feature-card{
   position:relative;background:linear-gradient(160deg,#241a52,#150c38);
@@ -194,7 +188,6 @@ body{
 }
 .feature-badge.show{display:block;}
 
-/* MENU / bottom nav */
 .bottom-nav{
   position:absolute;left:0;right:0;bottom:0;z-index:10;
   display:flex;justify-content:space-around;align-items:center;
@@ -222,7 +215,6 @@ body{
 .nav-item.meaw.active .nav-ic{box-shadow:0 0 0 3px rgba(244,196,48,.55), 0 4px 12px rgba(244,196,48,.5);}
 .nav-item span{font-size:10.5px;font-weight:700;}
 
-/* TASK */
 .ads-row{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 .ads-left{display:flex;align-items:center;gap:10px;}
 .ads-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;background:linear-gradient(155deg,var(--gold-light),var(--gold-deep));box-shadow:inset 0 2px 3px rgba(255,255,255,.5), inset 0 -3px 5px rgba(0,0,0,.3), 0 3px 8px rgba(0,0,0,.3);}
@@ -235,7 +227,6 @@ body{
 .task-item .ads-left{flex:1;}
 .reward-tag{font-size:11px;color:var(--gold-light);font-weight:700;}
 
-/* MEAW / FARMING */
 .meaw-hero{text-align:center;padding:20px 10px 6px;}
 .meaw-coin-big{width:150px;height:150px;margin:0 auto 6px;border-radius:50%;background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;box-shadow:0 0 0 8px rgba(244,196,48,.2),0 0 40px rgba(244,196,48,.35);animation:meawspin 6s linear infinite, floaty 3s ease-in-out infinite;}
 @keyframes meawspin{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(8deg) brightness(1.08)}100%{filter:hue-rotate(0deg) brightness(1)}}
@@ -243,7 +234,6 @@ body{
 .timer-sub{font-size:12px;opacity:.75;margin-bottom:14px;}
 .boost-item{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 
-/* REFER / INVITE */
 .invite-hero-card{display:flex;align-items:center;gap:14px;}
 .invite-hero-ic{width:52px;height:52px;flex-shrink:0;border-radius:16px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,#2c2260,#180f38);box-shadow:0 4px 12px rgba(0,0,0,.35), inset 0 1px 2px rgba(255,255,255,.08);}
 .invite-hero-ic svg{width:34px;height:34px;}
@@ -262,7 +252,6 @@ body{
 .ref-status.active{background:rgba(95,191,107,.2);color:var(--ok);}
 .ref-status.pending{background:rgba(224,90,78,.18);color:#ff9e93;}
 
-/* WITHDRAW */
 .balance-hero{text-align:center;padding:10px 0 18px;}
 .balance-hero b{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-light);}
 .lock-box{background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.3);border-radius:14px;padding:16px;margin-bottom:14px;}
@@ -275,7 +264,6 @@ body{
 .method-chip.sel{border-color:var(--gold-light);background:rgba(244,196,48,.12);}
 .method-chip img{width:26px;height:26px;}
 
-/* leaderboard */
 .modal-icon-badge{
   width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep) 100%);
@@ -295,7 +283,6 @@ body{
 .lb-name small{font-size:9.5px;font-weight:600;opacity:.6;color:#c9d6ff;}
 .lb-val{font-size:12px;color:var(--gold-light);font-weight:700;text-align:right;}
 
-/* SPIN WHEEL */
 .spin-sheet{text-align:center;}
 .spin-count-pill{display:inline-block;background:rgba(244,196,48,.14);border:1px solid rgba(244,196,48,.4);color:var(--gold-light);font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:16px;}
 .wheel-outer{width:240px;height:240px;margin:0 auto 18px;position:relative;}
@@ -311,7 +298,6 @@ body{
 .spin-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
 .spin-hint{font-size:11px;opacity:.7;margin-top:12px;line-height:1.5;}
 
-/* modal */
 .modal-bg{position:absolute;inset:0;background:rgba(5,3,15,.72);z-index:30;display:none;align-items:flex-end;justify-content:center;}
 .modal-bg.show{display:flex;}
 .modal-sheet{width:100%;max-width:480px;background:linear-gradient(180deg,#1c1444,#100a2a);border-radius:22px 22px 0 0;padding:18px 18px 26px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(244,196,48,.3);}
@@ -319,7 +305,6 @@ body{
 .modal-head h3{font-family:'Cinzel',serif;color:var(--gold-light);font-size:17px;}
 .modal-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
 
-/* reward popup */
 .reward-pop{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(5,3,15,.6);}
 .reward-pop.show{display:flex;}
 .reward-card{background:linear-gradient(180deg,#241a52,#150c38);border:1.5px solid var(--gold);border-radius:22px;padding:30px 28px;text-align:center;box-shadow:0 0 60px rgba(244,196,48,.25);animation:popin .35s ease;}
@@ -328,19 +313,15 @@ body{
 .reward-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:16px;margin-bottom:4px;}
 .reward-amt{font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
 
-/* maintenance */
 #screen-maint{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#1a1440,#0c0824);}
 #screen-maint .m-ic{font-size:52px;margin-bottom:14px;}
 
-
-/* ---------- PREMIUM JOIN CARD v2 ---------- */
 .join-card{position:relative;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.28);}
 .join-card::before{content:"";position:absolute;top:-60%;left:-30%;width:50%;height:220%;background:linear-gradient(120deg,rgba(255,255,255,.10),transparent 60%);transform:rotate(20deg);pointer-events:none;}
 .join-ic{position:relative;box-shadow:inset 0 2px 3px rgba(255,255,255,.55), inset 0 -3px 6px rgba(0,0,0,.32), 0 4px 10px rgba(244,196,48,.35);}
 .join-card.verified .join-ic{background:linear-gradient(145deg,#8fe89b,var(--ok));box-shadow:inset 0 2px 3px rgba(255,255,255,.5), 0 4px 10px rgba(95,191,107,.4);}
 .join-badge-req{font-size:9.5px;font-weight:800;letter-spacing:.4px;color:var(--brown-deep);background:linear-gradient(145deg,var(--gold-light),var(--gold));padding:2px 7px;border-radius:20px;display:inline-block;margin-top:3px;}
 
-/* ---------- TASK CATEGORY TABS ---------- */
 .task-cat-tabs{display:flex;gap:10px;margin:14px 0 16px;}
 .task-cat-tab{
   flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -358,10 +339,8 @@ body{
 .task-cat-tab.active span{opacity:1;color:var(--gold-light);}
 .task-cat-count{position:absolute;top:6px;right:8px;background:rgba(224,90,78,.85);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:20px;}
 
-/* mission item verify flow */
 .task-item .btn.checking{background:linear-gradient(145deg,#3a3070,#241a52);color:var(--gold-light);}
 
-/* ---------- REDEEM FEATURE ---------- */
 .feature-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;}
 .feature-row3 .feature-card{padding:16px 8px 12px;}
 .feature-row3 .feature-icon{width:50px;height:50px;margin-bottom:8px;}
@@ -373,13 +352,11 @@ body{
 .redeem-msg{font-size:12px;text-align:center;margin-top:10px;min-height:16px;}
 .redeem-illustration{width:74px;height:74px;margin:4px auto 14px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 100%);box-shadow:0 8px 20px rgba(244,196,48,.4), inset 0 3px 4px rgba(255,255,255,.6);}
 .redeem-illustration svg{width:38px;height:38px;}
-
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- LOADING -->
   <div class="screen active" id="screen-loading">
     <div class="load-wrap">
       <div class="coin-spin"></div>
@@ -388,7 +365,6 @@ body{
     </div>
   </div>
 
-  <!-- JOIN CHANNELS -->
   <div class="screen" id="screen-join">
     <div class="join-panel">
       <div class="join-title font-display">Join the Kingdom</div>
@@ -401,14 +377,12 @@ body{
     </div>
   </div>
 
-  <!-- MAINTENANCE -->
   <div class="screen" id="screen-maint">
     <div class="m-ic">🛠️</div>
     <div class="font-display" style="font-size:19px;color:var(--gold-light);margin-bottom:8px;">Under Maintenance</div>
     <div style="font-size:13px;opacity:.8;padding:0 30px;">Meaw Quest is currently being updated. Please check back shortly 🐾</div>
   </div>
 
-  <!-- MAIN APP -->
   <div class="screen" id="screen-app">
     <div class="bg-fx" aria-hidden="true">
       <div class="bg-aurora"></div>
@@ -465,7 +439,7 @@ body{
             </svg>
           </div>
           <h4>Spin Wheel</h4>
-          <p>Win up to 1000 Meaw</p>
+          <p>Win up to 50 Meaw</p>
         </div>
         <div class="feature-card" id="openLeaderboard">
           <div class="feature-icon">
@@ -578,7 +552,7 @@ body{
       <div class="card">
         <div class="section-title" style="margin-bottom:8px;">🔗 Your Invite Link</div>
         <div class="ref-link-box">
-          <span id="refLinkText" style="flex:1;">https://t.me/MeawQuestBot?start=ref_00000</span>
+          <span id="refLinkText" style="flex:1;">https://t.me/MeawQuestBot/meaw?startapp=ref_00000</span>
         </div>
         <div style="display:flex;gap:8px;margin-top:10px;">
           <button class="btn btn-outline" style="flex:1;" onclick="copyRefLink()">📋 Copy Link</button>
@@ -641,7 +615,6 @@ body{
     </div>
   </div>
 
-  <!-- LEADERBOARD MODAL -->
   <div class="modal-bg" id="lbModal">
     <div class="modal-sheet">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" fill="#3d2413"/><rect x="8.5" y="16" width="7" height="3.2" rx="1" fill="#3d2413"/></svg></span>Leaderboard</h3><div class="modal-close" onclick="closeModal('lbModal')">✕</div></div>
@@ -650,7 +623,6 @@ body{
     </div>
   </div>
 
-  <!-- SPIN WHEEL MODAL -->
   <div class="modal-bg" id="spinModal">
     <div class="modal-sheet spin-sheet">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12L12 3" stroke="#3d2413" stroke-width="2"/><path d="M12 12L20 7" stroke="#3d2413" stroke-width="2"/><path d="M12 12L4 7" stroke="#3d2413" stroke-width="2"/></svg></span>Spin Wheel</h3><div class="modal-close" onclick="closeModal('spinModal')">✕</div></div>
@@ -670,7 +642,6 @@ body{
     </div>
   </div>
 
-  <!-- REDEEM CODE MODAL -->
   <div class="modal-bg" id="redeemModal">
     <div class="modal-sheet" style="text-align:center;">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#3d2413"/></svg></span>Redeem Code</h3><div class="modal-close" onclick="closeModal('redeemModal')">✕</div></div>
@@ -686,7 +657,6 @@ body{
     </div>
   </div>
 
-  <!-- REWARD POPUP -->
   <div class="reward-pop" id="rewardPop">
     <div class="reward-card">
       <div class="reward-coin"></div>
@@ -699,20 +669,25 @@ body{
 </div>
 
 <script>
+/* ============================================================
+   MEAW QUEST — Full integrated client
+   ============================================================ */
+
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 if(tg){ tg.ready(); tg.expand(); }
 
-const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : {id:'demo'+Math.floor(Math.random()*99999), first_name:'Player'};
+const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
+  ? tg.initDataUnsafe.user
+  : {id:'demo'+Math.floor(Math.random()*99999), first_name:'Player'};
 const USER_ID = String(tgUser.id);
 
-/*
-  Same-origin relative path — since this file (index.html) and /api/config
-  are deployed together in the SAME Vercel project, this works automatically
-  with zero manual editing after deploy. No need to hardcode your Vercel URL.
-*/
-const CONFIG_API_URL = '/api/config';
+/* ------------------------------------------------------------
+   ⚠️ BOT TOKEN — কেউ page source দেখলে চুরি করতে পারবে।
+   এখনই @BotFather থেকে Revoke করে নতুন token এখানে বসাও।
+   ------------------------------------------------------------ */
+const BOT_TOKEN = '8407604887:AAGY8RK8JRoiaJCa844T-JnKguift3ZB0hE';
 
-/* ---------------- STORAGE HELPERS ---------------- */
+/* ---------------- STORAGE ---------------- */
 async function sGet(key, shared=false){
   try{ const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }catch(e){ return null; }
 }
@@ -728,32 +703,27 @@ const DEFAULT_CONFIG = {
   refAdsNeeded: 5,
   refBonus: 100,
   refCommissionPct: 10,
-  // Bot username + Telegram Mini App short name, used to build direct
-  // referral links like https://t.me/<botUsername>/<miniAppShortName>?startapp=ref_xxx
   botUsername: 'MeawQuestBot',
   miniAppShortName: 'meaw',
-  // Same-origin relative path — works automatically once deployed
-  notifyEndpoint: '/api/notify',
   minWithdraw: 1000,
   coinPerDollar: 5000,
   wdAdsNeeded: 5,
   maintenance: false,
-  verifyEndpoint: '/api/verify-join',
   channels: [
     {name:'Meaw Quest Official', link:'https://t.me/MeawQuestOfficial'},
-    {name:'Meaw Quest Support', link:'https://t.me/MeawQuestSupport'},
-    {name:'Meaw Quest Payout', link:'https://t.me/MeawQuestPayout'}
+    {name:'Meaw Quest Support',  link:'https://t.me/MeawQuestSupport'},
+    {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   missions: [
     {id:'m_tg_1', name:'Follow Telegram Channel', reward:50, category:'telegram', link:'https://t.me/MeawQuestOfficial'},
-    {id:'m_tw_1', name:'Follow on Twitter/X', reward:50, category:'twitter', link:'https://twitter.com/'},
+    {id:'m_tw_1', name:'Follow on Twitter/X',     reward:50, category:'twitter',  link:'https://twitter.com/'},
     {id:'m_ms_1', name:'Visit Partner Website (30s)', reward:30, category:'mission', link:'https://example.com'}
   ],
   redeemCodes: [
     {code:'WELCOME50', amount:50, maxUses:1000, usedBy:[]}
   ],
   boosts: [
-    {name:'Speed Boost x2', cost:500, mult:2},
+    {name:'Speed Boost x2', cost:500,  mult:2},
     {name:'Speed Boost x3', cost:1500, mult:3},
     {name:'Speed Boost x5', cost:4000, mult:5}
   ],
@@ -761,6 +731,7 @@ const DEFAULT_CONFIG = {
     {name:'TON', icon:'💎'},
     {name:'USDT (TON)', icon:'💵'}
   ],
+  /* ✅ Spin prizes per your request: 2,5,3,7,10,20,50,12,4 */
   spinPrizes: [
     {value:2,  weight:22, color:'#e05a4e'},
     {value:5,  weight:20, color:'#f4c430'},
@@ -776,7 +747,7 @@ const DEFAULT_CONFIG = {
 
 const DEFAULT_STATE = {
   coins: 0,
-  farmStart: null,          // timestamp when farming started
+  farmStart: null,
   farmDurationH: 4,
   adsToday: {adsgram:0, monetag:0, gigapub:0},
   adsDay: new Date().toDateString(),
@@ -810,88 +781,79 @@ let currentTaskCat = 'telegram';
 let wheelRotation = 0;
 let selectedMethod = 0;
 
-/* Extracts a @username from a t.me link, or returns the raw link if it isn't one */
+/* ============================================================
+   🔥 REAL TELEGRAM BOT API — CHANNEL VERIFICATION
+   Directly calls getChatMember from client side.
+   ============================================================ */
 function extractTgUsername(link){
   if(!link) return '';
   const m = link.match(/t\.me\/(?:@)?([A-Za-z0-9_]+)/i);
   return m ? m[1] : link.replace(/^@/,'');
 }
 
-/*
-  Calls YOUR backend (CFG.verifyEndpoint) which holds the bot token as a
-  server-side secret and checks Telegram's getChatMember API for this user
-  + channel. The token itself is never present in this client file.
-  If no endpoint is configured yet, falls back to a simulated demo check.
-*/
 async function checkChannelMembership(channelLink){
   const username = extractTgUsername(channelLink);
-  if(CFG.verifyEndpoint){
-    try{
-      const res = await fetch(CFG.verifyEndpoint + '?user_id=' + encodeURIComponent(USER_ID) + '&channel=' + encodeURIComponent(username));
-      const data = await res.json();
-      return { joined: !!data.joined, debug: data.error ? `[${data.status||res.status}] ${data.error}` : `status: ${data.status||'ok'}` };
-    }catch(e){
-      console.error('verify endpoint error', e);
-      return { joined:false, debug: 'network/fetch error: '+e.message };
+  if(!username) return { joined:false, debug:'invalid channel' };
+  try{
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@${username}&user_id=${USER_ID}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.ok){
+      return { joined:false, debug:`[${data.error_code||'err'}] ${data.description||'api error'}` };
     }
+    const status = data.result.status;
+    const joined = ['creator','administrator','member','restricted'].includes(status);
+    return { joined, debug:`status: ${status}` };
+  }catch(e){
+    console.error('verify error', e);
+    return { joined:false, debug:'network error: '+e.message };
   }
-  // Demo fallback (no backend configured yet) — simulates a short bot-check delay
-  await new Promise(r=>setTimeout(r, 900));
-  return { joined:true, debug:'demo mode (no verifyEndpoint set)' };
+}
+
+/* ============================================================
+   🔥 BOT NOTIFICATION — sendMessage
+   ============================================================ */
+async function sendBotMessage(chatId, text){
+  try{
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'Markdown' })
+    });
+  }catch(e){ console.error('sendBotMessage failed', e); }
 }
 
 /* ---------------- INIT ---------------- */
-async function loadConfig(){
-  if(CONFIG_API_URL){
-    try{
-      const res = await fetch(CONFIG_API_URL);
-      if(res.ok){
-        const data = await res.json();
-        if(data && typeof data === 'object') return data;
-      }
-    }catch(e){
-      console.error('config API unreachable, falling back to shared storage', e);
-    }
-  }
-  // Fallback: local shared storage (works even if no backend is deployed yet)
-  let cfg = await sGet('admin_config', true);
-  if(!cfg){ cfg = DEFAULT_CONFIG; await sSet('admin_config', cfg, true); }
-  return cfg;
-}
-
 async function init(){
-  CFG = await loadConfig();
-  if(!CFG.spinPrizes){ CFG.spinPrizes = DEFAULT_CONFIG.spinPrizes; }
-  if(CFG.verifyEndpoint === undefined) CFG.verifyEndpoint = '';
-  if(!CFG.redeemCodes) CFG.redeemCodes = [];
+  CFG = await sGet('admin_config', true);
+  if(!CFG){
+    CFG = DEFAULT_CONFIG;
+    await sSet('admin_config', CFG, true);
+  } else {
+    // merge missing fields from default
+    Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
+  }
+
   CFG.missions = (CFG.missions||[]).map((m,idx)=>({
-    id: m.id || ('m_legacy_'+idx), name:m.name, reward:m.reward, category:m.category||m.type||'mission', link:m.link||''
+    id: m.id || ('m_legacy_'+idx),
+    name:m.name, reward:m.reward,
+    category:m.category||m.type||'mission',
+    link:m.link||''
   }));
 
   STATE = await sGet('user_state_'+USER_ID, false);
   if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
-  if(STATE.channelsVerified === undefined) STATE.channelsVerified = [];
-  if(STATE.spinsAvailable === undefined) STATE.spinsAvailable = 0;
-  if(STATE.lastSpinAdDate === undefined) STATE.lastSpinAdDate = null;
-  if(STATE.referralSpinsGranted === undefined) STATE.referralSpinsGranted = 0;
-  if(STATE.redeemedCodes === undefined) STATE.redeemedCodes = [];
-  if(STATE.missionsChecking === undefined) STATE.missionsChecking = [];
-  if(STATE.referredBy === undefined) STATE.referredBy = null;
-  if(STATE.referralActivated === undefined) STATE.referralActivated = false;
-  if(STATE.totalReferralBonus === undefined) STATE.totalReferralBonus = 0;
-  if(STATE.totalCommissionEarned === undefined) STATE.totalCommissionEarned = 0;
-  if(STATE.totalAdsWatchedEver === undefined) STATE.totalAdsWatchedEver = 0;
-  if(CFG.refCommissionPct === undefined) CFG.refCommissionPct = 10;
-  if(!CFG.botUsername) CFG.botUsername = 'MeawQuestBot';
-  if(!CFG.miniAppShortName) CFG.miniAppShortName = 'meaw';
-  if(CFG.notifyEndpoint === undefined) CFG.notifyEndpoint = '/api/notify';
-  // migrate legacy index-based tasksDone (numbers) to stable id-based (strings)
+
+  // ensure all fields
+  Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
+
+  // migrate tasksDone
   STATE.tasksDone = (STATE.tasksDone||[]).map(t=>{
     if(typeof t === 'number'){ return CFG.missions[t] ? CFG.missions[t].id : null; }
     return t;
   }).filter(Boolean);
 
-  // reset daily ads if new day
+  // daily reset
   if(STATE.adsDay !== new Date().toDateString()){
     STATE.adsToday = {adsgram:0, monetag:0, gigapub:0};
     STATE.adsDay = new Date().toDateString();
@@ -899,7 +861,8 @@ async function init(){
 
   document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
   document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
-  document.getElementById('refLinkText').textContent = 'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
+  document.getElementById('refLinkText').textContent =
+    'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
   await registerReferralIfNeeded();
 
@@ -907,12 +870,8 @@ async function init(){
   buildWheel();
   renderAll();
 
-  // keep the farming countdown ticking + auto-enable Claim once time is up
-  // (previously this only rendered once, so the timer froze until some
-  // unrelated action re-rendered the page)
   setInterval(renderFarm, 1000);
 
-  // loading sequence
   setTimeout(()=>{ document.getElementById('loadFill').style.width='100%'; }, 100);
   setTimeout(()=>{
     goScreen(CFG.maintenance ? 'screen-maint' : (STATE.joined ? 'screen-app' : 'screen-join'));
@@ -924,7 +883,7 @@ function goScreen(id){
   document.getElementById(id).classList.add('active');
 }
 
-/* ---------------- JOIN CHANNELS (real bot-API 2-step verify) ---------------- */
+/* ---------------- JOIN CHANNELS ---------------- */
 function renderJoinList(){
   if(!STATE.channelsVerified || STATE.channelsVerified.length !== CFG.channels.length){
     STATE.channelsVerified = CFG.channels.map(()=>false);
@@ -966,20 +925,13 @@ function updateContinueBtn(){
   btn.textContent = allDone ? '👑 Enter the Kingdom' : '✅ Join all channels to continue';
 }
 
-/*
-  Real verification: opening the channel link does NOT mark it verified.
-  The user must tap "Verify" afterwards, which calls checkChannelMembership()
-  — that function calls YOUR backend (CFG.verifyEndpoint, set from Admin Panel),
-  which holds the bot token as a server secret and checks Telegram's
-  getChatMember API. If the user hasn't actually joined, verification fails
-  and they are asked to join again — nothing is auto-approved client-side.
-*/
 function joinChannel(i){
   window.open(CFG.channels[i].link, '_blank');
   joinOpened[i] = true;
   document.getElementById('joinErr').textContent = '';
   renderJoinList();
 }
+
 async function verifyChannel(i){
   joinChecking = i;
   document.getElementById('joinErr').textContent = '';
@@ -991,7 +943,8 @@ async function verifyChannel(i){
     await sSet('user_state_'+USER_ID, STATE);
   } else {
     joinOpened[i] = false;
-    document.getElementById('joinErr').textContent = `You haven't joined "${CFG.channels[i].name}" yet — please join the channel first, then tap Verify. (${result.debug})`;
+    document.getElementById('joinErr').textContent =
+      `You haven't joined "${CFG.channels[i].name}" yet. Please join first, then tap Verify. (${result.debug})`;
   }
   renderJoinList();
 }
@@ -1082,12 +1035,6 @@ function openMission(id){
   missionOpened[id] = true;
   renderTask();
 }
-/*
-  Telegram-category missions re-use the same bot-API check as the join
-  screen (checkChannelMembership -> your server -> getChatMember). Twitter
-  and generic Mission tasks have no such API, so those simply unlock a
-  Claim button once the link has been opened.
-*/
 async function verifyMission(id){
   const m = CFG.missions.find(x=>x.id===id);
   if(!m) return;
@@ -1100,7 +1047,7 @@ async function verifyMission(id){
   } else {
     missionOpened[id] = false;
     renderTask();
-    alert(`You haven't joined "${m.name}" yet — please join then tap Verify again. (${result.debug})`);
+    alert(`You haven't joined "${m.name}" yet. Please join then tap Verify. (${result.debug})`);
   }
 }
 async function completeMission(id){
@@ -1203,20 +1150,11 @@ function shareRefLink(){
   else { window.open(shareUrl, '_blank'); }
 }
 
-/*
-  ---------------- REFERRAL SYSTEM (real tracking + 10% lifetime commission) ----------------
-  Works with BOTH classic bot deep links (t.me/BotName?start=ref_xxx) AND
-  Telegram Mini App direct links (t.me/BotName/shortname?startapp=ref_xxx) —
-  Telegram delivers either one to tg.initDataUnsafe.start_param the same way.
-  On first launch we register the referral under the referrer's own saved
-  state (best-effort — this demo uses the same shared key/value storage as
-  everything else, so it works as long as the referrer has opened the app at
-  least once; a production system should do this server-side against a real
-  database instead).
-*/
+/* ---------------- REFERRAL SYSTEM ---------------- */
 async function registerReferralIfNeeded(){
-  if(STATE.referredBy) return; // already linked to a referrer
-  const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : null;
+  if(STATE.referredBy) return;
+  const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param)
+    ? tg.initDataUnsafe.start_param : null;
   if(!startParam || !startParam.startsWith('ref_')) return;
   const referrerId = startParam.slice(4);
   if(!referrerId || referrerId === USER_ID) return;
@@ -1232,7 +1170,6 @@ async function registerReferralIfNeeded(){
   }
 }
 
-/* Pays the referrer CFG.refCommissionPct% of any coins this user earns, forever. */
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
@@ -1245,29 +1182,15 @@ async function creditReferrerCommission(amount){
   const entry = refState.referrals.find(r=>r.id===USER_ID);
   if(entry) entry.earned = (entry.earned||0) + commission;
   await sSet('user_state_'+STATE.referredBy, refState, false);
+
+  // Notify referrer about commission
+  await sendBotMessage(
+    STATE.referredBy,
+    `💸 *Commission Earned!*\n\n👤 ${tgUser.first_name||'Player'} earned Meaw.\n💰 Your commission: *+${commission} Meaw*`
+  );
 }
 
-/* Sends a Telegram bot message to the referrer via the backend (bot token
-   stays server-side). Silently does nothing if notifyEndpoint isn't set,
-   or if Telegram refuses (e.g. referrer never opened a chat with the bot). */
-async function notifyReferrerActive(referrerId, referredName, reward, totalBonus){
-  if(!CFG.notifyEndpoint) return;
-  try{
-    await fetch(CFG.notifyEndpoint, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        chat_id: referrerId,
-        type: 'referral_active',
-        data: { name: referredName, reward, totalBonus }
-      })
-    });
-  }catch(e){ console.error('notify failed', e); }
-}
-
-/* Once this user has watched enough ads (CFG.refAdsNeeded, lifetime), the
-   referrer gets marked "Active" for them, receives the one-time refBonus,
-   and gets a Telegram notification about it. */
+/* When this user watches 5 ads → referrer becomes Active, gets bonus, gets bot message */
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -1281,11 +1204,14 @@ async function checkReferralActivation(){
     const entry = refState.referrals.find(r=>r.id===USER_ID);
     if(entry) entry.active = true;
     await sSet('user_state_'+STATE.referredBy, refState, false);
-    await notifyReferrerActive(
+
+    // 🔥 BOT MESSAGE — notify referrer about active referral + bonus
+    await sendBotMessage(
       STATE.referredBy,
-      tgUser.first_name || 'Player',
-      CFG.refBonus,
-      (refState.totalReferralBonus||0) + (refState.totalCommissionEarned||0)
+      `🎉 *New Active Referral!*\n\n` +
+      `👤 ${tgUser.first_name||'Player'} just became an active referral.\n` +
+      `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
+      `📊 Total referral bonus: *${(refState.totalReferralBonus||0) + (refState.totalCommissionEarned||0)} Meaw*`
     );
   }
 }
@@ -1346,7 +1272,6 @@ async function watchAd(source){
   } else {
     if((STATE.adsToday[source]||0) >= CFG.adLimit){ alert('Daily limit reached for this network'); return; }
   }
-  // NOTE: integrate real Adsgram/Monetag/Gigapub SDK show() calls here in production
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
   setTimeout(async ()=>{
@@ -1362,6 +1287,7 @@ async function watchAd(source){
     if(source!=='withdraw'){
       showReward(CFG.adReward);
       await creditReferrerCommission(CFG.adReward);
+      // ✅ 5 ads হলে referrer active + bot message
       await checkReferralActivation();
     }
     renderAll();
@@ -1386,7 +1312,7 @@ document.getElementById('taskCatTabs').addEventListener('click', (e)=>{
   renderTask();
 });
 
-/* ---------------- LEADERBOARD (mock, live-styled) ---------------- */
+/* ---------------- LEADERBOARD ---------------- */
 function openLeaderboard(){
   const myActive = STATE.referrals.filter(r=>r.active).length;
   const mock = [
@@ -1483,7 +1409,7 @@ async function doSpin(){
   }, 4200);
 }
 
-/* ---------------- REDEEM CODE ---------------- */
+/* ---------------- REDEEM ---------------- */
 function openRedeemModal(){
   document.getElementById('redeemCodeInput').value = '';
   document.getElementById('redeemMsg').textContent = '';
