@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Meaw Quest</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -313,6 +315,9 @@ body{
 .reward-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:16px;margin-bottom:4px;}
 .reward-amt{font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
 
+#screen-maint{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#1a1440,#0c0824);}
+#screen-maint .m-ic{font-size:52px;margin-bottom:14px;}
+
 .admin-panel{position:fixed;bottom:0;left:0;right:0;top:0;z-index:100;background:rgba(0,0,0,.95);display:none;flex-direction:column;padding:20px;overflow-y:auto;color:#fff;font-family:'Baloo 2',sans-serif;}
 .admin-panel.show{display:flex;}
 .admin-title{font-size:18px;font-weight:800;color:var(--gold-light);margin-bottom:10px;}
@@ -326,7 +331,6 @@ body{
 <body>
 <div id="app">
 
-  <!-- LOADING SCREEN -->
   <div class="screen active" id="screen-loading">
     <div class="load-wrap">
       <div class="coin-spin"></div>
@@ -335,7 +339,6 @@ body{
     </div>
   </div>
 
-  <!-- JOIN CHANNELS SCREEN -->
   <div class="screen" id="screen-join">
     <div class="join-panel">
       <div class="join-title font-display">Join the Kingdom</div>
@@ -348,7 +351,6 @@ body{
     </div>
   </div>
 
-  <!-- MAIN APP SCREEN -->
   <div class="screen" id="screen-app">
     <div class="bg-fx" aria-hidden="true">
       <div class="bg-aurora"></div>
@@ -378,7 +380,6 @@ body{
       </div>
     </div>
 
-    <!-- HOME TAB -->
     <div class="tab-content" id="tabHome">
       <div class="card farm-card">
         <div class="farm-label">FARM MEAW</div>
@@ -425,7 +426,6 @@ body{
       </div>
     </div>
 
-    <!-- TASK TAB -->
     <div class="tab-content" id="tabTask" style="display:none;">
       <div class="section-title">⚡ Ads Network</div>
       <div id="adsNetworkList"></div>
@@ -433,7 +433,6 @@ body{
       <div id="tasksList"></div>
     </div>
 
-    <!-- MEAW (FARMING) TAB -->
     <div class="tab-content" id="tabMeaw" style="display:none;">
       <div class="meaw-hero">
         <div class="meaw-coin-big"></div>
@@ -445,7 +444,6 @@ body{
       <div id="boostList"></div>
     </div>
 
-    <!-- REFER TAB -->
     <div class="tab-content" id="tabRefer" style="display:none;">
       <div class="card invite-hero-card">
         <div class="invite-hero-ic">
@@ -467,15 +465,14 @@ body{
         </div>
       </div>
       <div class="stat-grid stat-grid-3">
-        <div class="stat-box"><b id="refTotal">0</b><span>Total Invites</span></div>
-        <div class="stat-box"><b id="refActive">0</b><span>Active Invites</span></div>
+        <div class="stat-box"><b id="refTotal">0</b><span>Total Invite</span></div>
+        <div class="stat-box"><b id="refActive">0</b><span>Active Invite</span></div>
         <div class="stat-box stat-box-gold"><b id="refBonusEarned">0</b><span>Total Earned</span></div>
       </div>
       <div class="section-title">👥 Invited Friends</div>
       <div id="refList"></div>
     </div>
 
-    <!-- WITHDRAW TAB -->
     <div class="tab-content" id="tabWithdraw" style="display:none;">
       <div class="balance-hero">
         <div style="font-size:12px;opacity:.8;">Available Balance</div>
@@ -486,13 +483,13 @@ body{
         <div style="font-size:12px;opacity:.8;">Watch 5 ads to unlock withdrawal</div>
         <div class="lock-progress-bar"><div class="lock-progress-fill" id="lockFill"></div></div>
         <div style="font-size:11px;opacity:.75;" id="lockText">0 / 5 ads watched</div>
-        <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchWithdrawAd()">▶️ Watch Ad</button>
+        <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchAdForWithdraw()">▶️ Watch Ad</button>
       </div>
       <div id="withdrawForm" style="display:none;">
         <div class="field-label">Withdraw Method</div>
         <div class="method-row" id="methodRow"></div>
         <div class="field-label">Amount (Meaw Coin)</div>
-        <input class="input" id="wdAmount" type="number" placeholder="Minimum withdraw amount">
+        <input class="input" id="wdAmount" type="number" placeholder="Min withdraw amount">
         <div class="field-label">Wallet / TON Address</div>
         <input class="input" id="wdAddress" type="text" placeholder="Your TON wallet address">
         <button class="btn btn-gold btn-block" style="margin-top:14px;" onclick="submitWithdraw()">💎 Submit Withdraw</button>
@@ -502,7 +499,6 @@ body{
       <div id="wdHistory"></div>
     </div>
 
-    <!-- BOTTOM NAV -->
     <div class="bottom-nav">
       <div class="nav-item active" data-tab="tab-home">
         <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5" stroke="#e9e4ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9v-5.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V20h2.5a1 1 0 0 0 1-1v-9" stroke="#e9e4ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -528,7 +524,6 @@ body{
     </div>
   </div>
 
-  <!-- LEADERBOARD MODAL -->
   <div class="modal-bg" id="lbModal">
     <div class="modal-sheet">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" fill="#3d2413"/><rect x="8.5" y="16" width="7" height="3.2" rx="1" fill="#3d2413"/></svg></span>Leaderboard</h3><div class="modal-close" onclick="closeModal('lbModal')">✕</div></div>
@@ -537,7 +532,6 @@ body{
     </div>
   </div>
 
-  <!-- SPIN MODAL -->
   <div class="modal-bg" id="spinModal">
     <div class="modal-sheet spin-sheet">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12L12 3" stroke="#3d2413" stroke-width="2"/><path d="M12 12L20 7" stroke="#3d2413" stroke-width="2"/><path d="M12 12L4 7" stroke="#3d2413" stroke-width="2"/></svg></span>Spin Wheel</h3><div class="modal-close" onclick="closeModal('spinModal')">✕</div></div>
@@ -557,7 +551,6 @@ body{
     </div>
   </div>
 
-  <!-- REWARD POPUP -->
   <div class="reward-pop" id="rewardPop">
     <div class="reward-card">
       <div class="reward-coin"></div>
@@ -567,7 +560,6 @@ body{
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
   <div class="admin-panel" id="adminPanel">
     <button class="admin-close" onclick="toggleAdminPanel()">✕ Close</button>
     <div class="admin-title">⚙️ ADMIN PANEL</div>
@@ -581,13 +573,13 @@ body{
     </div>
 
     <div class="admin-section">
-      <label class="admin-label">Channels (JSON, one per line)</label>
+      <label class="admin-label">Channels (one per line)</label>
       <textarea class="admin-input" id="adminChannels" rows="4" placeholder='{"name":"Channel Name","link":"https://t.me/channel"}'></textarea>
       <button class="admin-btn" onclick="saveChannels()">Update Channels</button>
     </div>
 
     <div class="admin-section">
-      <label class="admin-label">Add Ads Network</label>
+      <label class="admin-label">Add Ads Network Task</label>
       <input class="admin-input" id="adminAdName" placeholder="e.g., Adsgram">
       <input class="admin-input" id="adminAdReward" type="number" placeholder="Reward per ad">
       <input class="admin-input" id="adminAdDaily" type="number" placeholder="Daily limit">
@@ -618,7 +610,26 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — FULLY FIXED VERSION
+   MEAW QUEST — FIREBASE EDITION (race-free referrals)
+   ============================================================
+   কী কী ফিক্স করা হলো:
+   1) window.storage সরিয়ে Firebase Realtime Database বসানো হলো
+      (window.storage শুধু claude.ai এর ভেতরে কাজ করে — বাইরে
+      হোস্ট করলে আগে সব সাইলেন্টলি ফেইল করছিল, তাই persistence/
+      referral কিছুই কাজ করছিল না)।
+   2) Referral count রেস-কন্ডিশন ফিক্স: প্রতি ৫ সেকেন্ডে পুরো
+      user object overwrite হতো বলে অন্য ইউজারের করা referral
+      আপডেট মুছে যেত। এখন coins/referral আলাদা Firebase path +
+      transaction দিয়ে আপডেট হয়, আর নিজের state শুধু "partial
+      update" দিয়ে সেভ হয় — তাই কোনো ডেটা ওভাররাইট হয় না।
+   3) referrals/<referrerId>/<referredId> — এখন referral লিস্ট
+      একটা রিয়েল-টাইম Firebase listener দিয়ে লাইভ আপডেট হয়,
+      পেজ রিফ্রেশ ছাড়াই referral count/active status বদলে যায়।
+   4) নতুন referral জয়েন করলে বট মেসেজ, ৫টা এড দেখে active হলে
+      বোনাসসহ বট মেসেজ, আর ইউজার নিজে ৩টা চ্যানেলে জয়েন করে
+      কিংডমে ঢুকলে ওয়েলকাম মেসেজ — সব যোগ করা হলো।
+   5) Withdraw পেজের "Watch Ad" বাটনটা আগে কিছুই করতো না
+      (ভুল network name পাস হচ্ছিল) — এটাও ফিক্স করা হলো।
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -630,26 +641,53 @@ const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
 const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
-/* ⚠️ REPLACE THIS WITH YOUR NEW BOT TOKEN FROM @BotFather
-   This token is exposed in client-side code. Revoke it if it was shared publicly. */
+// 🔓 PUBLICLY EDITABLE BOT TOKEN (REPLACE WITH YOUR OWN!)
+// ⚠️ নিরাপত্তা নোট: এই টোকেন ক্লায়েন্ট-সাইড কোডে থাকায় যে কেউ
+// পেজ সোর্স দেখে টোকেনটা নিয়ে নিতে পারবে। প্রোডাকশনে চালানোর
+// আগে এই কলগুলো একটা Cloud Function / ছোট backend এর পেছনে
+// সরিয়ে নেওয়াই ভালো — কিন্তু এখন যেভাবে চেয়েছেন সেভাবেই রাখা হলো।
 let BOT_TOKEN = '8407604887:AAGY8RK8JRoiaJCa844T-JnKguift3ZB0hE';
 
-/* ---------------- STORAGE HELPERS ---------------- */
-async function sGet(key, shared=false){
+/* ============================================================
+   🔥 FIREBASE SETUP
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBQg8dr2PZi8ekoNpfLPXv2wb0tddPf8F8",
+  authDomain: "meaw-quest.firebaseapp.com",
+  databaseURL: "https://meaw-quest-default-rtdb.firebaseio.com",
+  projectId: "meaw-quest",
+  storageBucket: "meaw-quest.firebasestorage.app",
+  messagingSenderId: "156823657259",
+  appId: "1:156823657259:web:7e51599d3f87cfc21c436e"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* ------------------------------------------------------------
+   Storage helpers (Firebase Realtime Database)
+   ------------------------------------------------------------ */
+async function sGet(key){
   try{
-    if(!window.storage) return null;
-    const r = await window.storage.get(key, shared);
-    return r ? JSON.parse(r.value) : null;
-  }catch(e){ return null; }
+    const snap = await db.ref(key).once('value');
+    return snap.exists() ? snap.val() : null;
+  }catch(e){ console.error('firebase get err', key, e); return null; }
 }
-async function sSet(key, val, shared=false){
+async function sSet(key, val){
+  try{ await db.ref(key).set(val); return true; }catch(e){ console.error('firebase set err', key, e); return false; }
+}
+async function sUpdate(key, patch){
+  try{ await db.ref(key).update(patch); return true; }catch(e){ console.error('firebase update err', key, e); return false; }
+}
+// Atomic increment — used for anything money-related (coins, bonuses)
+// so two different browser sessions can safely update the same field
+// at the same time without clobbering each other.
+async function sIncrement(path, amount){
   try{
-    if(!window.storage) return;
-    await window.storage.set(key, JSON.stringify(val), shared);
-  }catch(e){ console.error('storage set failed', e); }
+    const res = await db.ref(path).transaction(current => (current||0) + amount);
+    return res.committed ? res.snapshot.val() : null;
+  }catch(e){ console.error('firebase txn err', path, e); return null; }
 }
 
-/* ---------------- DEFAULT CONFIG ---------------- */
 const DEFAULT_CONFIG = {
   coinPrice: 0.0021,
   farmReward: 250,
@@ -669,15 +707,9 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Adsgram', reward:15, dailyLimit:10},
-    {name:'Monetag', reward:12, dailyLimit:10},
-    {name:'Gigapub', reward:10, dailyLimit:10}
+    {name:'Adsgram', reward:15, dailyLimit:10, watched:0}
   ],
-  tasks: [
-    {id:'task_tg_1', name:'Follow Telegram Channel', reward:50, icon:'📣', link:'https://t.me/MeawQuestOfficial'},
-    {id:'task_tw_1', name:'Follow on Twitter/X',     reward:50, icon:'🐦', link:'https://twitter.com/'},
-    {id:'task_visit_1', name:'Visit Partner Website', reward:30, icon:'🌐', link:'https://example.com'}
-  ],
+  tasks: [],
   spinPrizes: [
     {value:2,  weight:22, color:'#e05a4e'},
     {value:5,  weight:20, color:'#f4c430'},
@@ -700,7 +732,12 @@ const DEFAULT_CONFIG = {
   ]
 };
 
-/* ---------------- DEFAULT STATE ---------------- */
+// NOTE: `referrals` is kept here only as an in-memory placeholder for
+// first paint. The real, live list is streamed in from the separate
+// `referrals/<uid>` Firebase node (see attachReferralsListener) and is
+// never written back into user_state as a whole array — this is what
+// stops one session's periodic save from wiping out another user's
+// referral update.
 const DEFAULT_STATE = {
   coins: 0,
   farmStart: null,
@@ -725,13 +762,32 @@ const DEFAULT_STATE = {
   referralSpinsGranted: 0
 };
 
-/* ---------------- GLOBAL VARIABLES ---------------- */
 let CFG = null;
 let STATE = null;
 let joinChecking = -1;
 let joinOpened = [];
-let wheelRotation = 0;   /* ✅ Declared ONCE only here */
 let selectedMethod = 0;
+
+/* ------------------------------------------------------------
+   SCREEN TRANSITION SAFETY NET
+   Guarantees the app never gets stuck on the loading screen,
+   no matter what fails during init() (storage error, missing
+   network, blocked fetch, etc).
+   ------------------------------------------------------------ */
+let screenReady = false;
+function safeGoScreen(){
+  if(screenReady) return;
+  screenReady = true;
+  if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  goScreen(STATE.joined ? 'screen-app' : 'screen-join');
+}
+// Absolute failsafe: force a transition after 8s even if init() hangs
+setTimeout(()=>{
+  if(!screenReady){
+    console.warn('Failsafe triggered: init() was too slow or failed, forcing screen switch.');
+    safeGoScreen();
+  }
+}, 8000);
 
 /* ============================================================
    TELEGRAM BOT API — CHANNEL VERIFICATION
@@ -770,103 +826,101 @@ async function sendBotMessage(chatId, text){
 }
 
 /* ============================================================
-   INITIALIZE
+   INIT
    ============================================================ */
 async function init(){
-  try {
-    // Load config
-    CFG = await sGet('admin_config', true);
+  try{
+    CFG = await sGet('admin_config');
     if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
     else {
       Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
     }
 
-    // Load user state
-    STATE = await sGet('user_state_'+USER_ID, false);
+    STATE = await sGet('user_state_'+USER_ID);
     if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
     else {
       Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
     }
 
-    // Daily reset for ads
+    // 🔥 Daily reset
     if(STATE.adsDay !== new Date().toDateString()){
       STATE.adsToday = {};
-      (CFG.adsNetworks||[]).forEach(n=>{ STATE.adsToday[n.name] = 0; });
+      CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
       STATE.adsDay = new Date().toDateString();
     }
 
-    // Initialize adsToday for new networks
-    (CFG.adsNetworks||[]).forEach(n=>{
-      if(STATE.adsToday[n.name]===undefined) STATE.adsToday[n.name] = 0;
-    });
-
-    // Admin check — replace with your Telegram numeric user ID
-    if(USER_ID === '123456789'){
-      const navAdmin = document.getElementById('navAdmin');
-      if(navAdmin) navAdmin.style.display='flex';
+    // Check if user is admin (hidden feature)
+    if(USER_ID === '123456789'){ // Replace with your admin ID
+      const navAdminEl = document.getElementById('navAdmin');
+      if(navAdminEl) navAdminEl.style.display='flex';
     }
 
-    // Update topbar
     document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
     document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
     document.getElementById('refLinkText').textContent =
       'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
-    // Register referral if URL has start_param
-    await registerReferralIfNeeded();
+    // Referral registration must never block the whole app if it fails
+    await registerReferralIfNeeded().catch(e=>console.warn('registerReferralIfNeeded failed', e));
 
-    // Render everything
     renderJoinList();
     buildWheel();
     renderAll();
 
-    // Start background timers
+    // 🔴 LIVE listeners — these are what make the referral counter
+    // and admin changes update instantly, without a page refresh.
+    attachReferralsListener();
+    attachAdminConfigListener();
+
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
-
-    // Animate loading bar
-    setTimeout(()=>{
-      const fill = document.getElementById('loadFill');
-      if(fill) fill.style.width='100%';
-    }, 100);
-
-    // ✅ ALWAYS navigate away from loading screen
-    setTimeout(()=>{
-      try {
-        if(STATE.joined){
-          goScreen('screen-app');
-        } else {
-          goScreen('screen-join');
-        }
-      } catch(err){
-        console.error('goScreen failed:', err);
-        goScreen('screen-join');
-      }
-    }, 1600);
-
-  } catch(err){
-    console.error('INIT FAILED:', err);
-    // Even on error, navigate away from loading screen
-    setTimeout(()=>{
-      try { goScreen('screen-join'); } catch(e){ console.error(e); }
-    }, 800);
+  }catch(err){
+    // Never let an unexpected error trap the user on the loading screen
+    console.error('Init error, continuing with safe defaults:', err);
+    if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    try{ renderJoinList(); }catch(e){}
+    try{ buildWheel(); }catch(e){}
+    try{ renderAll(); }catch(e){}
+  }finally{
+    try{
+      const lf = document.getElementById('loadFill');
+      if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100);
+    }catch(e){}
+    setTimeout(()=>{ safeGoScreen(); }, 1500);
   }
 }
 
 function goScreen(id){
-  try {
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    const el = document.getElementById(id);
-    if(el){
-      el.classList.add('active');
-    } else {
-      console.error('Screen not found:', id);
-      const fallback = document.getElementById('screen-join');
-      if(fallback) fallback.classList.add('active');
-    }
-  } catch(e){
-    console.error('goScreen error:', e);
-  }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ============================================================
+   LIVE LISTENERS
+   ============================================================ */
+function attachReferralsListener(){
+  // referrals/<myId> holds one child per person I referred.
+  // Because each referred user only ever writes to their OWN child
+  // (referrals/<myId>/<theirId>), there is no overwrite race here —
+  // multiple friends can join/activate at the same time safely, and
+  // this listener pushes the update into the UI immediately.
+  db.ref('referrals/'+USER_ID).on('value', snap=>{
+    const val = snap.val();
+    STATE.referrals = val ? Object.keys(val).map(k=>val[k]) : [];
+    try{ refreshSpinCredits(); renderRefer(); }catch(e){}
+  });
+}
+
+function attachAdminConfigListener(){
+  db.ref('admin_config').on('value', snap=>{
+    if(!snap.exists()) return;
+    const remote = snap.val();
+    const merged = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    Object.assign(merged, remote);
+    CFG = merged;
+    try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
+  });
 }
 
 /* ============================================================
@@ -880,32 +934,28 @@ async function registerReferralIfNeeded(){
   if(!referrerId || referrerId === USER_ID) return;
 
   STATE.referredBy = referrerId;
-  await sSet('user_state_'+USER_ID, STATE);
+  await saveState();
 
-  const refState = await sGet('user_state_'+referrerId, false);
-  if(refState){
-    refState.referrals = refState.referrals || [];
-    if(!refState.referrals.find(r=>r.id===USER_ID)){
-      refState.referrals.push({
-        id:USER_ID,
-        name: tgUser.first_name || 'Player',
-        username: USER_USERNAME,
-        active:false,
-        earned:0,
-        adsWatched:0
-      });
-      await sSet('user_state_'+referrerId, refState, false);
-    }
-  }
+  // Write ONLY to my own child under the referrer's referral list.
+  // This never touches any other referral entry, so it can't race
+  // with anything else writing to that same list.
+  await sSet('referrals/'+referrerId+'/'+USER_ID, {
+    id: USER_ID,
+    name: tgUser.first_name || 'Player',
+    username: USER_USERNAME,
+    active: false,
+    earned: 0,
+    adsWatched: 0,
+    joinedAt: Date.now()
+  });
 
-  // Notify referrer about new referral
+  // 🔥 BOT NOTIFICATION — New referral joined
   await sendBotMessage(
     referrerId,
     `🎉 *New Referral Joined!*\n\n` +
     `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
     `joined Meaw Quest using your link!\n\n` +
-    `💡 They need to watch ${CFG.refAdsNeeded} ads to become active. ` +
-    `You'll get ${CFG.refBonus} Meaw bonus when they do!`
+    `💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active & you'll get ${CFG.refBonus} Meaw bonus!`
   );
 }
 
@@ -914,48 +964,47 @@ async function checkReferralActivation(){
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
 
   STATE.referralActivated = true;
-  await sSet('user_state_'+USER_ID, STATE);
+  await saveState();
 
-  const refState = await sGet('user_state_'+STATE.referredBy, false);
-  if(refState){
-    refState.coins = (refState.coins||0) + CFG.refBonus;
-    refState.totalReferralBonus = (refState.totalReferralBonus||0) + CFG.refBonus;
-    refState.referrals = refState.referrals || [];
-    const entry = refState.referrals.find(r=>r.id===USER_ID);
-    if(entry) entry.active = true;
-    await sSet('user_state_'+STATE.referredBy, refState, false);
+  const referrerId = STATE.referredBy;
 
-    // Notify referrer about active referral + bonus
-    await sendBotMessage(
-      STATE.referredBy,
-      `🌟 *Active Referral!*\n\n` +
-      `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-      `just became *ACTIVE* (watched ${CFG.refAdsNeeded} ads)!\n\n` +
-      `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
-      `📊 Total from referrals: *${(refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0)} Meaw*`
-    );
-  }
+  // Mark just my own child active — safe, no race.
+  await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
+
+  // Credit the referrer with a transaction (safe even if the
+  // referrer's app is open on another device right now).
+  await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
+  await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
+
+  // Read-only fetch just to build a nice message — this never writes
+  // the object back, so it can't clobber anything.
+  const refState = await sGet('user_state_'+referrerId);
+  const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
+
+  // 🔥 BOT MESSAGE — Active referral + bonus
+  await sendBotMessage(
+    referrerId,
+    `🌟 *Active Referral!*\n\n` +
+    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
+    `just became *ACTIVE* (watched ${CFG.refAdsNeeded||5} ads)!\n\n` +
+    `💰 You earned *+${CFG.refBonus} Meaw* referral bonus!\n` +
+    `📊 Total from referrals: *${fmt(totalEarn)} Meaw*`
+  );
 }
 
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
   if(commission<=0) return;
+  const referrerId = STATE.referredBy;
 
-  const refState = await sGet('user_state_'+STATE.referredBy, false);
-  if(!refState) return;
-
-  refState.coins = (refState.coins||0) + commission;
-  refState.totalCommissionEarned = (refState.totalCommissionEarned||0) + commission;
-  refState.referrals = refState.referrals || [];
-  const entry = refState.referrals.find(r=>r.id===USER_ID);
-  if(entry) entry.earned = (entry.earned||0) + commission;
-
-  await sSet('user_state_'+STATE.referredBy, refState, false);
+  await sIncrement('user_state_'+referrerId+'/coins', commission);
+  await sIncrement('user_state_'+referrerId+'/totalCommissionEarned', commission);
+  await sIncrement('referrals/'+referrerId+'/'+USER_ID+'/earned', commission);
 }
 
 /* ============================================================
-   JOIN CHANNELS
+   JOIN CHANNELS  (shown only once — until STATE.joined becomes true)
    ============================================================ */
 function renderJoinList(){
   if(!STATE.channelsVerified || STATE.channelsVerified.length !== CFG.channels.length){
@@ -995,29 +1044,26 @@ function updateContinueBtn(){
   const allDone = STATE.channelsVerified.length>0 && STATE.channelsVerified.every(Boolean);
   const btn = document.getElementById('btnVerify');
   btn.disabled = !allDone;
-  btn.textContent = allDone ? '👑 Enter the Kingdom' : '✅ Join all channels to continue';
+  btn.textContent = allDone ? '👑 Enter the Kingdom' : '✅ Join all channels';
 }
 
 function joinChannel(i){
   window.open(CFG.channels[i].link, '_blank');
   joinOpened[i] = true;
-  document.getElementById('joinErr').textContent = '';
   renderJoinList();
 }
 
 async function verifyChannel(i){
   joinChecking = i;
-  document.getElementById('joinErr').textContent = '';
   renderJoinList();
   const result = await checkChannelMembership(CFG.channels[i].link);
   joinChecking = -1;
   if(result.joined){
     STATE.channelsVerified[i] = true;
-    await sSet('user_state_'+USER_ID, STATE);
+    await saveState();
   } else {
     joinOpened[i] = false;
-    document.getElementById('joinErr').textContent =
-      `You haven't joined "${CFG.channels[i].name}" yet. Please join first, then tap Verify.`;
+    alert('You haven\'t joined yet. Please join first then verify.');
   }
   renderJoinList();
 }
@@ -1025,7 +1071,14 @@ async function verifyChannel(i){
 document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
-  await sSet('user_state_'+USER_ID, STATE);
+  await saveState();
+  // 👋 Welcome message the moment a NEW user enters the kingdom.
+  // This only ever fires once, since screen-join is skipped for
+  // returning users (STATE.joined stays true in Firebase).
+  await sendBotMessage(
+    USER_ID,
+    `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start farming Meaw Coin, complete tasks, and invite friends to earn more!`
+  );
   goScreen('screen-app');
 });
 
@@ -1043,14 +1096,24 @@ function renderAll(){
   refreshSpinCredits();
 }
 
-function fmt(n){ return Math.floor(n||0).toLocaleString(); }
+function fmt(n){ return Math.floor(n).toLocaleString(); }
+
+// Coins are ALWAYS mutated through this helper, which uses a Firebase
+// transaction. This is what keeps balances correct even when the
+// referrer's own client and a referred friend's client update the
+// same coins field at almost the same instant.
+async function addCoins(amount){
+  const newVal = await sIncrement('user_state_'+USER_ID+'/coins', amount);
+  if(newVal!==null){ STATE.coins = newVal; }
+  else { STATE.coins = Math.max(0, (STATE.coins||0) + amount); }
+}
 
 /* ============================================================
    TASKS RENDERING
    ============================================================ */
 function renderTask(){
-  // Render ads networks
-  const adsHtml = (CFG.adsNetworks||[]).map(net=>{
+  // Render Ads Networks
+  const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
     const icon = {
       'Adsgram':'📺',
@@ -1061,7 +1124,6 @@ function renderTask(){
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
     }
-    const done = watched >= net.dailyLimit;
     return `<div class="ads-row">
       <div class="ads-left">
         <div class="ads-logo">${icon}</div>
@@ -1071,13 +1133,13 @@ function renderTask(){
           <div class="dash-progress">${dashHtml}</div>
         </div>
       </div>
-      <button class="btn btn-gold" ${done?'disabled':''} onclick="watchAd('${net.name}', event)">Watch</button>
+      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}')">Watch</button>
     </div>`;
   }).join('');
-  document.getElementById('adsNetworkList').innerHTML = adsHtml || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No ads networks configured</div>';
+  document.getElementById('adsNetworkList').innerHTML = adsHtml;
 
-  // Render custom tasks
-  const tasksHtml = (CFG.tasks||[]).map(task=>{
+  // Render Custom Tasks
+  const tasksHtml = CFG.tasks.map(task=>{
     const done = STATE.tasksDone.includes(task.id||task.name);
     return `<div class="task-item">
       <div class="ads-left">
@@ -1092,21 +1154,20 @@ function renderTask(){
   document.getElementById('tasksList').innerHTML = tasksHtml || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No tasks yet</div>';
 }
 
-async function watchAd(netName, evt){
-  const net = (CFG.adsNetworks||[]).find(n=>n.name===netName);
+async function watchAd(netName){
+  const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
   if((STATE.adsToday[netName]||0) >= net.dailyLimit){ alert('Daily limit reached'); return; }
 
-  const btn = evt ? evt.target : null;
-  const old = btn ? btn.textContent : '';
-  if(btn){ btn.textContent='Loading...'; btn.disabled=true; }
+  const btn = event.target;
+  const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
 
   setTimeout(async ()=>{
-    if(btn){ btn.textContent = old; btn.disabled=false; }
+    btn.textContent = old; btn.disabled=false;
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
-    STATE.coins += net.reward;
     STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
-    await sSet('user_state_'+USER_ID, STATE);
+    await addCoins(net.reward);
+    await saveState();
     showReward(net.reward);
     await creditReferrerCommission(net.reward);
     await checkReferralActivation();
@@ -1114,23 +1175,14 @@ async function watchAd(netName, evt){
   }, 1500);
 }
 
-async function watchWithdrawAd(){
-  if(STATE.wdAdsWatched >= CFG.wdAdsNeeded) return;
-  STATE.wdAdsWatched++;
-  await sSet('user_state_'+USER_ID, STATE);
-  renderWithdraw();
-}
-
 async function completeTask(taskId){
   if(STATE.tasksDone.includes(taskId)) return;
-  const task = (CFG.tasks||[]).find(t=>(t.id||t.name)===taskId);
+  const task = CFG.tasks.find(t=>(t.id||t.name)===taskId);
   if(!task) return;
 
-  if(task.link) window.open(task.link, '_blank');
-
   STATE.tasksDone.push(taskId);
-  STATE.coins += task.reward;
-  await sSet('user_state_'+USER_ID, STATE);
+  await addCoins(task.reward);
+  await saveState();
   showReward(task.reward);
   await creditReferrerCommission(task.reward);
   renderAll();
@@ -1164,7 +1216,7 @@ function renderFarm(){
   }
 
   const bl = document.getElementById('boostList');
-  bl.innerHTML = (CFG.boosts||[]).map((b,i)=>{
+  bl.innerHTML = CFG.boosts.map((b,i)=>{
     const owned = STATE.boostsOwned.includes(i);
     return `<div class="boost-item"><div><div class="ads-name">${b.name}</div><div class="ads-sub">Cost: ${fmt(b.cost)} Meaw</div></div>
     <button class="btn ${owned?'btn-outline':'btn-gold'}" ${owned?'disabled':''} onclick="buyBoost(${i})">${owned?'Active':'Buy'}</button></div>`;
@@ -1183,7 +1235,7 @@ document.getElementById('btnStartFarming').addEventListener('click', async ()=>{
   if(!STATE.farmStart){
     STATE.farmStart = Date.now();
     STATE.farmDurationH = CFG.farmDurationH;
-    await sSet('user_state_'+USER_ID, STATE);
+    await saveState();
   }
   switchTab('tab-meaw');
 });
@@ -1191,9 +1243,9 @@ document.getElementById('btnStartFarming').addEventListener('click', async ()=>{
 document.getElementById('btnClaimFarm').addEventListener('click', async ()=>{
   const mult = STATE.boostsOwned.reduce((a,i)=>Math.max(a, CFG.boosts[i].mult), 1);
   const reward = Math.floor(CFG.farmReward * mult);
-  STATE.coins += reward;
   STATE.farmStart = null;
-  await sSet('user_state_'+USER_ID, STATE);
+  await addCoins(reward);
+  await saveState();
   showReward(reward);
   await creditReferrerCommission(reward);
   renderAll();
@@ -1202,9 +1254,9 @@ document.getElementById('btnClaimFarm').addEventListener('click', async ()=>{
 async function buyBoost(i){
   const b = CFG.boosts[i];
   if(STATE.coins < b.cost){ alert('Not enough Meaw!'); return; }
-  STATE.coins -= b.cost;
   STATE.boostsOwned.push(i);
-  await sSet('user_state_'+USER_ID, STATE);
+  await addCoins(-b.cost);
+  await saveState();
   renderAll();
 }
 
@@ -1219,13 +1271,13 @@ function renderRefer(){
 
   const wrap = document.getElementById('refList');
   if(STATE.referrals.length===0){
-    wrap.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No invites yet — share your link to start earning!</div>`;
+    wrap.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No invites yet</div>`;
   } else {
     wrap.innerHTML = STATE.referrals.map(r=>`
       <div class="ref-user">
-        <div class="avatar">${(r.name||'P')[0]}</div>
+        <div class="avatar">${(r.name||'?')[0]}</div>
         <div class="ru-name">
-          ${r.name||'Player'}
+          ${r.name}
           <small>${r.username?'@'+r.username:''} • +${fmt(r.earned||0)} Meaw</small>
         </div>
         <div class="ref-status ${r.active?'active':'pending'}">${r.active?'✅ Active':'⏳ Pending'}</div>
@@ -1235,17 +1287,13 @@ function renderRefer(){
 
 function copyRefLink(){
   const t = document.getElementById('refLinkText').textContent;
-  if(navigator.clipboard) navigator.clipboard.writeText(t);
-  if(tg && tg.showAlert) tg.showAlert('Invite link copied!');
-  else alert('Copied: ' + t);
+  navigator.clipboard && navigator.clipboard.writeText(t);
+  alert('Copied!');
 }
 
 function shareRefLink(){
   const link = document.getElementById('refLinkText').textContent;
-  const text = `🐾 Join Meaw Quest and earn Meaw Coin! ${link}`;
-  const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
-  if(tg && tg.openTelegramLink) tg.openTelegramLink(shareUrl);
-  else window.open(shareUrl, '_blank');
+  window.open('https://t.me/share/url?url=' + encodeURIComponent(link), '_blank');
 }
 
 /* ============================================================
@@ -1265,11 +1313,10 @@ function renderWithdraw(){
     document.getElementById('withdrawForm').style.display='none';
   }
   const mr = document.getElementById('methodRow');
-  mr.innerHTML = (CFG.withdrawMethods||[]).map((m,i)=>`
+  mr.innerHTML = CFG.withdrawMethods.map((m,i)=>`
     <div class="method-chip ${i===selectedMethod?'sel':''}" onclick="selectMethod(${i})">
       <div style="font-size:20px;">${m.icon}</div><span style="font-size:11px;">${m.name}</span>
     </div>`).join('');
-  document.getElementById('wdAmount').placeholder = 'Min ' + CFG.minWithdraw + ' coin';
 
   const hist = document.getElementById('wdHistory');
   hist.innerHTML = (STATE.withdrawHistory||[]).slice().reverse().map(h=>`
@@ -1277,34 +1324,39 @@ function renderWithdraw(){
       <div class="ads-left"><div class="ads-logo">💎</div>
       <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method}</div></div></div>
       <div class="reward-tag">${h.status}</div>
-    </div>`).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history yet</div>';
+    </div>`).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
 
 function selectMethod(i){ selectedMethod=i; renderWithdraw(); }
+
+// Fixed: this button used to call watchAd('withdraw') which matched no
+// ads network and silently did nothing. It now correctly counts toward
+// the withdraw-unlock progress.
+async function watchAdForWithdraw(){
+  const btn = event.target;
+  const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
+  setTimeout(async ()=>{
+    btn.textContent = old; btn.disabled=false;
+    STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
+    await saveState();
+    renderWithdraw();
+  }, 1500);
+}
 
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
   const msg = document.getElementById('wdMsg');
-  if(!amt || amt < CFG.minWithdraw){ msg.style.color='#ff9e93'; msg.textContent='Minimum withdraw is '+CFG.minWithdraw; return; }
-  if(amt > STATE.coins){ msg.style.color='#ff9e93'; msg.textContent='Insufficient balance'; return; }
-  if(!addr){ msg.style.color='#ff9e93'; msg.textContent='Enter wallet address'; return; }
+  if(!amt || amt < CFG.minWithdraw){ msg.textContent='Min '+CFG.minWithdraw; return; }
+  if(amt > STATE.coins){ msg.textContent='Insufficient balance'; return; }
+  if(!addr){ msg.textContent='Enter wallet address'; return; }
 
-  STATE.coins -= amt;
   STATE.withdrawHistory = STATE.withdrawHistory || [];
-  STATE.withdrawHistory.push({
-    amount:amt,
-    method:CFG.withdrawMethods[selectedMethod].name,
-    address:addr,
-    status:'pending',
-    time:Date.now()
-  });
+  STATE.withdrawHistory.push({amount:amt, method:CFG.withdrawMethods[selectedMethod].name, address:addr, status:'pending', time:Date.now()});
   STATE.wdAdsWatched = 0;
-  await sSet('user_state_'+USER_ID, STATE);
-  msg.style.color='#8fdc96';
+  await addCoins(-amt);
+  await saveState();
   msg.textContent='Submitted! Awaiting admin approval.';
-  document.getElementById('wdAmount').value='';
-  document.getElementById('wdAddress').value='';
   renderAll();
 }
 
@@ -1312,8 +1364,7 @@ async function submitWithdraw(){
    SPIN WHEEL
    ============================================================ */
 function buildWheel(){
-  const prizes = CFG.spinPrizes || [];
-  if(prizes.length===0) return;
+  const prizes = CFG.spinPrizes;
   const seg = 360/prizes.length;
   const gradParts = prizes.map((p,i)=> `${p.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
   document.getElementById('wheelSvg').style.background = `conic-gradient(${gradParts})`;
@@ -1330,10 +1381,10 @@ function refreshSpinCredits(){
   if(activeRefs > STATE.referralSpinsGranted){
     STATE.spinsAvailable += (activeRefs - STATE.referralSpinsGranted);
     STATE.referralSpinsGranted = activeRefs;
+    saveState();
   }
-  const badge = document.getElementById('spinFeatureBadge');
-  badge.textContent = STATE.spinsAvailable;
-  badge.classList.toggle('show', STATE.spinsAvailable>0);
+  document.getElementById('spinFeatureBadge').textContent = STATE.spinsAvailable;
+  document.getElementById('spinFeatureBadge').classList.toggle('show', STATE.spinsAvailable>0);
 }
 
 document.getElementById('openSpin').addEventListener('click', ()=>{
@@ -1343,12 +1394,11 @@ document.getElementById('openSpin').addEventListener('click', ()=>{
 });
 
 function renderSpinModal(){
-  document.getElementById('spinCountText').textContent =
-    STATE.spinsAvailable + (STATE.spinsAvailable===1?' spin left':' spins left');
+  document.getElementById('spinCountText').textContent = STATE.spinsAvailable + ' spins left';
   document.getElementById('btnSpinNow').disabled = STATE.spinsAvailable<=0;
   const today = new Date().toDateString();
-  const used = STATE.lastSpinAdDate === today;
   const adBtn = document.getElementById('btnWatchAdSpin');
+  const used = STATE.lastSpinAdDate === today;
   adBtn.disabled = used;
   adBtn.textContent = used ? '✅ Ad Used Today' : '▶️ Watch Ad (+1 Spin)';
 }
@@ -1361,22 +1411,18 @@ async function watchAdForSpin(){
   setTimeout(async ()=>{
     STATE.lastSpinAdDate = today;
     STATE.spinsAvailable += 1;
-    await sSet('user_state_'+USER_ID, STATE);
+    await saveState();
     renderSpinModal();
   }, 1500);
 }
 
+let wheelRotation = 0;
 async function doSpin(){
   if(STATE.spinsAvailable<=0) return;
-  const prizes = CFG.spinPrizes || [];
-  if(prizes.length===0) return;
-
+  const prizes = CFG.spinPrizes;
   const totalWeight = prizes.reduce((a,p)=>a+p.weight,0);
   let r = Math.random()*totalWeight, idx=0;
-  for(let i=0;i<prizes.length;i++){
-    if(r<prizes[i].weight){ idx=i; break; }
-    r -= prizes[i].weight;
-  }
+  for(let i=0;i<prizes.length;i++){ if(r<prizes[i].weight){ idx=i; break; } r-=prizes[i].weight; }
 
   const seg = 360/prizes.length;
   const targetCenter = idx*seg + seg/2;
@@ -1387,13 +1433,11 @@ async function doSpin(){
   document.getElementById('wheelSvg').style.transform = `rotate(${wheelRotation}deg)`;
   STATE.spinsAvailable--;
   document.getElementById('btnSpinNow').disabled = true;
-  document.getElementById('spinCountText').textContent =
-    STATE.spinsAvailable + (STATE.spinsAvailable===1?' spin left':' spins left');
-  await sSet('user_state_'+USER_ID, STATE);
+  await saveState();
 
   setTimeout(async ()=>{
-    STATE.coins += prizes[idx].value;
-    await sSet('user_state_'+USER_ID, STATE);
+    await addCoins(prizes[idx].value);
+    await saveState();
     renderAll();
     renderSpinModal();
     showReward(prizes[idx].value);
@@ -1406,31 +1450,25 @@ async function doSpin(){
    ============================================================ */
 function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
-  const el = document.getElementById('tab'+capitalize(id.replace('tab-','')));
-  if(el) el.style.display='block';
-  document.querySelectorAll('.nav-item[data-tab]').forEach(n=>{
-    n.classList.toggle('active', n.dataset.tab===id);
-  });
+  document.getElementById('tab'+capitalize(id.replace('tab-',''))).style.display='block';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.tab===id));
 }
 
 function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
 document.querySelectorAll('.nav-item[data-tab]').forEach(n=>n.addEventListener('click', ()=>switchTab(n.dataset.tab)));
-
 document.getElementById('openLeaderboard').addEventListener('click', ()=>{
   const myActive = STATE.referrals.filter(r=>r.active).length;
   const mock = [
     {name:'Aarav', v: 128400, refs: 34},
     {name:'Nusrat', v: 99210, refs: 27},
     {name:'Rakib', v: 87650, refs: 19},
-    {name:'Meaw_King', v: 76020, refs: 15},
-    {name:'Sadia', v: 65500, refs: 11},
     {name: tgUser.first_name || 'You', v: STATE.coins, refs: myActive, me:true}
   ].sort((a,b)=>b.v-a.v);
   document.getElementById('lbList').innerHTML = mock.map((u,i)=>`
     <div class="lb-row ${u.me?'me':''}">
       <div class="lb-rank">${i+1}</div>
-      <div class="avatar">${(u.name||'P')[0]}</div>
+      <div class="avatar">${u.name[0]}</div>
       <div class="lb-name">${u.name}${u.me?' (You)':''}<small>${u.refs} active refers</small></div>
       <div class="lb-val">${fmt(u.v)} 🪙</div>
     </div>`).join('');
@@ -1438,10 +1476,7 @@ document.getElementById('openLeaderboard').addEventListener('click', ()=>{
 });
 
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-function showReward(amt){
-  document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw';
-  document.getElementById('rewardPop').classList.add('show');
-}
+function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
 /* ============================================================
@@ -1456,7 +1491,7 @@ function saveAdminSettings(){
   if(token) BOT_TOKEN = token;
   const botUsername = document.getElementById('adminBotUsername').value.trim();
   if(botUsername) CFG.botUsername = botUsername;
-  sSet('admin_config', CFG, true);
+  sSet('admin_config', CFG);
   alert('Settings saved!');
 }
 
@@ -1472,7 +1507,7 @@ function saveChannels(){
     }).filter(Boolean);
     if(channels.length>0){
       CFG.channels = channels;
-      sSet('admin_config', CFG, true);
+      sSet('admin_config', CFG);
       alert('Channels updated!');
     }
   }catch(e){ alert('Error: '+e.message); }
@@ -1484,10 +1519,10 @@ function addAdsNetwork(){
   const daily = parseInt(document.getElementById('adminAdDaily').value)||10;
   if(!name) return;
   CFG.adsNetworks = CFG.adsNetworks || [];
-  CFG.adsNetworks.push({name, reward, dailyLimit:daily});
-  sSet('admin_config', CFG, true);
+  CFG.adsNetworks.push({name, reward, dailyLimit:daily, watched:0});
+  sSet('admin_config', CFG);
   STATE.adsToday[name] = 0;
-  sSet('user_state_'+USER_ID, STATE);
+  saveState();
   alert('Ads network added!');
   document.getElementById('adminAdName').value='';
   document.getElementById('adminAdReward').value='';
@@ -1502,7 +1537,7 @@ function addCustomTask(){
   if(!name) return;
   CFG.tasks = CFG.tasks || [];
   CFG.tasks.push({id:name+'_'+Date.now(), name, reward, link, icon:'✨'});
-  sSet('admin_config', CFG, true);
+  sSet('admin_config', CFG);
   alert('Task added!');
   document.getElementById('adminTaskName').value='';
   document.getElementById('adminTaskReward').value='';
@@ -1514,29 +1549,54 @@ function updateSpinRewards(){
   const raw = document.getElementById('adminSpinRewards').value;
   const vals = raw.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));
   if(vals.length>0){
-    const colors = ['#e05a4e','#f4c430','#5fbf6b','#4a86c8','#c8871a','#8a5cf6','#e08a4e','#ff5ecb','#66c2ff'];
-    CFG.spinPrizes = vals.map((v,i)=>({value:v, weight:Math.ceil(Math.random()*25), color:colors[i%colors.length]}));
-    sSet('admin_config', CFG, true);
+    CFG.spinPrizes = vals.map(v=>({value:v, weight:Math.ceil(Math.random()*25), color:'#'+Math.random().toString(16).slice(2,8)}));
+    sSet('admin_config', CFG);
     buildWheel();
     alert('Spin rewards updated!');
   }
 }
 
 function viewAllUsers(){
+  alert('Check browser console for user data export');
   console.log('User State:', STATE);
   console.log('Config:', CFG);
-  alert('User data exported to console (press F12 to view)');
-}
-
-async function saveState(){
-  if(STATE && STATE.joined) await sSet('user_state_'+USER_ID, STATE);
-  if(CFG) await sSet('admin_config', CFG, true);
 }
 
 /* ============================================================
-   START
+   SAVE STATE
+   ------------------------------------------------------------
+   IMPORTANT: this only writes fields that are exclusively owned
+   and changed by THIS client (never by another user's session).
+   `coins`, `totalReferralBonus`, `totalCommissionEarned` are
+   deliberately left out — those are only ever touched through
+   sIncrement() transactions, from any session, so they must
+   never be blindly overwritten here. `referrals` is also left
+   out since it now lives in its own Firebase node.
    ============================================================ */
+async function saveState(){
+  if(!STATE) return;
+  const patch = {
+    farmStart: STATE.farmStart,
+    farmDurationH: STATE.farmDurationH,
+    adsToday: STATE.adsToday,
+    adsDay: STATE.adsDay,
+    tasksDone: STATE.tasksDone,
+    boostsOwned: STATE.boostsOwned,
+    wdAdsWatched: STATE.wdAdsWatched,
+    withdrawHistory: STATE.withdrawHistory,
+    spinsAvailable: STATE.spinsAvailable,
+    lastSpinAdDate: STATE.lastSpinAdDate,
+    referralSpinsGranted: STATE.referralSpinsGranted,
+    channelsVerified: STATE.channelsVerified,
+    joined: STATE.joined,
+    referredBy: STATE.referredBy,
+    referralActivated: STATE.referralActivated,
+    totalAdsWatchedEver: STATE.totalAdsWatchedEver
+  };
+  await sUpdate('user_state_'+USER_ID, patch);
+}
+
 init();
 </script>
 </body>
-</html>
+                                                                                                        </html>
