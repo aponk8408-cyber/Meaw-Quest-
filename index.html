@@ -706,6 +706,27 @@ let joinOpened = [];
 let wheelRotation = 0;
 let selectedMethod = 0;
 
+/* ------------------------------------------------------------
+   SCREEN TRANSITION SAFETY NET
+   Guarantees the app never gets stuck on the loading screen,
+   no matter what fails during init() (storage error, missing
+   network, blocked fetch, etc).
+   ------------------------------------------------------------ */
+let screenReady = false;
+function safeGoScreen(){
+  if(screenReady) return;
+  screenReady = true;
+  if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  goScreen(STATE.joined ? 'screen-app' : 'screen-join');
+}
+// Absolute failsafe: force a transition after 8s even if init() hangs
+setTimeout(()=>{
+  if(!screenReady){
+    console.warn('Failsafe triggered: init() was too slow or failed, forcing screen switch.');
+    safeGoScreen();
+  }
+}, 8000);
+
 /* ============================================================
    TELEGRAM BOT API — CHANNEL VERIFICATION
    ============================================================ */
@@ -746,48 +767,61 @@ async function sendBotMessage(chatId, text){
    INIT
    ============================================================ */
 async function init(){
-  CFG = await sGet('admin_config', true);
-  if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
-  else {
-    Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
+  try{
+    CFG = await sGet('admin_config', true);
+    if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
+    else {
+      Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
+    }
+
+    STATE = await sGet('user_state_'+USER_ID, false);
+    if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+    else {
+      Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
+    }
+
+    // 🔥 Daily reset
+    if(STATE.adsDay !== new Date().toDateString()){
+      STATE.adsToday = {};
+      CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
+      STATE.adsDay = new Date().toDateString();
+    }
+
+    // Check if user is admin (hidden feature)
+    if(USER_ID === '123456789'){ // Replace with your admin ID
+      const navAdminEl = document.getElementById('navAdmin');
+      if(navAdminEl) navAdminEl.style.display='flex';
+    }
+
+    document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
+    document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
+    document.getElementById('refLinkText').textContent =
+      'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
+
+    // Referral registration must never block the whole app if it fails
+    await registerReferralIfNeeded().catch(e=>console.warn('registerReferralIfNeeded failed', e));
+
+    renderJoinList();
+    buildWheel();
+    renderAll();
+
+    setInterval(renderFarm, 1000);
+    setInterval(()=>saveState(), 5000);
+  }catch(err){
+    // Never let an unexpected error trap the user on the loading screen
+    console.error('Init error, continuing with safe defaults:', err);
+    if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    try{ renderJoinList(); }catch(e){}
+    try{ buildWheel(); }catch(e){}
+    try{ renderAll(); }catch(e){}
+  }finally{
+    try{
+      const lf = document.getElementById('loadFill');
+      if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100);
+    }catch(e){}
+    setTimeout(()=>{ safeGoScreen(); }, 1500);
   }
-
-  STATE = await sGet('user_state_'+USER_ID, false);
-  if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
-  else {
-    Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
-  }
-
-  // 🔥 Daily reset
-  if(STATE.adsDay !== new Date().toDateString()){
-    STATE.adsToday = {};
-    CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
-    STATE.adsDay = new Date().toDateString();
-  }
-
-  // Check if user is admin (hidden feature)
-  if(USER_ID === '123456789'){ // Replace with your admin ID
-    document.getElementById('navAdmin').style.display='flex';
-  }
-
-  document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
-  document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
-  document.getElementById('refLinkText').textContent =
-    'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
-
-  await registerReferralIfNeeded();
-
-  renderJoinList();
-  buildWheel();
-  renderAll();
-
-  setInterval(renderFarm, 1000);
-  setInterval(()=>saveState(), 5000);
-
-  setTimeout(()=>{ document.getElementById('loadFill').style.width='100%'; }, 100);
-  setTimeout(()=>{
-    goScreen(STATE.joined ? 'screen-app' : 'screen-join');
-  }, 1500);
 }
 
 function goScreen(id){
@@ -1417,4 +1451,4 @@ async function saveState(){
 init();
 </script>
 </body>
-                </html>
+        </html>
