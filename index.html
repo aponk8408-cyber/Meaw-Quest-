@@ -10,6 +10,8 @@
 
 <!-- ✅ Monetag Reward Ad SDK -->
 <script src='//libtl.com/sdk.js' data-zone='11782670' data-sdk='show_11782670'></script>
+<!-- ✅ Gigapub Reward Ad SDK -->
+<script src="https://ad.gigapub.tech/script?id=8142"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -480,10 +482,9 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Monetag REAL Reward Ads
-   Monetag SDK ei zone e real Reward Ad dekhay
-   Amra shudhu show_11782670() call korbo — Monetag nijei
-   nijer countdown + overlay dekhabe
+   MEAW QUEST — Real Reward Ads (Monetag + Gigapub)
+   SDK nijei countdown + overlay handle kore
+   Amra shudhu show_11782670() / showGiga() call kori
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -533,7 +534,8 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}
+    {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'},
+    {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'}
   ],
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
@@ -585,37 +587,61 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
-   ✅ MONETAG REAL REWARD AD — show_11782670()
-   Monetag SDK nijei countdown + overlay handle kore
-   Amra shudhu call kori ar reward wait kori
+   ✅ REAL REWARD ADS — Monetag + Gigapub
+   SDK nijei countdown + overlay handle kore
    ============================================================ */
 
+/* ✅ MONETAG — Real Reward Ad */
 function showMonetagRewardAd(){
   return new Promise((resolve) => {
     console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
 
     if(typeof window.show_11782670 !== 'function'){
-      console.warn('[Monetag] SDK not loaded, resolving immediately');
-      resolve(true);  // Monetag er SDK na thakle bhi resolve kori jate flow atke na jay
+      console.warn('[Monetag] SDK not loaded');
+      resolve(true);
       return;
     }
 
     try{
-      // ✅ Monetag SDK nijer countdown/overlay handle korbe
-      // Amra shudhu call kori
       const result = window.show_11782670();
-      console.log('[Monetag] Called — Monetag overlay should appear now');
+      console.log('[Monetag] Called — Monetag overlay should appear');
 
-      // Monetag API promise na return korle 15 sec por reward dey
       if(result && typeof result.then === 'function'){
         result.then(()=>{ console.log('[Monetag] Promise resolved'); resolve(true); })
               .catch(err=>{ console.warn('[Monetag] Promise rejected', err); resolve(true); });
       } else {
-        // Standard: 15 sec wait — Monetag overlay nijei dekhay
         setTimeout(()=>{ console.log('[Monetag] 15s elapsed → reward'); resolve(true); }, 15000);
       }
     }catch(e){
       console.warn('[Monetag] Call exception:', e);
+      resolve(true);
+    }
+  });
+}
+
+/* ✅ GIGAPUB — Real Reward Ad */
+function showGigapubRewardAd(){
+  return new Promise((resolve) => {
+    console.log('[Gigapub] typeof showGiga:', typeof window.showGiga);
+
+    if(typeof window.showGiga !== 'function'){
+      console.warn('[Gigapub] SDK not loaded');
+      resolve(true);
+      return;
+    }
+
+    try{
+      const result = window.showGiga();
+      console.log('[Gigapub] Called — Gigapub overlay should appear');
+
+      if(result && typeof result.then === 'function'){
+        result.then(()=>{ console.log('[Gigapub] Promise resolved'); resolve(true); })
+              .catch(err=>{ console.warn('[Gigapub] Promise rejected', err); resolve(true); });
+      } else {
+        setTimeout(()=>{ console.log('[Gigapub] 15s elapsed → reward'); resolve(true); }, 15000);
+      }
+    }catch(e){
+      console.warn('[Gigapub] Call exception:', e);
       resolve(true);
     }
   });
@@ -662,9 +688,12 @@ async function init(){
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
-    // Monetag-only network
+    // Ensure both Monetag and Gigapub exist
     if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
-      CFG.adsNetworks = [{name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}];
+      CFG.adsNetworks.unshift({name:'Monetag', reward:12, dailyLimit:20, type:'monetag'});
+    }
+    if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
+      CFG.adsNetworks.push({name:'Gigapub', reward:15, dailyLimit:20, type:'giga'});
     }
 
     STATE = await sGet('user_state_'+USER_ID);
@@ -698,7 +727,8 @@ async function init(){
 
     setTimeout(()=>{
       console.log('=== SDK Status ===');
-      console.log('show_11782670:', typeof window.show_11782670);
+      console.log('show_11782670 (Monetag):', typeof window.show_11782670);
+      console.log('showGiga (Gigapub):', typeof window.showGiga);
     }, 3000);
   }catch(err){
     console.error('Init error:', err);
@@ -891,7 +921,7 @@ async function addCoins(amount){
 function renderTask(){
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
-    const icon = net.type === 'monetag' ? '🎬' : '📡';
+    const icon = net.type === 'monetag' ? '🎬' : net.type === 'giga' ? '🎮' : '📡';
     let dashHtml = '';
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
@@ -958,7 +988,7 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad — Real Monetag Reward Ad */
+/* ✅ Watch Ad — Direct SDK call (Monetag or Gigapub) */
 async function watchAd(netName, btnEl){
   if(adInProgress) return;
 
@@ -973,8 +1003,12 @@ async function watchAd(netName, btnEl){
   adInProgress = true;
 
   try{
-    // ✅ Direct Monetag call — SDK nijer Reward Ad dekhabe
-    await showMonetagRewardAd();
+    // ✅ Direct SDK call — SDK nijer Reward Ad dekhabe
+    if(net.type === 'monetag'){
+      await showMonetagRewardAd();
+    } else if(net.type === 'giga'){
+      await showGigapubRewardAd();
+    }
 
     // Reward
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
@@ -985,7 +1019,7 @@ async function watchAd(netName, btnEl){
     await creditReferrerCommission(net.reward);
     await checkReferralActivation();
     renderAll();
-    console.log(`✅ Monetag reward: +${net.reward}`);
+    console.log(`✅ ${net.name} reward: +${net.reward}`);
   }catch(e){
     console.warn('Ad error:', e);
   }finally{
@@ -1372,4 +1406,4 @@ async function saveState(){
 init();
 </script>
 </body>
-  </html>
+          </html>
