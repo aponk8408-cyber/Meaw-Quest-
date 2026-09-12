@@ -824,8 +824,7 @@ body{
    ✅ Gigapub ads integration (window.showGiga())
    ✅ Monetag ads integration (show_11782670)
    ✅ Gigapub + Monetag added to Task tab
-   ✅ No active referral bonus — only commission
-   ✅ No bot message for active referral
+   ✅ Active referral sends bot message + gives reward
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -1195,11 +1194,17 @@ async function registerReferralIfNeeded(){
     joinedAt: Date.now()
   });
 
-  // ✅ No bot message for new referral join — silent registration
+  // ✅ Bot message for new referral join
+  await sendBotMessage(
+    referrerId,
+    `🎉 *New Referral Joined!*\n\n` +
+    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
+    `joined using your link!\n\n` +
+    `💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active & you'll get ${CFG.refBonus} Meaw bonus!`
+  );
 }
 
-/* ✅ Referral activation — NO bonus to referrer, NO bot message.
-   Only marks referral as active so commission starts working. */
+/* ✅ Referral activation — sends bot message + gives bonus reward */
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -1210,11 +1215,25 @@ async function checkReferralActivation(){
   const referrerId = STATE.referredBy;
   await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
 
-  // ✅ No bonus coins added — only commission (which is handled via creditReferrerCommission on every earn)
-  // ✅ No bot message sent to referrer
+  // ✅ Give bonus reward to referrer
+  await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
+  await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
+
+  // ✅ Send bot message to referrer
+  const refState = await sGet('user_state_'+referrerId);
+  const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
+
+  await sendBotMessage(
+    referrerId,
+    `🌟 *Active Referral!*\n\n` +
+    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
+    `just became *ACTIVE* (watched ${CFG.refAdsNeeded||5} ads)!\n\n` +
+    `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
+    `📊 Total from referrals: *${fmt(totalEarn)} Meaw*`
+  );
 }
 
-/* ✅ Commission — only way referrer earns from referrals */
+/* ✅ Commission — referrer earns on every user earn */
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
