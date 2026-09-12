@@ -483,9 +483,10 @@ body{
 <script>
 /* ============================================================
    MEAW QUEST — Full fix
-   ✅ Gigapub auto-show on bot open
+   ✅ Withdraw push() to Firebase (never overwritten)
+   ✅ Dual-write to withdraw_requests (admin always sees it)
+   ✅ Gigapub auto-ad on bot open
    ✅ Gigapub + Monetag reward ads on Watch click
-   ✅ Withdraw save fix (saveState no longer overwrites)
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -498,7 +499,7 @@ const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
 let BOT_TOKEN = '';
-let autoAdShown = false; // ensures auto-ad fires once per session
+let autoAdShown = false;
 
 const firebaseConfig = {
   apiKey: "AIzaSyBQg8dr2PZi8ekoNpfLPXv2wb0tddPf8F8",
@@ -566,7 +567,7 @@ const DEFAULT_STATE = {
   referralActivated: false, totalReferralBonus: 0, totalCommissionEarned: 0,
   totalAdsWatchedEver: 0, withdrawHistory: [], joined: false,
   channelsVerified: [], spinsAvailable: 0, lastSpinAdDate: null,
-  referralSpinsGranted: 0, redeemedCodes: [], autoAdShown: false
+  referralSpinsGranted: 0, redeemedCodes: []
 };
 
 let CFG = null;
@@ -589,7 +590,7 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
-   ✅ PERMANENT AD NETWORKS — Gigapub + Monetag always present
+   ✅ PERMANENT AD NETWORKS
    ============================================================ */
 const CORE_AD_NETWORKS = [
   {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'},
@@ -613,10 +614,7 @@ function ensureCoreAdNetworks(cfg){
 
 /* ============================================================
    ✅ REAL REWARD ADS
-   Gigapub via window.showGiga() — Promise-based
-   Monetag via window.show_11782670() — direct call
    ============================================================ */
-
 function showGigapubRewardAd(){
   return new Promise((resolve)=>{
     console.log('[Gigapub] typeof showGiga:', typeof window.showGiga);
@@ -656,8 +654,6 @@ function showMonetagRewardAd(){
 
 /* ============================================================
    ✅ AUTO GIGAPUB AD on bot open (once per session)
-   Fires ~3s after the app is ready so Telegram has time to
-   mount the WebView — then calls window.showGiga() directly.
    ============================================================ */
 async function tryAutoGigapubAd(){
   if(autoAdShown) return;
@@ -757,7 +753,6 @@ async function init(){
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
     setTimeout(()=>{
       safeGoScreen();
-      // ✅ Auto Gigapub ad fires 3s after app is ready
       setTimeout(()=>{ tryAutoGigapubAd(); }, 3000);
     }, 1500);
   }
@@ -1012,7 +1007,6 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad */
 async function watchAd(netName, btnEl){
   if(adInProgress) return;
 
@@ -1210,13 +1204,24 @@ function renderWithdraw(){
     document.getElementById('withdrawForm').style.display='none';
   }
 
+  // Withdraw history — read from STATE (fresh from Firebase)
+  const histArr = [];
+  const wh = STATE.withdrawHistory || {};
+  if(Array.isArray(wh)){
+    wh.forEach(h => { if(h) histArr.push(h); });
+  } else {
+    Object.keys(wh).forEach(k => { if(wh[k]) histArr.push(wh[k]); });
+  }
+
+  histArr.sort((a,b)=> (b.time||0) - (a.time||0));
+
   const hist = document.getElementById('wdHistory');
-  hist.innerHTML = (STATE.withdrawHistory||[]).slice().reverse().map(h=>{
+  hist.innerHTML = histArr.map(h=>{
     const statusColor = h.status==='approved' ? 'var(--ok)' : h.status==='rejected' ? 'var(--danger)' : 'var(--gold-light)';
     const statusIcon = h.status==='approved' ? '✅' : h.status==='rejected' ? '❌' : '⏳';
     return `<div class="task-item" style="align-items:center;">
       <div class="ads-left"><div class="ads-logo" style="background:#fff;padding:4px;"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" style="width:100%;height:100%;object-fit:contain;"></div>
-      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">TON</div></div></div>
+      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method||'TON'}</div></div></div>
       <div class="reward-tag" style="color:${statusColor};">${statusIcon} ${h.status}</div>
     </div>`;
   }).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
@@ -1233,30 +1238,103 @@ async function watchWithdrawAd(){
   await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
 }
 
+/* ============================================================
+   ✅ FIXED submitWithdraw() — Uses push() for unique keys
+   Saves to BOTH:
+     1. user_state/{uid}/withdrawHistory/{pushKey}
+     2. withdraw_requests/{pushKey}   (global, admin always finds)
+   Never overwritten by saveState() because it uses its own key.
+   ============================================================ */
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
   const msg = document.getElementById('wdMsg');
-  if(!amt || amt < CFG.minWithdraw){ msg.textContent='Min '+CFG.minWithdraw; msg.style.color='#ffb4ac'; return; }
-  if(amt > STATE.coins){ msg.textContent='Insufficient balance'; msg.style.color='#ffb4ac'; return; }
-  if(!addr){ msg.textContent='Enter TON address'; msg.style.color='#ffb4ac'; return; }
 
-  STATE.withdrawHistory = STATE.withdrawHistory || [];
+  if(!amt || amt < CFG.minWithdraw){
+    msg.textContent = 'Min ' + CFG.minWithdraw;
+    msg.style.color = '#ffb4ac';
+    return;
+  }
+  if(amt > STATE.coins){
+    msg.textContent = 'Insufficient balance';
+    msg.style.color = '#ffb4ac';
+    return;
+  }
+  if(!addr){
+    msg.textContent = 'Enter TON address';
+    msg.style.color = '#ffb4ac';
+    return;
+  }
+
+  // Disable button while processing
+  const submitBtn = document.querySelector('.withdraw-submit-btn');
+  if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
+
   const record = {
-    id: 'wd_'+Date.now(), userId: USER_ID, name: tgUser.first_name || 'Player',
-    amount: amt, method: 'TON', address: addr, status: 'pending', time: Date.now()
+    userId: USER_ID,
+    name: tgUser.first_name || 'Player',
+    username: USER_USERNAME,
+    amount: amt,
+    method: 'TON',
+    address: addr,
+    status: 'pending',
+    time: Date.now(),
+    createdAt: new Date().toISOString()
   };
-  STATE.withdrawHistory.push(record);
+
+  let savedOK = false;
+
+  // ✅ 1. Save to user_state/{uid}/withdrawHistory (push gives unique key — never overwrites)
+  try{
+    const ref = db.ref('user_state/' + USER_ID + '/withdrawHistory');
+    const pushRef = ref.push();
+    record.id = pushRef.key;
+    await pushRef.set(record);
+    console.log('✅ Saved to user_state/withdrawHistory with key:', pushRef.key);
+    savedOK = true;
+  }catch(e){
+    console.error('❌ user_state save failed:', e);
+  }
+
+  // ✅ 2. Save to global withdraw_requests/{key} too (admin cross-check)
+  try{
+    await db.ref('withdraw_requests/' + record.id).set(record);
+    console.log('✅ Saved to withdraw_requests/' + record.id);
+    savedOK = true;
+  }catch(e){
+    console.warn('⚠️ withdraw_requests save failed (non-critical):', e);
+  }
+
+  if(!savedOK){
+    msg.textContent = '❌ Network error. Please retry.';
+    msg.style.color = '#ffb4ac';
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Withdrawal'; }
+    return;
+  }
+
+  // ✅ 3. Update local state + deduct coins
+  STATE.withdrawHistory = STATE.withdrawHistory || {};
+  STATE.withdrawHistory[record.id] = record;
   STATE.wdAdsWatched = 0;
+
   await addCoins(-amt);
   await saveState();
-  // ✅ Withdraw saved to Firebase — admin panel will see it
-  await sUpdate('user_state_'+USER_ID, { withdrawHistory: STATE.withdrawHistory, wdAdsWatched: 0 });
-  msg.textContent='✅ Submitted!';
-  msg.style.color='#8fdc96';
-  document.getElementById('wdAmount').value='';
-  document.getElementById('wdAddress').value='';
+
+  // ✅ 4. Success message
+  msg.textContent = '✅ Submitted! Awaiting admin approval.';
+  msg.style.color = '#8fdc96';
+
+  document.getElementById('wdAmount').value = '';
+  document.getElementById('wdAddress').value = '';
+
+  if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Withdrawal'; }
+
+  // ✅ 5. Refresh UI
   renderAll();
+  renderWithdraw();
+
+  // ✅ 6. Auto-hide message
+  setTimeout(()=>{ if(msg.textContent.startsWith('✅')) msg.textContent = ''; }, 3500);
 }
 
 /* ---------- SPIN ---------- */
@@ -1400,9 +1478,9 @@ function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
 /* ============================================================
-   ✅ SAVE — withdrawHistory intentionally REMOVED from here
-   so the 5-second auto-save never overwrites the withdraw
-   record that submitWithdraw() wrote directly to Firebase.
+   ✅ SAVE — withdrawHistory REMOVED from here
+   (submitWithdraw() writes it directly with push(), so 5s
+   auto-save never overwrites it)
    ============================================================ */
 async function saveState(){
   if(!STATE) return;
@@ -1415,7 +1493,7 @@ async function saveState(){
     tasksDone: STATE.tasksDone,
     boostsOwned: STATE.boostsOwned,
     wdAdsWatched: STATE.wdAdsWatched,
-    // ⚠️ withdrawHistory NOT included here — handled separately in submitWithdraw()
+    // ⚠️ withdrawHistory NOT included — handled in submitWithdraw()
     spinsAvailable: STATE.spinsAvailable,
     lastSpinAdDate: STATE.lastSpinAdDate,
     referralSpinsGranted: STATE.referralSpinsGranted,
@@ -1431,4 +1509,4 @@ async function saveState(){
 init();
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                   </html>
+  </html>
