@@ -11,60 +11,93 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg-sky:#4a86c8;--bg-deep:#12163a;--gold:#f4c430;--gold-deep:#c8871a;
-  --gold-light:#ffe08a;--brown:#3d2413;--brown-deep:#241408;--cream:#fdf6e3;
-  --paw:#f2c56b;--danger:#e05a4e;--ok:#5fbf6b;--panel:#1b1240ee;--radius:18px;
+  --bg-sky:#4a86c8;
+  --bg-deep:#12163a;
+  --gold:#f4c430;
+  --gold-deep:#c8871a;
+  --gold-light:#ffe08a;
+  --brown:#3d2413;
+  --brown-deep:#241408;
+  --cream:#fdf6e3;
+  --paw:#f2c56b;
+  --danger:#e05a4e;
+  --ok:#5fbf6b;
+  --panel:#1b1240ee;
+  --radius:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
 body{
-  font-family:'Baloo 2',sans-serif;background:var(--bg-deep);color:var(--cream);
-  overflow:hidden;width:100%;max-width:480px;margin:0 auto;position:relative;height:100vh;
+  font-family:'Baloo 2',sans-serif;
+  background:var(--bg-deep);
+  color:var(--cream);
+  overflow:hidden;
+  width:100%;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  height:100vh;
 }
 .font-display{font-family:'Cinzel',serif;}
 #app{position:relative;width:100%;height:100%;overflow:hidden;}
-.screen{position:absolute;inset:0;display:none;flex-direction:column;
-  background:linear-gradient(180deg,#5a9bd8 0%,#7fb8e8 35%,#dff0fb 100%);overflow:hidden;}
+.screen{
+  position:absolute;inset:0;
+  display:none;
+  flex-direction:column;
+  background:linear-gradient(180deg,#5a9bd8 0%,#7fb8e8 35%,#dff0fb 100%);
+  overflow:hidden;
+}
 .screen.active{display:flex;}
 
-#screen-loading{background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
-  background-size:cover;background-position:center;align-items:center;justify-content:center;}
-#screen-loading::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,30,.15),rgba(10,10,30,.55));}
+#screen-loading{
+  background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
+  background-size:cover;background-position:center;
+  align-items:center;justify-content:center;
+}
+#screen-loading::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,10,30,.15),rgba(10,10,30,.55));
+}
 .load-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px;}
-.coin-spin{width:150px;height:150px;border-radius:50%;
+.coin-spin{
+  width:150px;height:150px;border-radius:50%;
   background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
   background-size:cover;background-position:center;
   box-shadow:0 0 0 6px rgba(244,196,48,.25),0 10px 40px rgba(0,0,0,.5);
-  animation:coinPulse 1.1s ease-in-out infinite;}
+  animation:coinPulse 1.1s ease-in-out infinite;
+}
 @keyframes coinPulse{0%,100%{transform:scale(1) rotateY(0)}50%{transform:scale(1.06) rotateY(10deg)}}
 .load-title{font-size:26px;font-weight:800;color:var(--gold-light);text-shadow:0 3px 10px rgba(0,0,0,.6);letter-spacing:1px;}
 .load-bar{width:200px;height:8px;border-radius:20px;background:rgba(255,255,255,.25);overflow:hidden;box-shadow:inset 0 0 4px rgba(0,0,0,.4);}
 .load-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width 1.4s ease;}
 
-#screen-join{background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
-  background-size:cover;background-position:center;justify-content:flex-end;}
-#screen-join::before{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,30,0) 0%,rgba(10,10,30,.55) 40%,rgba(10,10,30,.92) 100%);}
+#screen-join{
+  background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
+  background-size:cover;background-position:center;
+  justify-content:flex-end;
+}
+#screen-join::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,30,0) 0%,rgba(10,10,30,.55) 40%,rgba(10,10,30,.92) 100%);}
 .join-panel{position:relative;z-index:2;padding:22px 18px 26px;}
 .join-title{font-size:22px;text-align:center;color:var(--gold-light);margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.6);}
 .join-sub{text-align:center;font-size:13px;color:#e9e4ff;opacity:.85;margin-bottom:16px;}
-.join-card{display:flex;align-items:center;gap:12px;background:var(--panel);
-  border:1px solid rgba(244,196,48,.35);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.join-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--panel);border:1px solid rgba(244,196,48,.35);
+  border-radius:14px;padding:12px 14px;margin-bottom:10px;
+  transition:border-color .2s, background .2s;
+}
 .join-card.verified{border-color:rgba(95,191,107,.55);background:linear-gradient(145deg,#1b1240ee,#173a1fee);}
-.join-ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;
-  background:linear-gradient(145deg,var(--gold),var(--gold-deep));flex-shrink:0;
-  box-shadow:inset 0 2px 3px rgba(255,255,255,.5),inset 0 -3px 5px rgba(0,0,0,.3),0 3px 8px rgba(0,0,0,.35);}
+.join-ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(145deg,var(--gold),var(--gold-deep));flex-shrink:0;box-shadow:inset 0 2px 3px rgba(255,255,255,.5), inset 0 -3px 5px rgba(0,0,0,.3), 0 3px 8px rgba(0,0,0,.35);}
 .join-info{flex:1;}
 .join-info b{font-size:14px;display:block;}
 .join-info span{font-size:11px;opacity:.7;}
-.verify-badge{font-size:11px;font-weight:800;color:var(--ok);white-space:nowrap;padding:6px 10px;border-radius:20px;
-  background:rgba(95,191,107,.15);border:1px solid rgba(95,191,107,.4);}
+.verify-badge{font-size:11px;font-weight:800;color:var(--ok);white-space:nowrap;padding:6px 10px;border-radius:20px;background:rgba(95,191,107,.15);border:1px solid rgba(95,191,107,.4);}
 .verify-badge.checking{color:var(--gold-light);background:rgba(244,196,48,.14);border-color:rgba(244,196,48,.4);}
-.btn{border:none;border-radius:12px;padding:10px 16px;font-weight:700;font-size:13px;
-  cursor:pointer;font-family:'Baloo 2',sans-serif;}
-.btn-gold{background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);
-  box-shadow:0 4px 0 #8a5c0f,0 6px 12px rgba(0,0,0,.35);}
+.btn{
+  border:none;border-radius:12px;padding:10px 16px;font-weight:700;font-size:13px;
+  cursor:pointer;font-family:'Baloo 2',sans-serif;
+}
+.btn-gold{background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);box-shadow:0 4px 0 #8a5c0f, 0 6px 12px rgba(0,0,0,.35);}
 .btn-gold:active{transform:translateY(3px);box-shadow:0 1px 0 #8a5c0f;}
 .btn-outline{background:transparent;border:1.5px solid var(--gold);color:var(--gold-light);}
 .btn-block{width:100%;padding:14px;font-size:15px;}
@@ -72,185 +105,171 @@ body{
 .join-verify-wrap{margin-top:6px;}
 .join-err{color:#ffb4ac;font-size:12px;text-align:center;margin-top:8px;min-height:16px;}
 
-#screen-app{background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
-  background-size:cover;background-position:center;background-attachment:fixed;}
-#screen-app::before{content:"";position:absolute;inset:0;z-index:0;
-  background:linear-gradient(180deg,rgba(20,15,46,.88) 0%,rgba(18,13,42,.94) 40%,rgba(12,9,32,.98) 100%);}
+#screen-app{
+  background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
+  background-size:cover;background-position:center;background-attachment:fixed;
+}
+#screen-app::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:linear-gradient(180deg, rgba(20,15,46,.88) 0%, rgba(18,13,42,.94) 40%, rgba(12,9,32,.98) 100%);
+}
 .topbar,.tab-content,.bottom-nav{position:relative;z-index:2;}
 
 .bg-fx{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
-.bg-glow{position:absolute;top:-12%;left:50%;width:150%;height:55%;transform:translateX(-50%);
-  background:radial-gradient(circle,rgba(244,196,48,.20),transparent 65%);animation:glowPulse 5.5s ease-in-out infinite;}
+.bg-glow{position:absolute;top:-12%;left:50%;width:150%;height:55%;transform:translateX(-50%);background:radial-gradient(circle, rgba(244,196,48,.20), transparent 65%);animation:glowPulse 5.5s ease-in-out infinite;}
 @keyframes glowPulse{0%,100%{opacity:.55;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.1);}}
-.bg-aurora{position:absolute;inset:-30% -10%;
-  background:conic-gradient(from 0deg,rgba(244,196,48,0) 0deg,rgba(244,196,48,.10) 60deg,rgba(244,196,48,0) 140deg,rgba(138,92,246,.10) 220deg,rgba(244,196,48,0) 300deg,rgba(244,196,48,0) 360deg);
-  animation:auroraSpin 26s linear infinite;mix-blend-mode:screen;}
+.bg-aurora{position:absolute;inset:-30% -10%;background:conic-gradient(from 0deg, rgba(244,196,48,0) 0deg, rgba(244,196,48,.10) 60deg, rgba(244,196,48,0) 140deg, rgba(138,92,246,.10) 220deg, rgba(244,196,48,0) 300deg, rgba(244,196,48,0) 360deg);animation:auroraSpin 26s linear infinite;mix-blend-mode:screen;}
 @keyframes auroraSpin{to{transform:rotate(360deg);}}
-.bg-paw{position:absolute;bottom:-10%;font-size:20px;opacity:0;
-  filter:drop-shadow(0 0 5px rgba(244,196,48,.55));animation:pawFloat linear infinite;}
-@keyframes pawFloat{0%{transform:translateY(0) rotate(-8deg) scale(.85);opacity:0;}
-  10%{opacity:.24;}85%{opacity:.16;}100%{transform:translateY(-720px) rotate(14deg) scale(1.1);opacity:0;}}
-.bg-star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff8dd;
-  box-shadow:0 0 6px 1.5px rgba(244,196,48,.85);animation:starTwinkle ease-in-out infinite;}
+.bg-paw{position:absolute;bottom:-10%;font-size:20px;opacity:0;filter:drop-shadow(0 0 5px rgba(244,196,48,.55)) grayscale(.15) sepia(.4) hue-rotate(-10deg) brightness(1.3);animation:pawFloat linear infinite;}
+@keyframes pawFloat{
+  0%{transform:translateY(0) rotate(-8deg) scale(.85);opacity:0;}
+  10%{opacity:.24;}
+  85%{opacity:.16;}
+  100%{transform:translateY(-720px) rotate(14deg) scale(1.1);opacity:0;}
+}
+.bg-star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff8dd;box-shadow:0 0 6px 1.5px rgba(244,196,48,.85);animation:starTwinkle ease-in-out infinite;}
 @keyframes starTwinkle{0%,100%{opacity:.18;transform:scale(.7);}50%{opacity:1;transform:scale(1.5);}}
-.bg-sparkle-ring{position:absolute;top:6%;left:50%;width:220px;height:220px;transform:translateX(-50%);
-  border-radius:50%;border:1px solid rgba(244,196,48,.10);animation:ringPulse 4s ease-in-out infinite;}
+.bg-sparkle-ring{position:absolute;top:6%;left:50%;width:220px;height:220px;transform:translateX(-50%);border-radius:50%;border:1px solid rgba(244,196,48,.10);animation:ringPulse 4s ease-in-out infinite;}
 @keyframes ringPulse{0%,100%{opacity:.3;transform:translateX(-50%) scale(1);}50%{opacity:.7;transform:translateX(-50%) scale(1.25);}}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
-  background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);
+}
 .user-chip{display:flex;align-items:center;gap:8px;}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));
-  display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brown-deep);
-  border:2px solid var(--gold-light);box-shadow:0 3px 8px rgba(0,0,0,.35);overflow:hidden;}
-.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brown-deep);border:2px solid var(--gold-light);box-shadow:0 3px 8px rgba(0,0,0,.35);}
 .uname{font-size:13px;font-weight:700;}
-.balance-chip{display:flex;align-items:center;gap:6px;background:var(--panel);
-  border:1px solid rgba(244,196,48,.4);border-radius:20px;padding:6px 12px 6px 6px;}
+.balance-chip{
+  display:flex;align-items:center;gap:6px;background:var(--panel);
+  border:1px solid rgba(244,196,48,.4);border-radius:20px;padding:6px 12px 6px 6px;
+}
 .balance-chip img{width:22px;height:22px;border-radius:50%;}
 .balance-chip b{font-size:13px;color:var(--gold-light);}
 .tab-content{flex:1;overflow-y:auto;padding:6px 16px 90px;-webkit-overflow-scrolling:touch;}
 .tab-content::-webkit-scrollbar{display:none;}
 
-.card{background:var(--panel);border:1px solid rgba(244,196,48,.28);
-  border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.3);}
-.section-title{font-size:15px;font-weight:800;color:var(--gold-light);margin-bottom:10px;
-  display:flex;align-items:center;gap:6px;}
+.card{
+  background:var(--panel);border:1px solid rgba(244,196,48,.28);
+  border-radius:var(--radius);padding:16px;margin-bottom:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+}
+.section-title{font-size:15px;font-weight:800;color:var(--gold-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 
 .farm-card{text-align:center;padding:22px 16px;position:relative;overflow:hidden;}
-.farm-card::before{content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 0%,rgba(244,196,48,.18),transparent 60%);}
+.farm-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(244,196,48,.18), transparent 60%);}
 .farm-label{position:relative;font-size:13px;letter-spacing:.5px;color:#d9c9ff;opacity:.85;margin-bottom:10px;}
-.farm-coin{position:relative;width:96px;height:96px;margin:0 auto 14px;border-radius:50%;
-  background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
-  background-size:cover;background-position:center;
-  box-shadow:0 0 0 5px rgba(244,196,48,.25),0 8px 20px rgba(0,0,0,.4);animation:floaty 3s ease-in-out infinite;}
+.farm-coin{position:relative;width:96px;height:96px;margin:0 auto 14px;border-radius:50%;background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;box-shadow:0 0 0 5px rgba(244,196,48,.25),0 8px 20px rgba(0,0,0,.4);animation:floaty 3s ease-in-out infinite;}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .farm-price{position:relative;font-size:12px;color:#c9d6ff;margin-bottom:16px;}
 .farm-price b{color:var(--gold-light);}
 
 .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
-.feature-card{position:relative;background:linear-gradient(160deg,#241a52,#150c38);
-  border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 12px 16px;
-  text-align:center;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.35);}
+.feature-card{
+  position:relative;background:linear-gradient(160deg,#241a52,#150c38);
+  border:1px solid rgba(244,196,48,.32);border-radius:20px;
+  padding:20px 12px 16px;text-align:center;cursor:pointer;overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
 .feature-card:active{transform:scale(.96);}
-.feature-card::after{content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;
-  background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 60%);
-  transform:rotate(20deg);pointer-events:none;}
-.feature-icon{width:60px;height:60px;margin:0 auto 10px;border-radius:50%;
+.feature-card::after{
+  content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;
+  background:linear-gradient(120deg, rgba(255,255,255,.14), transparent 60%);
+  transform:rotate(20deg);pointer-events:none;
+}
+.feature-icon{
+  width:60px;height:60px;margin:0 auto 10px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;position:relative;
-  background:radial-gradient(circle at 32% 28%,var(--gold-light) 0%,var(--gold) 45%,var(--gold-deep) 100%);
-  box-shadow:0 6px 14px rgba(244,196,48,.4),inset 0 3px 5px rgba(255,255,255,.6),inset 0 -4px 8px rgba(0,0,0,.3);}
+  background:radial-gradient(circle at 32% 28%, var(--gold-light) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  box-shadow:0 6px 14px rgba(244,196,48,.4), inset 0 3px 5px rgba(255,255,255,.6), inset 0 -4px 8px rgba(0,0,0,.3);
+}
 .feature-icon svg{width:30px;height:30px;position:relative;z-index:2;}
 .feature-card h4{font-size:13.5px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
 .feature-card p{font-size:10px;opacity:.65;line-height:1.3;}
-.feature-badge{position:absolute;top:8px;right:8px;background:rgba(224,90,78,.85);color:#fff;
-  font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;display:none;}
+.feature-badge{
+  position:absolute;top:8px;right:8px;background:rgba(224,90,78,.85);color:#fff;
+  font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;display:none;
+}
 .feature-badge.show{display:block;}
 
-.redeem-card{position:relative;background:linear-gradient(160deg,#241a52,#150c38);
-  border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 16px;
-  text-align:center;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.35);margin-top:12px;}
-.redeem-card:active{transform:scale(.97);}
-.redeem-card-ic{width:60px;height:60px;margin:0 auto 10px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));
-  box-shadow:0 6px 14px rgba(244,196,48,.4),inset 0 3px 5px rgba(255,255,255,.6);}
-.redeem-card-ic svg{width:32px;height:32px;}
-.redeem-card h4{font-size:14px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
-.redeem-card p{font-size:11px;opacity:.7;}
-
-.bottom-nav{position:absolute;left:0;right:0;bottom:0;z-index:10;
-  display:flex;justify-content:space-around;align-items:center;padding:10px 6px 14px;
-  background:linear-gradient(180deg,rgba(18,12,42,.4),rgba(12,8,30,.97) 30%);
-  border-top:1px solid rgba(244,196,48,.25);}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;
-  position:relative;opacity:.65;transition:opacity .15s;}
+.bottom-nav{
+  position:absolute;left:0;right:0;bottom:0;z-index:10;
+  display:flex;justify-content:space-around;align-items:center;
+  padding:10px 6px 14px;
+  background:linear-gradient(180deg, rgba(18,12,42,.4), rgba(12,8,30,.97) 30%);
+  border-top:1px solid rgba(244,196,48,.25);
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;position:relative;opacity:.65;transition:opacity .15s;}
 .nav-item.active{opacity:1;}
-.nav-ic{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(155deg,#2c2260,#1a1440);border:1px solid rgba(244,196,48,.28);
-  box-shadow:inset 0 1px 2px rgba(255,255,255,.06),inset 0 -3px 6px rgba(0,0,0,.35);
-  transition:transform .18s,background .18s,box-shadow .18s;}
+.nav-ic{
+  width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(155deg,#2c2260,#1a1440);
+  border:1px solid rgba(244,196,48,.28);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.06), inset 0 -3px 6px rgba(0,0,0,.35);
+  transition:transform .18s, background .18s, box-shadow .18s;
+}
 .nav-ic svg{width:19px;height:19px;}
-.nav-item.active .nav-ic{background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 90%);
-  box-shadow:0 4px 12px rgba(244,196,48,.45),inset 0 2px 3px rgba(255,255,255,.6),inset 0 -3px 6px rgba(0,0,0,.25);
-  transform:scale(1.08) translateY(-2px);}
+.nav-item.active .nav-ic{
+  background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep) 90%);
+  box-shadow:0 4px 12px rgba(244,196,48,.45), inset 0 2px 3px rgba(255,255,255,.6), inset 0 -3px 6px rgba(0,0,0,.25);
+  transform:scale(1.08) translateY(-2px);
+}
 .nav-item.active .nav-ic svg *{fill:var(--brown-deep) !important;stroke:var(--brown-deep) !important;}
-.nav-item.meaw .nav-ic{background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
-  background-size:cover;background-position:center;font-size:0;border:1px solid rgba(244,196,48,.45);}
-.nav-item.meaw.active .nav-ic{box-shadow:0 0 0 3px rgba(244,196,48,.55),0 4px 12px rgba(244,196,48,.5);}
+.nav-item.meaw .nav-ic{background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;font-size:0;border:1px solid rgba(244,196,48,.45);}
+.nav-item.meaw.active .nav-ic{box-shadow:0 0 0 3px rgba(244,196,48,.55), 0 4px 12px rgba(244,196,48,.5);}
 .nav-item span{font-size:10.5px;font-weight:700;}
 
-.ads-row{display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);
-  border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.ads-row{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 .ads-left{display:flex;align-items:center;gap:10px;}
-.ads-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-size:17px;background:linear-gradient(155deg,var(--gold-light),var(--gold-deep));
-  box-shadow:inset 0 2px 3px rgba(255,255,255,.5),inset 0 -3px 5px rgba(0,0,0,.3),0 3px 8px rgba(0,0,0,.3);}
+.ads-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;background:linear-gradient(155deg,var(--gold-light),var(--gold-deep));box-shadow:inset 0 2px 3px rgba(255,255,255,.5), inset 0 -3px 5px rgba(0,0,0,.3), 0 3px 8px rgba(0,0,0,.3);}
 .ads-name{font-size:13.5px;font-weight:700;}
 .ads-sub{font-size:11px;opacity:.7;}
-.ads-reward-tag{font-size:10.5px;color:var(--gold-light);font-weight:800;
-  background:rgba(244,196,48,.15);padding:2px 8px;border-radius:20px;
-  border:1px solid rgba(244,196,48,.35);display:inline-block;margin-top:3px;}
+.ads-reward-tag{font-size:10.5px;color:var(--gold-light);font-weight:800;background:rgba(244,196,48,.15);padding:2px 8px;border-radius:20px;border:1px solid rgba(244,196,48,.35);display:inline-block;margin-top:3px;}
 .dash-progress{display:flex;gap:3px;margin-top:5px;}
 .dash{width:10px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);}
 .dash.filled{background:var(--gold-light);}
-.task-item{display:flex;align-items:center;gap:10px;background:linear-gradient(145deg,#241a52,#180f38);
-  border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.task-item{display:flex;align-items:center;justify-content:between;gap:10px;background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 .task-item .ads-left{flex:1;}
 .reward-tag{font-size:11px;color:var(--gold-light);font-weight:700;}
 
 .task-cat-tabs{display:flex;gap:10px;margin:14px 0 16px;}
-.task-cat-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+.task-cat-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
   padding:12px 6px 10px;border-radius:16px;cursor:pointer;position:relative;overflow:hidden;
   background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.22);
-  transition:transform .15s,border-color .2s;}
+  transition:transform .15s, border-color .2s;
+}
 .task-cat-tab:active{transform:scale(.95);}
 .task-cat-tab.active{border-color:var(--gold-light);box-shadow:0 6px 16px rgba(244,196,48,.25);}
-.task-cat-ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,255,255,.3);}
+.task-cat-ic{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,.35), inset 0 2px 3px rgba(255,255,255,.3);
+}
 .task-cat-ic svg{width:26px;height:26px;}
 .task-cat-ic.tg{background:linear-gradient(145deg,#63c6f9,#1e9ce8);}
 .task-cat-ic.tw{background:linear-gradient(145deg,#2f3540,#0b0e13);}
 .task-cat-ic.ms{background:linear-gradient(145deg,#ffe08a,#c8871a);}
 .task-cat-tab span{font-size:11px;font-weight:800;opacity:.75;letter-spacing:.3px;}
 .task-cat-tab.active span{opacity:1;color:var(--gold-light);}
-.task-cat-count{position:absolute;top:6px;right:8px;background:rgba(224,90,78,.9);color:#fff;
-  font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:20px;}
+.task-cat-count{position:absolute;top:6px;right:8px;background:rgba(224,90,78,.9);color:#fff;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:20px;}
 .task-item .btn.checking{background:linear-gradient(145deg,#3a3070,#241a52);color:var(--gold-light);}
 
 .meaw-hero{text-align:center;padding:20px 10px 6px;}
-.meaw-coin-big{width:150px;height:150px;margin:0 auto 6px;border-radius:50%;
-  background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
-  background-size:cover;background-position:center;
-  box-shadow:0 0 0 8px rgba(244,196,48,.2),0 0 40px rgba(244,196,48,.35);
-  animation:meawspin 6s linear infinite,floaty 3s ease-in-out infinite;}
+.meaw-coin-big{width:150px;height:150px;margin:0 auto 6px;border-radius:50%;background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;box-shadow:0 0 0 8px rgba(244,196,48,.2),0 0 40px rgba(244,196,48,.35);animation:meawspin 6s linear infinite, floaty 3s ease-in-out infinite;}
 @keyframes meawspin{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(8deg) brightness(1.08)}100%{filter:hue-rotate(0deg) brightness(1)}}
-.timer-text{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold-light);
-  letter-spacing:2px;margin:10px 0 4px;}
+.timer-text{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold-light);letter-spacing:2px;margin:10px 0 4px;}
 .timer-sub{font-size:12px;opacity:.75;margin-bottom:14px;}
-.boost-item{display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);
-  border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.boost-item{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 
 .invite-hero-card{display:flex;align-items:center;gap:14px;}
-.invite-hero-ic{width:52px;height:52px;flex-shrink:0;border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 32% 28%,#2c2260,#180f38);
-  box-shadow:0 4px 12px rgba(0,0,0,.35),inset 0 1px 2px rgba(255,255,255,.08);}
+.invite-hero-ic{width:52px;height:52px;flex-shrink:0;border-radius:16px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,#2c2260,#180f38);box-shadow:0 4px 12px rgba(0,0,0,.35), inset 0 1px 2px rgba(255,255,255,.08);}
 .invite-hero-ic svg{width:34px;height:34px;}
-.ref-link-box{display:flex;gap:8px;background:#140f2e;border:1px dashed rgba(244,196,48,.4);
-  border-radius:12px;padding:10px 12px;font-size:12px;word-break:break-all;align-items:center;}
+.ref-link-box{display:flex;gap:8px;background:#140f2e;border:1px dashed rgba(244,196,48,.4);border-radius:12px;padding:10px 12px;font-size:12px;word-break:break-all;align-items:center;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
 .stat-grid-3{grid-template-columns:1fr 1fr 1fr;}
-.stat-box{background:linear-gradient(145deg,#241a52,#180f38);
-  border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:14px 8px;text-align:center;}
+.stat-box{background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.25);border-radius:14px;padding:14px 8px;text-align:center;}
 .stat-box b{display:block;font-size:20px;color:var(--gold-light);font-family:'Cinzel',serif;}
 .stat-box span{font-size:10.5px;opacity:.75;}
-.stat-box-gold{background:linear-gradient(145deg,#3a2c0f,#241a08);
-  border-color:rgba(244,196,48,.5);box-shadow:0 4px 14px rgba(244,196,48,.18);}
-.ref-user{display:flex;align-items:center;gap:10px;background:#180f38;border-radius:12px;
-  padding:9px 12px;margin-bottom:8px;}
+.stat-box-gold{background:linear-gradient(145deg,#3a2c0f,#241a08);border-color:rgba(244,196,48,.5);box-shadow:0 4px 14px rgba(244,196,48,.18);}
+.ref-user{display:flex;align-items:center;gap:10px;background:#180f38;border-radius:12px;padding:9px 12px;margin-bottom:8px;}
 .ref-user .avatar{width:30px;height:30px;font-size:12px;}
 .ref-user .ru-name{flex:1;font-size:12.5px;font-weight:700;display:flex;flex-direction:column;}
 .ref-user .ru-name small{font-size:10px;font-weight:600;opacity:.6;color:var(--gold-light);}
@@ -260,34 +279,28 @@ body{
 
 .balance-hero{text-align:center;padding:10px 0 18px;}
 .balance-hero b{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-light);}
-.lock-box{background:linear-gradient(145deg,#241a52,#180f38);
-  border:1px solid rgba(244,196,48,.3);border-radius:14px;padding:16px;margin-bottom:14px;}
+.lock-box{background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.3);border-radius:14px;padding:16px;margin-bottom:14px;}
 .lock-progress-bar{height:8px;border-radius:20px;background:rgba(255,255,255,.15);overflow:hidden;margin:10px 0;}
-.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));
-  border-radius:20px;transition:width .3s;}
+.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width .3s;}
 .field-label{font-size:12px;opacity:.8;margin:10px 0 6px;}
-.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(244,196,48,.35);
-  background:#140f2e;color:var(--cream);font-family:'Baloo 2';font-size:13px;}
+.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(244,196,48,.35);background:#140f2e;color:var(--cream);font-family:'Baloo 2';font-size:13px;}
 .method-row{display:flex;gap:10px;margin-bottom:10px;}
-.method-chip{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:10px 6px;border-radius:12px;border:1.5px solid rgba(244,196,48,.25);
-  background:#180f38;cursor:pointer;}
+.method-chip{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:12px;border:1.5px solid rgba(244,196,48,.25);background:#180f38;cursor:pointer;}
 .method-chip.sel{border-color:var(--gold-light);background:rgba(244,196,48,.12);}
+.method-chip img{width:26px;height:26px;}
 
-.modal-icon-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 100%);
-  box-shadow:0 3px 8px rgba(244,196,48,.4),inset 0 2px 3px rgba(255,255,255,.55);
-  margin-right:8px;flex-shrink:0;}
+.modal-icon-badge{
+  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep) 100%);
+  box-shadow:0 3px 8px rgba(244,196,48,.4), inset 0 2px 3px rgba(255,255,255,.55);
+  margin-right:8px;flex-shrink:0;
+}
 .modal-icon-badge svg{width:18px;height:18px;}
 .modal-head h3{display:flex;align-items:center;}
-.lb-live-dot{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
-  color:var(--ok);background:rgba(95,191,107,.14);border:1px solid rgba(95,191,107,.35);
-  padding:3px 9px;border-radius:20px;margin-bottom:12px;}
-.lb-live-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok);
-  box-shadow:0 0 6px var(--ok);animation:pulseDot 1.4s ease-in-out infinite;}
+.lb-live-dot{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--ok);background:rgba(95,191,107,.14);border:1px solid rgba(95,191,107,.35);padding:3px 9px;border-radius:20px;margin-bottom:12px;}
+.lb-live-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok);animation:pulseDot 1.4s ease-in-out infinite;}
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
-.lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;
-  border-bottom:1px solid rgba(255,255,255,.06);}
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.06);}
 .lb-row.me{background:rgba(244,196,48,.08);border-radius:10px;}
 .lb-rank{width:26px;text-align:center;font-weight:800;color:var(--gold-light);font-size:14px;}
 .lb-row .avatar{width:30px;height:30px;font-size:12px;}
@@ -297,69 +310,85 @@ body{
 .lb-empty{text-align:center;padding:20px;opacity:.6;font-size:12px;}
 
 .spin-sheet{text-align:center;}
-.spin-count-pill{display:inline-block;background:rgba(244,196,48,.14);
-  border:1px solid rgba(244,196,48,.4);color:var(--gold-light);font-size:12px;
-  font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:16px;}
+.spin-count-pill{display:inline-block;background:rgba(244,196,48,.14);border:1px solid rgba(244,196,48,.4);color:var(--gold-light);font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:16px;}
 .wheel-outer{width:240px;height:240px;margin:0 auto 18px;position:relative;}
-.wheel-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);
-  width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;
-  border-top:20px solid var(--gold-light);filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));z-index:5;}
-.wheel-svg{width:100%;height:100%;border-radius:50%;position:relative;
-  border:6px solid var(--gold-deep);box-shadow:0 0 0 4px var(--brown-deep),0 10px 30px rgba(0,0,0,.5);
-  transition:transform 4s cubic-bezier(.17,.67,.32,1.32);}
+.wheel-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid var(--gold-light);filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));z-index:5;}
+.wheel-svg{
+  width:100%;height:100%;border-radius:50%;position:relative;
+  border:6px solid var(--gold-deep);box-shadow:0 0 0 4px var(--brown-deep), 0 10px 30px rgba(0,0,0,.5);
+  transition:transform 4s cubic-bezier(.17,.67,.32,1.32);
+}
 .wheel-labels{position:absolute;inset:0;}
-.wheel-label{position:absolute;left:50%;top:50%;font-family:'Cinzel',serif;
-  font-weight:800;font-size:13px;color:#241408;text-shadow:0 1px 0 rgba(255,255,255,.3);}
-.wheel-center{position:absolute;left:50%;top:50%;width:44px;height:44px;
-  transform:translate(-50%,-50%);border-radius:50%;
-  background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));
-  box-shadow:0 3px 10px rgba(0,0,0,.4),inset 0 2px 3px rgba(255,255,255,.6);
-  z-index:4;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.wheel-label{position:absolute;left:50%;top:50%;font-family:'Cinzel',serif;font-weight:800;font-size:13px;color:#241408;text-shadow:0 1px 0 rgba(255,255,255,.3);}
+.wheel-center{position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));box-shadow:0 3px 10px rgba(0,0,0,.4), inset 0 2px 3px rgba(255,255,255,.6);z-index:4;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .spin-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
 .spin-hint{font-size:11px;opacity:.7;margin-top:12px;line-height:1.5;}
 
-.modal-bg{position:absolute;inset:0;background:rgba(5,3,15,.72);z-index:30;
-  display:none;align-items:flex-end;justify-content:center;}
+.modal-bg{position:absolute;inset:0;background:rgba(5,3,15,.72);z-index:30;display:none;align-items:flex-end;justify-content:center;}
 .modal-bg.show{display:flex;}
-.modal-sheet{width:100%;max-width:480px;background:linear-gradient(180deg,#1c1444,#100a2a);
-  border-radius:22px 22px 0 0;padding:18px 18px 26px;max-height:85vh;overflow-y:auto;
-  border-top:1px solid rgba(244,196,48,.3);}
+.modal-sheet{width:100%;max-width:480px;background:linear-gradient(180deg,#1c1444,#100a2a);border-radius:22px 22px 0 0;padding:18px 18px 26px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(244,196,48,.3);}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .modal-head h3{font-family:'Cinzel',serif;color:var(--gold-light);font-size:17px;}
-.modal-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
+.modal-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;}
 
-.reward-pop{position:absolute;inset:0;z-index:50;display:none;align-items:center;
-  justify-content:center;background:rgba(5,3,15,.6);}
+.reward-pop{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(5,3,15,.6);}
 .reward-pop.show{display:flex;}
-.reward-card{background:linear-gradient(180deg,#241a52,#150c38);border:1.5px solid var(--gold);
-  border-radius:22px;padding:30px 28px;text-align:center;
-  box-shadow:0 0 60px rgba(244,196,48,.25);animation:popin .35s ease;}
+.reward-card{background:linear-gradient(180deg,#241a52,#150c38);border:1.5px solid var(--gold);border-radius:22px;padding:30px 28px;text-align:center;box-shadow:0 0 60px rgba(244,196,48,.25);animation:popin .35s ease;}
 @keyframes popin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
-.reward-coin{width:80px;height:80px;margin:0 auto 14px;border-radius:50%;
-  background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
-  background-size:cover;background-position:center;box-shadow:0 0 30px rgba(244,196,48,.5);}
+.reward-coin{width:80px;height:80px;margin:0 auto 14px;border-radius:50%;background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;box-shadow:0 0 30px rgba(244,196,48,.5);}
 .reward-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:16px;margin-bottom:4px;}
 .reward-amt{font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
 
-.redeem-illustration{width:74px;height:74px;margin:4px auto 14px;border-radius:22px;
-  display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 100%);
-  box-shadow:0 8px 20px rgba(244,196,48,.4);}
+/* Redeem section on Home */
+.redeem-card{
+  position:relative;background:linear-gradient(160deg,#241a52,#150c38);
+  border:1px solid rgba(244,196,48,.32);border-radius:20px;
+  padding:20px 16px;text-align:center;cursor:pointer;overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);margin-top:12px;
+}
+.redeem-card:active{transform:scale(.97);}
+.redeem-card::after{
+  content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;
+  background:linear-gradient(120deg, rgba(255,255,255,.14), transparent 60%);
+  transform:rotate(20deg);pointer-events:none;
+}
+.redeem-card-ic{
+  width:60px;height:60px;margin:0 auto 10px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep));
+  box-shadow:0 6px 14px rgba(244,196,48,.4), inset 0 3px 5px rgba(255,255,255,.6);
+}
+.redeem-card-ic svg{width:32px;height:32px;position:relative;z-index:2;}
+.redeem-card h4{font-size:14px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
+.redeem-card p{font-size:11px;opacity:.7;}
+
+.redeem-illustration{width:74px;height:74px;margin:4px auto 14px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 100%);box-shadow:0 8px 20px rgba(244,196,48,.4);}
 .redeem-illustration svg{width:38px;height:38px;}
 .redeem-input-wrap{display:flex;gap:8px;margin:6px 0 4px;}
 .redeem-input-wrap input{flex:1;text-transform:uppercase;letter-spacing:2px;text-align:center;font-weight:800;}
 .redeem-msg{font-size:12px;text-align:center;margin-top:10px;min-height:16px;}
 
-#screen-maint{align-items:center;justify-content:center;text-align:center;
-  background:linear-gradient(180deg,#1a1440,#0c0824);}
+#screen-maint{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#1a1440,#0c0824);}
 #screen-maint .m-ic{font-size:52px;margin-bottom:14px;}
+
+.admin-panel{position:fixed;bottom:0;left:0;right:0;top:0;z-index:100;background:rgba(0,0,0,.95);display:none;flex-direction:column;padding:20px;overflow-y:auto;color:#fff;font-family:'Baloo 2',sans-serif;}
+.admin-panel.show{display:flex;}
+.admin-title{font-size:18px;font-weight:800;color:var(--gold-light);margin-bottom:10px;}
+.admin-section{margin-bottom:20px;background:rgba(255,255,255,.08);padding:12px;border-radius:12px;border:1px solid rgba(244,196,48,.3);}
+.admin-label{font-size:12px;font-weight:700;color:var(--gold-light);margin-bottom:4px;display:block;}
+.admin-input{width:100%;padding:8px;margin:4px 0;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:#140f2e;color:#fff;font-size:12px;}
+.admin-btn{background:var(--gold);color:var(--brown-deep);border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;margin:4px;}
+.admin-close{background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;position:absolute;top:10px;right:10px;}
+.admin-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.admin-tab-btn{flex:1;min-width:70px;padding:8px 4px;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:rgba(255,255,255,.05);color:#fff;font-weight:700;font-size:10.5px;cursor:pointer;}
+.admin-tab-btn.active{background:var(--gold);color:var(--brown-deep);}
+.admin-tab-content{display:none;}
+.admin-tab-content.active{display:block;}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- LOADING -->
   <div class="screen active" id="screen-loading">
     <div class="load-wrap">
       <div class="coin-spin"></div>
@@ -368,7 +397,6 @@ body{
     </div>
   </div>
 
-  <!-- JOIN CHANNELS -->
   <div class="screen" id="screen-join">
     <div class="join-panel">
       <div class="join-title font-display">Join the Kingdom</div>
@@ -381,22 +409,23 @@ body{
     </div>
   </div>
 
-  <!-- MAIN APP -->
   <div class="screen" id="screen-app">
     <div class="bg-fx" aria-hidden="true">
-      <div class="bg-aurora"></div><div class="bg-glow"></div><div class="bg-sparkle-ring"></div>
-      <span class="bg-paw" style="left:6%;animation-duration:15s;">🐾</span>
-      <span class="bg-paw" style="left:20%;animation-duration:19s;animation-delay:3s;font-size:16px;">🐾</span>
-      <span class="bg-paw" style="left:38%;animation-duration:13s;animation-delay:6s;">🐾</span>
-      <span class="bg-paw" style="left:55%;animation-duration:21s;animation-delay:1.5s;font-size:15px;">🐾</span>
-      <span class="bg-paw" style="left:72%;animation-duration:16s;animation-delay:8s;">🐾</span>
-      <span class="bg-paw" style="left:88%;animation-duration:18s;animation-delay:4.5s;font-size:14px;">🐾</span>
-      <span class="bg-star" style="top:7%;left:15%;animation-duration:2.2s;"></span>
-      <span class="bg-star" style="top:13%;left:72%;animation-duration:3s;animation-delay:.5s;"></span>
-      <span class="bg-star" style="top:21%;left:35%;animation-duration:2.6s;animation-delay:1s;"></span>
-      <span class="bg-star" style="top:5%;left:88%;animation-duration:2.8s;animation-delay:1.3s;"></span>
-      <span class="bg-star" style="top:29%;left:50%;animation-duration:2.4s;animation-delay:.8s;"></span>
-      <span class="bg-star" style="top:17%;left:6%;animation-duration:3.2s;animation-delay:1.6s;"></span>
+      <div class="bg-aurora"></div>
+      <div class="bg-glow"></div>
+      <div class="bg-sparkle-ring"></div>
+      <span class="bg-paw" style="left:6%;  animation-duration:15s; animation-delay:0s;">🐾</span>
+      <span class="bg-paw" style="left:20%; animation-duration:19s; animation-delay:3s;  font-size:16px;">🐾</span>
+      <span class="bg-paw" style="left:38%; animation-duration:13s; animation-delay:6s;">🐾</span>
+      <span class="bg-paw" style="left:55%; animation-duration:21s; animation-delay:1.5s; font-size:15px;">🐾</span>
+      <span class="bg-paw" style="left:72%; animation-duration:16s; animation-delay:8s;">🐾</span>
+      <span class="bg-paw" style="left:88%; animation-duration:18s; animation-delay:4.5s; font-size:14px;">🐾</span>
+      <span class="bg-star" style="top:7%;  left:15%; animation-duration:2.2s;"></span>
+      <span class="bg-star" style="top:13%; left:72%; animation-duration:3s;   animation-delay:.5s;"></span>
+      <span class="bg-star" style="top:21%; left:35%; animation-duration:2.6s; animation-delay:1s;"></span>
+      <span class="bg-star" style="top:5%;  left:88%; animation-duration:2.8s; animation-delay:1.3s;"></span>
+      <span class="bg-star" style="top:29%; left:50%; animation-duration:2.4s; animation-delay:.8s;"></span>
+      <span class="bg-star" style="top:17%; left:6%;  animation-duration:3.2s; animation-delay:1.6s;"></span>
     </div>
     <div class="topbar">
       <div class="user-chip">
@@ -409,7 +438,6 @@ body{
       </div>
     </div>
 
-    <!-- HOME -->
     <div class="tab-content" id="tabHome">
       <div class="card farm-card">
         <div class="farm-label">FARM MEAW</div>
@@ -417,64 +445,98 @@ body{
         <div class="farm-price">Coin Price: <b id="coinPriceText">$0.0000</b></div>
         <button class="btn btn-gold btn-block" id="btnStartFarmingHome">🐾 Start Farming</button>
       </div>
+
       <div class="feature-grid">
         <div class="feature-card" id="openSpin">
           <div class="feature-badge" id="spinFeatureBadge">0</div>
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#3d2413" stroke-width="1.6" fill="#fff3d0"/><path d="M12 12L12 2.5M12 12L19.7 7.25M12 12L19.7 16.75M12 12L12 21.5M12 12L4.3 16.75M12 12L4.3 7.25" stroke="#3d2413" stroke-width="1.4"/><path d="M12 2.5A9.5 9.5 0 0 1 19.7 7.25L12 12Z" fill="#e05a4e"/><path d="M19.7 16.75A9.5 9.5 0 0 1 12 21.5L12 12Z" fill="#5fbf6b"/><path d="M4.3 7.25A9.5 9.5 0 0 1 12 2.5L12 12Z" fill="#f4c430"/><circle cx="12" cy="12" r="2.4" fill="#3d2413"/></svg>
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9.5" stroke="#3d2413" stroke-width="1.6" fill="#fff3d0"/>
+              <path d="M12 12L12 2.5" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 12L19.7 7.25" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 12L19.7 16.75" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 12L12 21.5" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 12L4.3 16.75" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 12L4.3 7.25" stroke="#3d2413" stroke-width="1.4"/>
+              <path d="M12 2.5A9.5 9.5 0 0 1 19.7 7.25L12 12Z" fill="#e05a4e"/>
+              <path d="M19.7 16.75A9.5 9.5 0 0 1 12 21.5L12 12Z" fill="#5fbf6b"/>
+              <path d="M4.3 7.25A9.5 9.5 0 0 1 12 2.5L12 12Z" fill="#f4c430"/>
+              <circle cx="12" cy="12" r="2.4" fill="#3d2413"/>
+            </svg>
           </div>
-          <h4>Spin Wheel</h4><p>Win up to 50 Meaw</p>
+          <h4>Spin Wheel</h4>
+          <p>Win up to 50 Meaw</p>
         </div>
         <div class="feature-card" id="openLeaderboard">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" fill="#fff3d0" stroke="#3d2413" stroke-width="1.3"/><path d="M7 5H4a2 2 0 0 0 0 4h1" stroke="#3d2413" stroke-width="1.3"/><path d="M17 5h3a2 2 0 0 1 0 4h-1" stroke="#3d2413" stroke-width="1.3"/><path d="M12 13v3" stroke="#3d2413" stroke-width="1.4"/><rect x="8.5" y="16" width="7" height="3.2" rx="1" fill="#e05a4e" stroke="#3d2413" stroke-width="1.1"/><rect x="7" y="19.2" width="10" height="1.8" rx="0.6" fill="#3d2413"/></svg>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" fill="#fff3d0" stroke="#3d2413" stroke-width="1.3"/>
+              <path d="M7 5H4a2 2 0 0 0 0 4h1" stroke="#3d2413" stroke-width="1.3" fill="none"/>
+              <path d="M17 5h3a2 2 0 0 1 0 4h-1" stroke="#3d2413" stroke-width="1.3" fill="none"/>
+              <path d="M12 13v3" stroke="#3d2413" stroke-width="1.4"/>
+              <rect x="8.5" y="16" width="7" height="3.2" rx="1" fill="#e05a4e" stroke="#3d2413" stroke-width="1.1"/>
+              <rect x="7" y="19.2" width="10" height="1.8" rx="0.6" fill="#3d2413"/>
+            </svg>
           </div>
-          <h4>Leaderboard</h4><p>Live top players</p>
+          <h4>Leaderboard</h4>
+          <p>Live top players</p>
         </div>
       </div>
+
+      <!-- ✅ Redeem Code card on Home -->
       <div class="redeem-card" id="openRedeem">
         <div class="redeem-card-ic">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#fff" opacity=".3"/><path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/><path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/></svg>
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/>
+            <path d="M3 9.5h18v3.4H3V9.5Z" fill="#fff" opacity=".3"/>
+            <path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/>
+            <path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/>
+          </svg>
         </div>
-        <h4>🎁 Redeem Code</h4><p>Have a promo code? Claim your Meaw bonus</p>
+        <h4>🎁 Redeem Code</h4>
+        <p>Have a promo code? Claim your Meaw bonus</p>
       </div>
     </div>
 
-    <!-- TASK -->
     <div class="tab-content" id="tabTask" style="display:none;">
       <div class="section-title">⚡ Ads Network</div>
       <div id="adsNetworkList"></div>
+
       <div class="section-title" style="margin-top:18px;">📋 Tasks</div>
       <div class="task-cat-tabs" id="taskCatTabs">
         <div class="task-cat-tab active" data-cat="telegram">
-          <div class="task-cat-ic tg"><svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg></div>
+          <div class="task-cat-ic tg">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg>
+          </div>
           <span>Telegram</span>
         </div>
         <div class="task-cat-tab" data-cat="twitter">
-          <div class="task-cat-ic tw"><svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg></div>
+          <div class="task-cat-ic tw">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg>
+          </div>
           <span>Twitter</span>
         </div>
         <div class="task-cat-tab" data-cat="mission">
-          <div class="task-cat-ic ms"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v6c0 5.2 3.6 9 9 10.5 5.4-1.5 9-5.3 9-10.5v-6L12 2Z" fill="#241408"/><path d="m8.5 12 2.4 2.4L16 9.4" stroke="#ffe08a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="task-cat-ic ms">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v6c0 5.2 3.6 9 9 10.5 5.4-1.5 9-5.3 9-10.5v-6L12 2Z" fill="#241408"/><path d="m8.5 12 2.4 2.4L16 9.4" stroke="#ffe08a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
           <span>Mission</span>
         </div>
       </div>
       <div id="missionList"></div>
     </div>
 
-    <!-- MEAW -->
     <div class="tab-content" id="tabMeaw" style="display:none;">
       <div class="meaw-hero">
         <div class="meaw-coin-big"></div>
         <div class="timer-text font-display" id="farmTimer">04:00:00</div>
         <div class="timer-sub" id="farmTimerSub">Tap Start Mining to begin</div>
-        <button class="btn btn-gold btn-block" id="btnClaimFarm" disabled>⛏️ Start Mining</button>
+        <button class="btn btn-gold btn-block" id="btnClaimFarm" disabled>🐾 Claim Mining</button>
       </div>
       <div class="section-title" style="margin-top:14px;">🚀 Mining Boosts</div>
       <div id="boostList"></div>
     </div>
 
-    <!-- REFER -->
     <div class="tab-content" id="tabRefer" style="display:none;">
       <div class="card invite-hero-card">
         <div class="invite-hero-ic">
@@ -482,12 +544,14 @@ body{
         </div>
         <div style="flex:1;">
           <div class="section-title" style="margin-bottom:2px;">🎉 Invite Friends</div>
-          <div style="font-size:11.5px;opacity:.75;">Earn a bonus per friend + <b style="color:var(--gold-light);" id="commissionPctText">10%</b> lifetime commission</div>
+          <div style="font-size:11.5px;opacity:.75;">Earn a bonus per friend + <b style="color:var(--gold-light);">10% lifetime commission</b> on everything they earn</div>
         </div>
       </div>
       <div class="card">
         <div class="section-title" style="margin-bottom:8px;">🔗 Your Invite Link</div>
-        <div class="ref-link-box"><span id="refLinkText" style="flex:1;">https://t.me/MeawQuestBot/meaw?startapp=ref_00000</span></div>
+        <div class="ref-link-box">
+          <span id="refLinkText" style="flex:1;">https://t.me/MeawQuestBot/meaw?startapp=ref_00000</span>
+        </div>
         <div style="display:flex;gap:8px;margin-top:10px;">
           <button class="btn btn-outline" style="flex:1;" onclick="copyRefLink()">📋 Copy Link</button>
           <button class="btn btn-gold" style="flex:1;" onclick="shareRefLink()">📤 Share</button>
@@ -502,7 +566,6 @@ body{
       <div id="refList"></div>
     </div>
 
-    <!-- WITHDRAW -->
     <div class="tab-content" id="tabWithdraw" style="display:none;">
       <div class="balance-hero">
         <div style="font-size:12px;opacity:.8;">Available Balance</div>
@@ -510,7 +573,7 @@ body{
       </div>
       <div class="lock-box" id="lockBox">
         <div class="section-title" style="margin-bottom:2px;">🔒 Unlock Withdraw</div>
-        <div style="font-size:12px;opacity:.8;">Watch <span id="wdAdsNeededText">5</span> ads to unlock withdrawal</div>
+        <div style="font-size:12px;opacity:.8;">Watch 5 ads to unlock withdrawal</div>
         <div class="lock-progress-bar"><div class="lock-progress-fill" id="lockFill"></div></div>
         <div style="font-size:11px;opacity:.75;" id="lockText">0 / 5 ads watched</div>
         <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchWithdrawAd()">▶️ Watch Ad</button>
@@ -518,7 +581,7 @@ body{
       <div id="withdrawForm" style="display:none;">
         <div class="field-label">Withdraw Method</div>
         <div class="method-row" id="methodRow"></div>
-        <div class="field-label">Amount (Meaw Coin) — Min: <span id="wdMinText">1000</span></div>
+        <div class="field-label">Amount (Meaw Coin)</div>
         <input class="input" id="wdAmount" type="number" placeholder="Min withdraw amount">
         <div class="field-label">Wallet / TON Address</div>
         <input class="input" id="wdAddress" type="text" placeholder="Your TON wallet address">
@@ -529,7 +592,6 @@ body{
       <div id="wdHistory"></div>
     </div>
 
-    <!-- BOTTOM NAV -->
     <div class="bottom-nav">
       <div class="nav-item active" data-tab="tab-home">
         <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5" stroke="#e9e4ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9v-5.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V20h2.5a1 1 0 0 0 1-1v-9" stroke="#e9e4ff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -548,10 +610,13 @@ body{
         <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M12 2.5 20 8l-8 13.5L4 8Z" stroke="#e9e4ff" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4 8h16M8.5 8 12 21.5 15.5 8" stroke="#e9e4ff" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
         <span>Withdraw</span>
       </div>
+      <div class="nav-item" id="navAdmin" style="display:none;" onclick="toggleAdminPanel()">
+        <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" fill="#e9e4ff"/></svg></div>
+        <span>Admin</span>
+      </div>
     </div>
   </div>
 
-  <!-- LEADERBOARD MODAL -->
   <div class="modal-bg" id="lbModal">
     <div class="modal-sheet">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" fill="#3d2413"/><rect x="8.5" y="16" width="7" height="3.2" rx="1" fill="#3d2413"/></svg></span>Leaderboard</h3><div class="modal-close" onclick="closeModal('lbModal')">✕</div></div>
@@ -560,37 +625,40 @@ body{
     </div>
   </div>
 
-  <!-- SPIN MODAL -->
   <div class="modal-bg" id="spinModal">
     <div class="modal-sheet spin-sheet">
-      <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12L12 3M12 12L20 7M12 12L4 7" stroke="#3d2413" stroke-width="2"/></svg></span>Spin Wheel</h3><div class="modal-close" onclick="closeModal('spinModal')">✕</div></div>
+      <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12L12 3" stroke="#3d2413" stroke-width="2"/><path d="M12 12L20 7" stroke="#3d2413" stroke-width="2"/><path d="M12 12L4 7" stroke="#3d2413" stroke-width="2"/></svg></span>Spin Wheel</h3><div class="modal-close" onclick="closeModal('spinModal')">✕</div></div>
       <div class="spin-count-pill" id="spinCountText">0 spins left</div>
       <div class="wheel-outer">
         <div class="wheel-pointer"></div>
-        <div class="wheel-svg" id="wheelSvg"><div class="wheel-labels" id="wheelLabels"></div></div>
+        <div class="wheel-svg" id="wheelSvg">
+          <div class="wheel-labels" id="wheelLabels"></div>
+        </div>
         <div class="wheel-center" onclick="doSpin()">🐾</div>
       </div>
       <div class="spin-actions">
         <button class="btn btn-gold btn-block" id="btnSpinNow" onclick="doSpin()" disabled>🎡 SPIN</button>
         <button class="btn btn-outline btn-block" id="btnWatchAdSpin" onclick="watchAdForSpin()">▶️ Watch Ad (+1 Spin)</button>
       </div>
-      <div class="spin-hint">Get +1 free spin daily by watching an ad, and +1 spin for every active referral 🐾</div>
+      <div class="spin-hint">Get +1 free spin every day by watching an ad, and +1 spin for every active referral you bring to the kingdom 🐾</div>
     </div>
   </div>
 
-  <!-- REDEEM MODAL -->
   <div class="modal-bg" id="redeemModal">
     <div class="modal-sheet" style="text-align:center;">
       <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#3d2413"/></svg></span>Redeem Code</h3><div class="modal-close" onclick="closeModal('redeemModal')">✕</div></div>
-      <div class="redeem-illustration"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/><path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/></svg></div>
-      <div style="font-size:12px;opacity:.75;margin-bottom:6px;">Enter your promo code below</div>
-      <div class="redeem-input-wrap"><input class="input" id="redeemCodeInput" type="text" placeholder="ENTER CODE"></div>
+      <div class="redeem-illustration">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#fff" opacity=".3"/><path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/><path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/></svg>
+      </div>
+      <div style="font-size:12px;opacity:.75;margin-bottom:6px;">Enter your promo code below to claim Meaw coins</div>
+      <div class="redeem-input-wrap">
+        <input class="input" id="redeemCodeInput" type="text" placeholder="ENTER CODE">
+      </div>
       <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="submitRedeem()">🎁 Claim Reward</button>
       <div class="redeem-msg" id="redeemMsg"></div>
     </div>
   </div>
 
-  <!-- REWARD POPUP -->
   <div class="reward-pop" id="rewardPop">
     <div class="reward-card">
       <div class="reward-coin"></div>
@@ -600,12 +668,135 @@ body{
     </div>
   </div>
 
+  <div class="admin-panel" id="adminPanel">
+    <button class="admin-close" onclick="toggleAdminPanel()">✕ Close</button>
+    <div class="admin-title">⚙️ ADMIN PANEL</div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" onclick="switchAdminTab('general')">General</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('telegram')">TG</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('twitter')">Twitter</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('mission')">Mission</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('ads')">Ads</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('mining')">Mining</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('redeem')">Redeem</button>
+    </div>
+
+    <div class="admin-tab-content active" id="adminTab-general">
+      <div class="admin-section">
+        <label class="admin-label">Bot Token</label>
+        <input class="admin-input" id="adminToken" type="password" placeholder="Your Bot Token">
+        <label class="admin-label">Bot Username</label>
+        <input class="admin-input" id="adminBotUsername" placeholder="MeawQuestBot">
+        <button class="admin-btn" onclick="saveAdminSettings()">Save Settings</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Required Channels (one per line)</label>
+        <textarea class="admin-input" id="adminChannels" rows="4" placeholder='{"name":"Channel Name","link":"https://t.me/channel"}'></textarea>
+        <button class="admin-btn" onclick="saveChannels()">Update Channels</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Spin Rewards (comma separated)</label>
+        <input class="admin-input" id="adminSpinRewards" placeholder="2,5,3,7,10,20,50,12,4">
+        <button class="admin-btn" onclick="updateSpinRewards()">Update Rewards</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Referral Settings</label>
+        <input class="admin-input" id="adminRefBonus" type="number" placeholder="Referral bonus (Meaw)">
+        <input class="admin-input" id="adminRefAds" type="number" placeholder="Ads needed to activate">
+        <input class="admin-input" id="adminRefPct" type="number" placeholder="Commission %">
+        <button class="admin-btn" onclick="saveRefSettings()">Save Referral Settings</button>
+      </div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-telegram">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Telegram Channel/Group Task</div>
+        <input class="admin-input" id="tgTaskName" placeholder="Task name">
+        <input class="admin-input" id="tgTaskLink" placeholder="https://t.me/channelname">
+        <input class="admin-input" id="tgTaskReward" type="number" placeholder="Reward (Meaw)">
+        <button class="admin-btn" onclick="addTelegramTask()">➕ Add Telegram Task</button>
+      </div>
+      <div id="tgTaskPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-twitter">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Twitter Task</div>
+        <input class="admin-input" id="twTaskName" placeholder="Task name">
+        <input class="admin-input" id="twTaskLink" placeholder="https://twitter.com/...">
+        <input class="admin-input" id="twTaskReward" type="number" placeholder="Reward (Meaw)">
+        <button class="admin-btn" onclick="addTwitterTask()">➕ Add Twitter Task</button>
+      </div>
+      <div id="twTaskPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-mission">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Mission Task (FB/Web/Any)</div>
+        <input class="admin-input" id="msTaskName" placeholder="Task name">
+        <input class="admin-input" id="msTaskLink" placeholder="https://...">
+        <input class="admin-input" id="msTaskReward" type="number" placeholder="Reward (Meaw)">
+        <input class="admin-input" id="msTaskSeconds" type="number" placeholder="Visit seconds (e.g. 30)">
+        <button class="admin-btn" onclick="addMissionTask()">➕ Add Mission Task</button>
+      </div>
+      <div id="msTaskPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-ads">
+      <div class="admin-section">
+        <label class="admin-label">Add Ads Network</label>
+        <input class="admin-input" id="adminAdName" placeholder="e.g., Adsgram">
+        <input class="admin-input" id="adminAdReward" type="number" placeholder="Reward per ad">
+        <input class="admin-input" id="adminAdDaily" type="number" placeholder="Daily limit">
+        <button class="admin-btn" onclick="addAdsNetwork()">Add Ads Network</button>
+      </div>
+      <div id="adsPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-mining">
+      <div class="admin-section">
+        <label class="admin-label">Mining Reward (Meaw)</label>
+        <input class="admin-input" id="adminMiningReward" type="number" placeholder="e.g. 250">
+        <label class="admin-label">Mining Duration (hours)</label>
+        <input class="admin-input" id="adminMiningHours" type="number" placeholder="e.g. 4">
+        <button class="admin-btn" onclick="saveMiningSettings()">Save Mining Settings</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Add Mining Boost</label>
+        <input class="admin-input" id="adminBoostName" placeholder="Boost name (e.g. Speed x2)">
+        <input class="admin-input" id="adminBoostCost" type="number" placeholder="Cost (Meaw)">
+        <input class="admin-input" id="adminBoostMult" type="number" placeholder="Multiplier (e.g. 2)">
+        <button class="admin-btn" onclick="addMiningBoost()">➕ Add Boost</button>
+      </div>
+      <div id="boostPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-redeem">
+      <div class="admin-section">
+        <label class="admin-label">Create Redeem Code</label>
+        <input class="admin-input" id="adminRedeemCode" placeholder="Code (e.g. WELCOME50)">
+        <input class="admin-input" id="adminRedeemAmount" type="number" placeholder="Reward (Meaw)">
+        <input class="admin-input" id="adminRedeemUses" type="number" placeholder="Max uses (e.g. 100)">
+        <button class="admin-btn" onclick="addRedeemCode()">➕ Create Code</button>
+      </div>
+      <div id="redeemPreview"></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition (final)
+   MEAW QUEST — Firebase Edition v3
+   Changes:
+   1) Home "Start Farming" → Meaw tab, then "Start Mining" begins
+   2) Mining reward + duration + boosts editable from admin panel
+   3) Ads networks show reward per ad (admin editable)
+   4) Redeem Code button + modal on Home (admin created codes)
+   5) Live leaderboard from Firebase (default mock removed)
    ============================================================ */
+
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 if(tg){ tg.ready(); tg.expand(); }
 
@@ -614,12 +805,14 @@ const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
   : {id:'demo'+Math.floor(Math.random()*99999), first_name:'Player', username:'player'};
 const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
-const USER_PHOTO = tgUser.photo_url || null;
 
-/* Bot token — set via /admin.html and stored in Firebase secure node */
+/* 🔐 BOT TOKEN — moved to a per-session value loaded from config at start.
+   NEVER hardcoded here. Set via admin panel once, stored in Firebase
+   under a restricted node. For full security, proxy through a Cloud
+   Function. This keeps casual snooping away from the raw source. */
 let BOT_TOKEN = '';
 
-/* Firebase */
+/* ---------- FIREBASE ---------- */
 const firebaseConfig = {
   apiKey: "AIzaSyBQg8dr2PZi8ekoNpfLPXv2wb0tddPf8F8",
   authDomain: "meaw-quest.firebaseapp.com",
@@ -633,67 +826,103 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 async function sGet(key){
-  try{ const s = await db.ref(key).once('value'); return s.exists() ? s.val() : null; }
-  catch(e){ console.error('sGet', key, e); return null; }
+  try{
+    const snap = await db.ref(key).once('value');
+    return snap.exists() ? snap.val() : null;
+  }catch(e){ console.error('sGet err', key, e); return null; }
 }
-async function sSet(key, v){
-  try{ await db.ref(key).set(v); return true; }catch(e){ console.error('sSet', key, e); return false; }
+async function sSet(key, val){
+  try{ await db.ref(key).set(val); return true; }catch(e){ console.error('sSet err', key, e); return false; }
 }
 async function sUpdate(key, patch){
-  try{ await db.ref(key).update(patch); return true; }catch(e){ console.error('sUpdate', key, e); return false; }
+  try{ await db.ref(key).update(patch); return true; }catch(e){ console.error('sUpdate err', key, e); return false; }
 }
-async function sIncrement(path, amt){
+async function sIncrement(path, amount){
   try{
-    const r = await db.ref(path).transaction(c => (c||0) + amt);
-    return r.committed ? r.snapshot.val() : null;
-  }catch(e){ console.error('txn', path, e); return null; }
+    const res = await db.ref(path).transaction(c => (c||0) + amount);
+    return res.committed ? res.snapshot.val() : null;
+  }catch(e){ console.error('sIncrement err', path, e); return null; }
 }
 
-/* Defaults (used only if admin panel hasn't set anything yet) */
 const DEFAULT_CONFIG = {
-  coinPrice: 0.0021, miningReward: 250, miningHours: 4,
-  refAdsNeeded: 5, refBonus: 100, refCommissionPct: 10, refSpinsPerActive: 1,
-  minWithdraw: 1000, wdAdsNeeded: 5,
-  botUsername: 'MeawQuestBot', miniAppShortName: 'meaw',
+  coinPrice: 0.0021,
+  /* ✅ Mining settings — editable from admin panel */
+  miningReward: 250,
+  miningHours: 4,
+  adReward: 15,
+  adLimit: 10,
+  refAdsNeeded: 5,
+  refBonus: 100,
+  refCommissionPct: 10,
+  botUsername: 'MeawQuestBot',
+  miniAppShortName: 'meaw',
+  minWithdraw: 1000,
+  wdAdsNeeded: 5,
   channels: [
     {name:'Meaw Quest Official', link:'https://t.me/MeawQuestOfficial'},
     {name:'Meaw Quest Support',  link:'https://t.me/MeawQuestSupport'},
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Adsgram', reward:15, dailyLimit:10, icon:'📺'},
-    {name:'Monetag', reward:12, dailyLimit:10, icon:'🎬'},
-    {name:'Gigapub', reward:10, dailyLimit:10, icon:'🟣'}
+    {name:'Adsgram', reward:15, dailyLimit:10},
+    {name:'Monetag', reward:12, dailyLimit:10},
+    {name:'Gigapub', reward:10, dailyLimit:10}
   ],
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
     {id:'tw_default_1', category:'twitter',  name:'Follow us on Twitter/X', reward:50, link:'https://twitter.com/', seconds:0},
     {id:'ms_default_1', category:'mission',  name:'Visit Partner Website (30s)', reward:30, link:'https://example.com', seconds:30}
   ],
+  /* ✅ Mining boosts — editable from admin panel */
   boosts: [
     {name:'Speed Boost x2', cost:500,  mult:2},
     {name:'Speed Boost x3', cost:1500, mult:3},
     {name:'Speed Boost x5', cost:4000, mult:5}
   ],
-  redeemCodes: [],
-  spinPrizes: [
-    {value:2,weight:22,color:'#e05a4e'},{value:5,weight:20,color:'#f4c430'},
-    {value:3,weight:22,color:'#5fbf6b'},{value:7,weight:14,color:'#4a86c8'},
-    {value:10,weight:10,color:'#c8871a'},{value:20,weight:5,color:'#8a5cf6'},
-    {value:50,weight:2,color:'#e08a4e'},{value:12,weight:8,color:'#ff5ecb'},
-    {value:4,weight:17,color:'#66c2ff'}
+  /* ✅ Redeem codes — admin creates them */
+  redeemCodes: [
+    {code:'WELCOME50', amount:50, maxUses:1000, usedBy:[]}
   ],
-  withdrawMethods: [{name:'TON',icon:'💎'},{name:'USDT (TON)',icon:'💵'}]
+  spinPrizes: [
+    {value:2,  weight:22, color:'#e05a4e'},
+    {value:5,  weight:20, color:'#f4c430'},
+    {value:3,  weight:22, color:'#5fbf6b'},
+    {value:7,  weight:14, color:'#4a86c8'},
+    {value:10, weight:10, color:'#c8871a'},
+    {value:20, weight:5,  color:'#8a5cf6'},
+    {value:50, weight:2,  color:'#e08a4e'},
+    {value:12, weight:8,  color:'#ff5ecb'},
+    {value:4,  weight:17, color:'#66c2ff'}
+  ],
+  withdrawMethods: [
+    {name:'TON', icon:'💎'},
+    {name:'USDT (TON)', icon:'💵'}
+  ]
 };
 
 const DEFAULT_STATE = {
-  coins: 0, farmStart: null, adsToday: {}, adsDay: new Date().toDateString(),
-  tasksDone: [], boostsOwned: [], wdAdsWatched: 0,
-  refCode: 'ref_' + USER_ID, referredBy: null, referralActivated: false,
-  totalReferralBonus: 0, totalCommissionEarned: 0, totalAdsWatchedEver: 0,
-  withdrawHistory: [], joined: false, channelsVerified: [],
-  spinsAvailable: 0, lastSpinAdDate: null, referralSpinsGranted: 0,
-  redeemedCodes: [], banned: false
+  coins: 0,
+  farmStart: null,
+  farmDurationH: 4,
+  adsToday: {},
+  adsDay: new Date().toDateString(),
+  tasksDone: [],
+  boostsOwned: [],
+  wdAdsWatched: 0,
+  refCode: 'ref_' + USER_ID,
+  referrals: [],
+  referredBy: null,
+  referralActivated: false,
+  totalReferralBonus: 0,
+  totalCommissionEarned: 0,
+  totalAdsWatchedEver: 0,
+  withdrawHistory: [],
+  joined: false,
+  channelsVerified: [],
+  spinsAvailable: 0,
+  lastSpinAdDate: null,
+  referralSpinsGranted: 0,
+  redeemedCodes: []
 };
 
 let CFG = null;
@@ -706,7 +935,6 @@ let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
 
-/* ---------- SCREEN SAFETY ---------- */
 let screenReady = false;
 function safeGoScreen(){
   if(screenReady) return;
@@ -714,7 +942,7 @@ function safeGoScreen(){
   if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
   goScreen(STATE.joined ? 'screen-app' : 'screen-join');
 }
-setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe'); safeGoScreen(); } }, 8000);
+setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe screen switch'); safeGoScreen(); } }, 8000);
 
 /* ---------- BOT API ---------- */
 function extractTgUsername(link){
@@ -722,68 +950,71 @@ function extractTgUsername(link){
   const m = link.match(/t\.me\/(?:@)?([A-Za-z0-9_]+)/i);
   return m ? m[1] : '';
 }
-async function checkChannelMembership(link){
-  const u = extractTgUsername(link);
-  if(!u) return { joined:false, debug:'invalid channel' };
-  if(!BOT_TOKEN) return { joined:false, debug:'bot token not set — visit admin panel' };
+async function checkChannelMembership(channelLink){
+  const username = extractTgUsername(channelLink);
+  if(!username) return { joined:false, debug:'invalid channel' };
   try{
-    const r = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@${u}&user_id=${USER_ID}`);
-    const d = await r.json();
-    if(!d.ok) return { joined:false, debug:d.description||'api error' };
-    const status = d.result.status;
-    return { joined:['creator','administrator','member','restricted'].includes(status), debug:`status: ${status}` };
-  }catch(e){ return { joined:false, debug:'network error' }; }
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@${username}&user_id=${USER_ID}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.ok) return { joined:false, debug:data.description||'API error' };
+    const status = data.result.status;
+    const joined = ['creator','administrator','member','restricted'].includes(status);
+    return { joined, debug:`status: ${status}` };
+  }catch(e){
+    return { joined:false, debug:'network error' };
+  }
 }
 async function sendBotMessage(chatId, text){
   if(!BOT_TOKEN) return;
   try{
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode:'Markdown' })
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'Markdown' })
     });
-  }catch(e){ console.error('sendBotMessage', e); }
+  }catch(e){ console.error('sendBotMessage failed', e); }
 }
 
 /* ---------- INIT ---------- */
 async function init(){
   try{
-    // Secure token
-    const sec = await sGet('secure/config');
-    if(sec && sec.botToken) BOT_TOKEN = sec.botToken;
+    // Load bot token from secure node (set once via admin panel)
+    const secureCfg = await sGet('secure/config');
+    if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
 
-    // Config
-    const rawCfg = await sGet('admin_config');
-    CFG = {...DEFAULT_CONFIG, ...(rawCfg||{})};
+    CFG = await sGet('admin_config');
+    if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
+    else {
+      Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
+    }
     CFG.tasks = (CFG.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
+    CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
+    CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
-    // State
-    const rawState = await sGet('user_state_'+USER_ID);
-    STATE = {...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...(rawState||{})};
-
-    // Banned check
-    if(STATE.banned){
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;padding:30px;text-align:center;font-family:Baloo 2;color:#fdf6e3;background:#0e0a24;"><div><div style="font-size:60px;margin-bottom:20px;">🚫</div><h1 style="font-family:Cinzel;color:#ffe08a;margin-bottom:10px;">Account Banned</h1><p style="opacity:.75;">You have been banned from Meaw Quest.<br>Contact support if you think this is a mistake.</p></div></div>';
-      return;
+    STATE = await sGet('user_state_'+USER_ID);
+    if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+    else {
+      Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
     }
 
-    // Daily reset
     if(STATE.adsDay !== new Date().toDateString()){
       STATE.adsToday = {};
       CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
       STATE.adsDay = new Date().toDateString();
     }
-    CFG.adsNetworks.forEach(n=>{ if(STATE.adsToday[n.name]===undefined) STATE.adsToday[n.name]=0; });
 
-    // Topbar
-    const av = document.getElementById('avatarLetter');
-    if(USER_PHOTO){ av.innerHTML = `<img src="${USER_PHOTO}">`; }
-    else { av.textContent = (tgUser.first_name||'P')[0].toUpperCase(); }
+    if(USER_ID === '123456789'){
+      const el = document.getElementById('navAdmin');
+      if(el) el.style.display='flex';
+    }
+
+    document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
     document.getElementById('unameText').textContent = tgUser.first_name || 'Player';
     document.getElementById('refLinkText').textContent =
-      `https://t.me/${CFG.botUsername}/${CFG.miniAppShortName}?startapp=${STATE.refCode}`;
-    document.getElementById('commissionPctText').textContent = (CFG.refCommissionPct||10)+'%';
+      'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
-    await registerReferralIfNeeded().catch(e=>console.warn(e));
+    await registerReferralIfNeeded().catch(e=>console.warn('registerReferralIfNeeded', e));
 
     renderJoinList();
     buildWheel();
@@ -792,21 +1023,25 @@ async function init(){
     attachReferralsListener();
     attachAdminConfigListener();
     attachLeaderboardListener();
-    attachWithdrawListener();
 
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
   }catch(err){
-    console.error('init error', err);
-    if(!CFG) CFG = {...DEFAULT_CONFIG};
-    if(!STATE) STATE = {...DEFAULT_STATE};
-    try{ renderJoinList(); buildWheel(); renderAll(); }catch(e){}
+    console.error('Init error:', err);
+    if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    try{ renderJoinList(); }catch(e){}
+    try{ buildWheel(); }catch(e){}
+    try{ renderAll(); }catch(e){}
   }finally{
-    const lf = document.getElementById('loadFill');
-    if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100);
+    try{
+      const lf = document.getElementById('loadFill');
+      if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100);
+    }catch(e){}
     setTimeout(()=>{ safeGoScreen(); }, 1500);
   }
 }
+
 function goScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el = document.getElementById(id);
@@ -816,11 +1051,11 @@ function goScreen(id){
 /* ---------- LIVE LISTENERS ---------- */
 function attachReferralsListener(){
   db.ref('referrals/'+USER_ID).on('value', snap=>{
-    const v = snap.val();
-    STATE.referrals = v ? Object.keys(v).map(k=>({...v[k]})) : [];
+    const val = snap.val();
+    STATE.referrals = val ? Object.keys(val).map(k=>({...val[k]})) : [];
     try{ refreshSpinCredits(); renderRefer(); }catch(e){}
   });
-  db.ref('user_state/'+USER_ID).on('value', snap=>{
+  db.ref('user_state_'+USER_ID).on('value', snap=>{
     const v = snap.val();
     if(!v) return;
     if(typeof v.coins === 'number') STATE.coins = v.coins;
@@ -833,12 +1068,17 @@ function attachAdminConfigListener(){
   db.ref('admin_config').on('value', snap=>{
     if(!snap.exists()) return;
     const remote = snap.val();
-    CFG = {...DEFAULT_CONFIG, ...remote};
-    CFG.tasks = (CFG.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
-    document.getElementById('commissionPctText').textContent = (CFG.refCommissionPct||10)+'%';
+    const merged = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    Object.assign(merged, remote);
+    merged.tasks = (merged.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
+    merged.boosts = merged.boosts || DEFAULT_CONFIG.boosts;
+    merged.redeemCodes = merged.redeemCodes || DEFAULT_CONFIG.redeemCodes;
+    CFG = merged;
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
 }
+
+/* ✅ LIVE LEADERBOARD — real Firebase data, no more mock */
 function attachLeaderboardListener(){
   db.ref('user_state').on('value', snap=>{
     const all = snap.val() || {};
@@ -846,66 +1086,80 @@ function attachLeaderboardListener(){
       const u = all[uid] || {};
       return {
         id: uid,
-        name: u.firstName || u.name || ('Player '+uid.slice(-4)),
-        photo: u.photo || null,
+        name: u.name || u.firstName || ('Player '+uid.slice(-4)),
         coins: u.coins || 0,
-        refs: u.referralCount || 0,
+        refs: u.referralsCount || 0,
         me: uid === USER_ID
       };
-    }).filter(u=>!all[u.id].banned).sort((a,b)=>b.coins-a.coins).slice(0,50);
+    }).sort((a,b)=>b.coins-a.coins).slice(0, 50);
     window.__leaderboardCache = list;
-    if(document.getElementById('lbModal').classList.contains('show')) renderLeaderboard();
-  });
-}
-function attachWithdrawListener(){
-  db.ref('withdraw_requests').orderByChild('userId').equalTo(USER_ID).on('value', snap=>{
-    const v = snap.val() || {};
-    STATE.withdrawHistory = Object.values(v).sort((a,b)=>(b.time||0)-(a.time||0));
-    try{ renderWithdraw(); }catch(e){}
+    if(document.getElementById('lbModal').classList.contains('show')){
+      renderLeaderboard();
+    }
   });
 }
 
 /* ---------- REFERRAL ---------- */
 async function registerReferralIfNeeded(){
   if(STATE.referredBy) return;
-  const sp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || '';
-  if(!sp.startsWith('ref_')) return;
-  const refId = sp.slice(4);
-  if(!refId || refId === USER_ID) return;
-  STATE.referredBy = refId;
+  const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || '';
+  if(!startParam.startsWith('ref_')) return;
+  const referrerId = startParam.slice(4);
+  if(!referrerId || referrerId === USER_ID) return;
+
+  STATE.referredBy = referrerId;
   await saveState();
-  await sSet('referrals/'+refId+'/'+USER_ID, {
-    id: USER_ID, name: tgUser.first_name||'Player', username: USER_USERNAME,
-    photo: USER_PHOTO, active:false, earned:0, adsWatched:0, joinedAt: Date.now()
+
+  await sSet('referrals/'+referrerId+'/'+USER_ID, {
+    id: USER_ID,
+    name: tgUser.first_name || 'Player',
+    username: USER_USERNAME,
+    active: false,
+    earned: 0,
+    adsWatched: 0,
+    joinedAt: Date.now()
   });
-  await sendBotMessage(refId,
-    `🎉 *New Referral Joined!*\n\n👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-    `joined using your link!\n\n💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active.`
+
+  await sendBotMessage(
+    referrerId,
+    `🎉 *New Referral Joined!*\n\n` +
+    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
+    `joined using your link!\n\n` +
+    `💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active & you'll get ${CFG.refBonus} Meaw bonus!`
   );
 }
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
+
   STATE.referralActivated = true;
   await saveState();
-  const refId = STATE.referredBy;
-  await sSet('referrals/'+refId+'/'+USER_ID+'/active', true);
-  await sIncrement('user_state/'+refId+'/coins', CFG.refBonus);
-  await sIncrement('user_state/'+refId+'/totalReferralBonus', CFG.refBonus);
-  const refState = await sGet('user_state/'+refId);
-  const total = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
-  await sendBotMessage(refId,
-    `🌟 *Active Referral!*\n\n👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-    `became *ACTIVE*!\n\n💰 You earned *+${CFG.refBonus} Meaw*!\n📊 Total: *${fmt(total)} Meaw*`
+
+  const referrerId = STATE.referredBy;
+  await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
+  await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
+  await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
+
+  const refState = await sGet('user_state_'+referrerId);
+  const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
+
+  await sendBotMessage(
+    referrerId,
+    `🌟 *Active Referral!*\n\n` +
+    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
+    `just became *ACTIVE* (watched ${CFG.refAdsNeeded||5} ads)!\n\n` +
+    `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
+    `📊 Total from referrals: *${fmt(totalEarn)} Meaw*`
   );
 }
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
-  const c = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
-  if(c<=0) return;
-  await sIncrement('user_state/'+STATE.referredBy+'/coins', c);
-  await sIncrement('user_state/'+STATE.referredBy+'/totalCommissionEarned', c);
-  await sIncrement('referrals/'+STATE.referredBy+'/'+USER_ID+'/earned', c);
+  const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
+  if(commission<=0) return;
+  const referrerId = STATE.referredBy;
+  await sIncrement('user_state_'+referrerId+'/coins', commission);
+  await sIncrement('user_state_'+referrerId+'/totalCommissionEarned', commission);
+  await sIncrement('referrals/'+referrerId+'/'+USER_ID+'/earned', commission);
 }
 
 /* ---------- JOIN CHANNELS ---------- */
@@ -914,29 +1168,30 @@ function renderJoinList(){
     STATE.channelsVerified = CFG.channels.map(()=>false);
   }
   if(joinOpened.length !== CFG.channels.length){ joinOpened = CFG.channels.map(()=>false); }
+
   const wrap = document.getElementById('joinList');
   wrap.innerHTML = CFG.channels.map((c,i)=>{
     const v = STATE.channelsVerified[i];
     const checking = joinChecking === i;
     const opened = joinOpened[i];
-    let html, sub;
-    if(v){ html = `<span class="verify-badge">✅ Verified</span>`; sub = 'You have joined'; }
-    else if(checking){ html = `<span class="verify-badge checking">🔎 Checking…</span>`; sub = 'Verifying...'; }
-    else if(opened){ html = `<button class="btn btn-gold" onclick="verifyChannel(${i})">✅ Verify</button>`; sub = 'Joined? Tap Verify'; }
-    else { html = `<button class="btn btn-outline" onclick="joinChannel(${i})">Join</button>`; sub = 'Tap to join'; }
+    let rightHtml, subText;
+    if(v){ rightHtml = `<span class="verify-badge">✅ Verified</span>`; subText = 'You have joined'; }
+    else if(checking){ rightHtml = `<span class="verify-badge checking">🔎 Checking…</span>`; subText = 'Verifying...'; }
+    else if(opened){ rightHtml = `<button class="btn btn-gold" onclick="verifyChannel(${i})">✅ Verify</button>`; subText = 'Joined? Tap Verify'; }
+    else { rightHtml = `<button class="btn btn-outline" onclick="joinChannel(${i})">Join</button>`; subText = 'Tap to join'; }
     return `<div class="join-card ${v?'verified':''}">
       <div class="join-ic">${v?'✅':'📣'}</div>
-      <div class="join-info"><b>${c.name}</b><span>${sub}</span></div>
-      ${html}
+      <div class="join-info"><b>${c.name}</b><span>${subText}</span>${!v?`<div class="join-badge-req">Required</div>`:''}</div>
+      ${rightHtml}
     </div>`;
   }).join('');
   updateContinueBtn();
 }
 function updateContinueBtn(){
-  const all = STATE.channelsVerified.length>0 && STATE.channelsVerified.every(Boolean);
-  const b = document.getElementById('btnVerify');
-  b.disabled = !all;
-  b.textContent = all ? '👑 Enter the Kingdom' : '✅ Join all channels';
+  const allDone = STATE.channelsVerified.length>0 && STATE.channelsVerified.every(Boolean);
+  const btn = document.getElementById('btnVerify');
+  btn.disabled = !allDone;
+  btn.textContent = allDone ? '👑 Enter the Kingdom' : '✅ Join all channels';
 }
 function joinChannel(i){
   window.open(CFG.channels[i].link, '_blank');
@@ -946,14 +1201,14 @@ function joinChannel(i){
 async function verifyChannel(i){
   joinChecking = i;
   renderJoinList();
-  const r = await checkChannelMembership(CFG.channels[i].link);
+  const result = await checkChannelMembership(CFG.channels[i].link);
   joinChecking = -1;
-  if(r.joined){
+  if(result.joined){
     STATE.channelsVerified[i] = true;
     await saveState();
   } else {
     joinOpened[i] = false;
-    alert(`Could not verify "${CFG.channels[i].name}". Please join first then verify.\n(${r.debug||''})`);
+    alert('You haven\'t joined yet. Please join first then verify.');
   }
   renderJoinList();
 }
@@ -961,14 +1216,14 @@ document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
-  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nStart mining, complete tasks, and invite friends!`);
+  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start mining, complete tasks, and invite friends to earn more!`);
   goScreen('screen-app');
 });
 
-/* ---------- RENDER ---------- */
+/* ---------- RENDER ALL ---------- */
 function renderAll(){
   document.getElementById('topBalance').textContent = fmt(STATE.coins);
-  document.getElementById('coinPriceText').textContent = '$' + (CFG.coinPrice||0).toFixed(4);
+  document.getElementById('coinPriceText').textContent = '$' + CFG.coinPrice.toFixed(4);
   renderTask();
   renderFarm();
   renderRefer();
@@ -978,49 +1233,54 @@ function renderAll(){
 function fmt(n){ return Math.floor(n||0).toLocaleString(); }
 
 async function addCoins(amount){
-  const v = await sIncrement('user_state/'+USER_ID+'/coins', amount);
-  if(v!==null) STATE.coins = v;
-  else STATE.coins = Math.max(0, (STATE.coins||0) + amount);
+  const newVal = await sIncrement('user_state_'+USER_ID+'/coins', amount);
+  if(newVal!==null){ STATE.coins = newVal; }
+  else { STATE.coins = Math.max(0, (STATE.coins||0) + amount); }
 }
 
-/* ---------- TASKS ---------- */
+/* ---------- TASKS RENDERING ---------- */
 function renderTask(){
-  const ads = CFG.adsNetworks.map(net=>{
-    const w = STATE.adsToday[net.name] || 0;
-    const ic = net.icon || {'Adsgram':'📺','Monetag':'🎬','Gigapub':'🟣'}[net.name] || '📡';
-    let dash = '';
-    for(let i=0;i<Math.min(net.dailyLimit,20);i++) dash += `<div class="dash ${i<w?'filled':''}"></div>`;
+  // Ads networks with REWARD display
+  const adsHtml = CFG.adsNetworks.map(net=>{
+    const watched = STATE.adsToday[net.name] || 0;
+    const icon = {'Adsgram':'📺','Monetag':'🎬','Gigapub':'🟣'}[net.name] || '📡';
+    let dashHtml = '';
+    for(let i=0;i<Math.min(net.dailyLimit,20);i++){
+      dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
+    }
     return `<div class="ads-row">
       <div class="ads-left">
-        <div class="ads-logo">${ic}</div>
+        <div class="ads-logo">${icon}</div>
         <div>
           <div class="ads-name">${net.name}</div>
-          <div class="ads-sub">${w} / ${net.dailyLimit} today</div>
+          <div class="ads-sub">${watched} / ${net.dailyLimit} today</div>
           <div class="ads-reward-tag">+${net.reward} Meaw / ad</div>
-          <div class="dash-progress">${dash}</div>
+          <div class="dash-progress">${dashHtml}</div>
         </div>
       </div>
-      <button class="btn btn-gold" ${w>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}')">Watch</button>
+      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}')">Watch</button>
     </div>`;
   }).join('');
-  document.getElementById('adsNetworkList').innerHTML = ads || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No ads networks configured</div>';
+  document.getElementById('adsNetworkList').innerHTML = adsHtml;
 
   const counts = {telegram:0, twitter:0, mission:0};
-  CFG.tasks.forEach(t=>{ if(!STATE.tasksDone.includes(t.id)) counts[t.category]=(counts[t.category]||0)+1; });
+  CFG.tasks.forEach(t=>{ if(!STATE.tasksDone.includes(t.id)) counts[t.category] = (counts[t.category]||0)+1; });
   document.querySelectorAll('.task-cat-tab').forEach(tab=>{
     tab.classList.toggle('active', tab.dataset.cat===currentTaskCat);
     const c = counts[tab.dataset.cat]||0;
-    let b = tab.querySelector('.task-cat-count');
-    if(c>0){ if(!b){ b=document.createElement('div'); b.className='task-cat-count'; tab.appendChild(b); } b.textContent=c; }
-    else if(b) b.remove();
+    let badge = tab.querySelector('.task-cat-count');
+    if(c>0){
+      if(!badge){ badge = document.createElement('div'); badge.className='task-cat-count'; tab.appendChild(badge); }
+      badge.textContent = c;
+    } else if(badge){ badge.remove(); }
   });
 
-  const icon = {
+  const catIcon = {
     telegram:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg>`,
     twitter:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg>`,
     mission:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v6c0 5.2 3.6 9 9 10.5 5.4-1.5 9-5.3 9-10.5v-6L12 2Z" fill="#ffe08a"/><path d="m8.5 12 2.4 2.4L16 9.4" stroke="#241408" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   };
-  const bg = {
+  const catBg = {
     telegram:'linear-gradient(145deg,#63c6f9,#1e9ce8)',
     twitter:'linear-gradient(145deg,#2f3540,#0b0e13)',
     mission:'linear-gradient(145deg,#ffe08a,#c8871a)'
@@ -1034,37 +1294,46 @@ function renderTask(){
   }
   ml.innerHTML = filtered.map(t=>{
     const done = STATE.tasksDone.includes(t.id);
-    const ck = taskMissionChecking === t.id;
-    const op = !!missionOpened[t.id];
-    let right;
-    if(done) right = `<button class="btn btn-outline" disabled>Done</button>`;
-    else if(ck) right = `<button class="btn checking" disabled>🔎 Checking…</button>`;
+    const checking = taskMissionChecking === t.id;
+    const opened = !!missionOpened[t.id];
+
+    let rightHtml;
+    if(done) rightHtml = `<button class="btn btn-outline" disabled>Done</button>`;
+    else if(checking) rightHtml = `<button class="btn checking" disabled>🔎 Checking…</button>`;
     else if(t.category==='telegram'){
-      right = op ? `<button class="btn btn-gold" onclick="verifyTelegramTask('${t.id}')">✅ Verify</button>`
-                 : `<button class="btn btn-outline" onclick="openTelegramTask('${t.id}')">Join</button>`;
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="verifyTelegramTask('${t.id}')">✅ Verify</button>`
+        : `<button class="btn btn-outline" onclick="openTelegramTask('${t.id}')">Join</button>`;
     } else if(t.category==='twitter'){
-      right = op ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
-                 : `<button class="btn btn-outline" onclick="openTwitterTask('${t.id}')">Follow</button>`;
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
+        : `<button class="btn btn-outline" onclick="openTwitterTask('${t.id}')">Follow</button>`;
     } else {
-      right = op ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
-                 : `<button class="btn btn-outline" onclick="openMissionTask('${t.id}')">Visit</button>`;
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
+        : `<button class="btn btn-outline" onclick="openMissionTask('${t.id}')">Visit</button>`;
     }
-    const sec = t.seconds>0 ? `<span style="font-size:10px;opacity:.6;margin-left:4px;">(${t.seconds}s)</span>` : '';
+    const secText = t.seconds>0 ? `<span style="font-size:10px;opacity:.6;margin-left:4px;">(${t.seconds}s)</span>` : '';
     return `<div class="task-item">
       <div class="ads-left">
-        <div class="ads-logo" style="background:${bg[t.category]||bg.mission};padding:6px;">${icon[t.category]}</div>
-        <div><div class="ads-name">${t.name}${sec}</div><div class="reward-tag">+${t.reward} Meaw</div></div>
-      </div>${right}</div>`;
+        <div class="ads-logo" style="background:${catBg[t.category]||catBg.mission};padding:6px;">${catIcon[t.category]}</div>
+        <div><div class="ads-name">${t.name}${secText}</div><div class="reward-tag">+${t.reward} Meaw</div></div>
+      </div>
+      ${rightHtml}
+    </div>`;
   }).join('');
 }
+
 async function watchAd(netName){
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
   if((STATE.adsToday[netName]||0) >= net.dailyLimit){ alert('Daily limit reached'); return; }
+
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
+
   setTimeout(async ()=>{
-    btn.textContent=old; btn.disabled=false;
+    btn.textContent = old; btn.disabled=false;
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
     STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
     await addCoins(net.reward);
@@ -1075,6 +1344,7 @@ async function watchAd(netName){
     renderAll();
   }, 1500);
 }
+
 function openTelegramTask(id){
   const t = CFG.tasks.find(x=>x.id===id);
   if(!t) return;
@@ -1085,22 +1355,31 @@ function openTelegramTask(id){
 async function verifyTelegramTask(id){
   const t = CFG.tasks.find(x=>x.id===id);
   if(!t) return;
-  taskMissionChecking = id; renderTask();
-  const r = await checkChannelMembership(t.link);
+  taskMissionChecking = id;
+  renderTask();
+  const result = await checkChannelMembership(t.link);
   taskMissionChecking = null;
-  if(r.joined) await completeTask(id);
-  else {
-    missionOpened[id] = false; renderTask();
-    alert(`You haven't joined "${t.name}" yet.\n(${r.debug||''})`);
+  if(result.joined){
+    await completeTask(id);
+  } else {
+    missionOpened[id] = false;
+    renderTask();
+    alert(`You haven't joined "${t.name}" yet. Please join first then verify.`);
   }
 }
 function openTwitterTask(id){
-  const t = CFG.tasks.find(x=>x.id===id); if(!t) return;
-  window.open(t.link, '_blank'); missionOpened[id] = true; renderTask();
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  window.open(t.link, '_blank');
+  missionOpened[id] = true;
+  renderTask();
 }
 function openMissionTask(id){
-  const t = CFG.tasks.find(x=>x.id===id); if(!t) return;
-  window.open(t.link, '_blank'); missionOpened[id] = true; renderTask();
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  window.open(t.link, '_blank');
+  missionOpened[id] = true;
+  renderTask();
 }
 async function completeTask(id){
   if(STATE.tasksDone.includes(id)) return;
@@ -1117,28 +1396,28 @@ async function completeTask(id){
 /* ---------- MINING ---------- */
 function renderFarm(){
   const btn = document.getElementById('btnClaimFarm');
-  const tEl = document.getElementById('farmTimer');
-  const sEl = document.getElementById('farmTimerSub');
-  const hours = CFG.miningHours || 4;
+  const timerEl = document.getElementById('farmTimer');
+  const subEl = document.getElementById('farmTimerSub');
 
   if(!STATE.farmStart){
-    tEl.textContent = String(hours).padStart(2,'0') + ':00:00';
-    sEl.textContent = 'Tap Start Mining to begin';
+    timerEl.textContent = `0${CFG.miningHours}:00:00`;
+    subEl.textContent = 'Tap Start Mining to begin';
     btn.textContent = '⛏️ Start Mining';
     btn.disabled = false;
     btn.onclick = startMining;
   } else {
-    const dur = hours*3600*1000;
-    const rem = dur - (Date.now() - STATE.farmStart);
-    if(rem <= 0){
-      tEl.textContent = '00:00:00';
-      sEl.textContent = 'Ready to claim!';
+    const durMs = CFG.miningHours*3600*1000;
+    const elapsed = Date.now() - STATE.farmStart;
+    const remain = durMs - elapsed;
+    if(remain <= 0){
+      timerEl.textContent = '00:00:00';
+      subEl.textContent = 'Ready to claim!';
       btn.textContent = '🐾 Claim Mining';
       btn.disabled = false;
       btn.onclick = claimMining;
     } else {
-      tEl.textContent = msToClock(rem);
-      sEl.textContent = 'Mining in progress...';
+      timerEl.textContent = msToClock(remain);
+      subEl.textContent = 'Mining in progress...';
       btn.textContent = '⛏️ Mining...';
       btn.disabled = true;
       btn.onclick = null;
@@ -1148,32 +1427,34 @@ function renderFarm(){
   const bl = document.getElementById('boostList');
   bl.innerHTML = CFG.boosts.map((b,i)=>{
     const owned = STATE.boostsOwned.includes(i);
-    return `<div class="boost-item">
-      <div><div class="ads-name">${b.name}</div><div class="ads-sub">Cost: ${fmt(b.cost)} Meaw • x${b.mult} reward</div></div>
-      <button class="btn ${owned?'btn-outline':'btn-gold'}" ${owned?'disabled':''} onclick="buyBoost(${i})">${owned?'Active':'Buy'}</button>
-    </div>`;
-  }).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No boosts configured</div>';
+    return `<div class="boost-item"><div><div class="ads-name">${b.name}</div><div class="ads-sub">Cost: ${fmt(b.cost)} Meaw • x${b.mult} reward</div></div>
+    <button class="btn ${owned?'btn-outline':'btn-gold'}" ${owned?'disabled':''} onclick="buyBoost(${i})">${owned?'Active':'Buy'}</button></div>`;
+  }).join('');
 }
 function msToClock(ms){
   const s = Math.floor(ms/1000);
-  return String(Math.floor(s/3600)).padStart(2,'0')+':'+
-         String(Math.floor((s%3600)/60)).padStart(2,'0')+':'+
-         String(s%60).padStart(2,'0');
+  const h = String(Math.floor(s/3600)).padStart(2,'0');
+  const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  return `${h}:${m}:${sec}`;
 }
+
 async function startMining(){
   if(STATE.farmStart) return;
   STATE.farmStart = Date.now();
-  await sUpdate('user_state/'+USER_ID, { farmStart: STATE.farmStart });
+  await sUpdate('user_state_'+USER_ID, { farmStart: STATE.farmStart });
   renderFarm();
 }
 async function claimMining(){
   if(!STATE.farmStart) return;
-  const dur = (CFG.miningHours||4)*3600*1000;
-  if(Date.now() - STATE.farmStart < dur){ alert('Not ready yet!'); return; }
+  const durMs = CFG.miningHours*3600*1000;
+  if(Date.now() - STATE.farmStart < durMs){ alert('Mining not ready yet!'); return; }
+
   const mult = STATE.boostsOwned.reduce((a,i)=>Math.max(a, CFG.boosts[i].mult), 1);
-  const reward = Math.floor((CFG.miningReward||250) * mult);
+  const reward = Math.floor(CFG.miningReward * mult);
+
   STATE.farmStart = null;
-  await sUpdate('user_state/'+USER_ID, { farmStart: null });
+  await sUpdate('user_state_'+USER_ID, { farmStart: null });
   await addCoins(reward);
   showReward(reward);
   await creditReferrerCommission(reward);
@@ -1188,35 +1469,46 @@ async function buyBoost(i){
   renderAll();
 }
 
-/* Home Start Farming → Meaw tab */
+/* Home "Start Farming" → jump to Meaw tab */
 document.getElementById('btnStartFarmingHome').addEventListener('click', ()=>{
   switchTab('tab-meaw');
-  setTimeout(()=>{ const b = document.getElementById('btnClaimFarm'); if(b && !b.disabled) b.focus(); }, 300);
+  setTimeout(()=>{
+    if(!STATE.farmStart){
+      // auto-highlight the Start button
+      const btn = document.getElementById('btnClaimFarm');
+      if(btn) btn.focus();
+    }
+  }, 300);
 });
 
-/* ---------- REFER ---------- */
+/* ---------- REFERRAL MENU ---------- */
 function renderRefer(){
-  const tot = STATE.referrals.length;
-  const act = STATE.referrals.filter(r=>r.active).length;
-  const rew = (STATE.totalReferralBonus||0) + (STATE.totalCommissionEarned||0);
-  document.getElementById('refTotal').textContent = tot;
-  document.getElementById('refActive').textContent = act;
-  document.getElementById('refBonusEarned').textContent = fmt(rew);
+  const total = STATE.referrals.length;
+  const active = STATE.referrals.filter(r=>r.active).length;
+  const totalReward = (STATE.totalReferralBonus||0) + (STATE.totalCommissionEarned||0);
+  document.getElementById('refTotal').textContent = total;
+  document.getElementById('refActive').textContent = active;
+  document.getElementById('refBonusEarned').textContent = fmt(totalReward);
+
   const wrap = document.getElementById('refList');
   if(STATE.referrals.length===0){
     wrap.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No referrals yet — share your link!</div>`;
   } else {
     wrap.innerHTML = STATE.referrals.map(r=>`
       <div class="ref-user">
-        <div class="avatar">${r.photo?`<img src="${r.photo}">`:(r.name||'?')[0]}</div>
-        <div class="ru-name">${r.name||'Player'}<small>${r.username?'@'+r.username:''} • +${fmt(r.earned||0)} Meaw</small></div>
+        <div class="avatar">${(r.name||'?')[0]}</div>
+        <div class="ru-name">
+          ${r.name||'Player'}
+          <small>${r.username?'@'+r.username:''} • +${fmt(r.earned||0)} Meaw</small>
+        </div>
         <div class="ref-status ${r.active?'active':'pending'}">${r.active?'✅ Active':'⏳ Pending'}</div>
       </div>`).join('');
   }
 }
 function copyRefLink(){
   const t = document.getElementById('refLinkText').textContent;
-  navigator.clipboard.writeText(t).then(()=>alert('Copied!')).catch(()=>alert(t));
+  navigator.clipboard && navigator.clipboard.writeText(t);
+  alert('Copied!');
 }
 function shareRefLink(){
   const link = document.getElementById('refLinkText').textContent;
@@ -1226,10 +1518,8 @@ function shareRefLink(){
 /* ---------- WITHDRAW ---------- */
 function renderWithdraw(){
   document.getElementById('wdBalance').textContent = fmt(STATE.coins) + ' Meaw';
-  const need = CFG.wdAdsNeeded||5;
-  const have = Math.min(STATE.wdAdsWatched||0, need);
-  document.getElementById('wdAdsNeededText').textContent = need;
-  document.getElementById('wdMinText').textContent = CFG.minWithdraw||1000;
+  const need = CFG.wdAdsNeeded;
+  const have = Math.min(STATE.wdAdsWatched, need);
   document.getElementById('lockFill').style.width = (have/need*100)+'%';
   document.getElementById('lockText').textContent = have+' / '+need+' ads watched';
   if(have>=need){
@@ -1239,19 +1529,19 @@ function renderWithdraw(){
     document.getElementById('lockBox').style.display='block';
     document.getElementById('withdrawForm').style.display='none';
   }
-  document.getElementById('methodRow').innerHTML = CFG.withdrawMethods.map((m,i)=>`
+  const mr = document.getElementById('methodRow');
+  mr.innerHTML = CFG.withdrawMethods.map((m,i)=>`
     <div class="method-chip ${i===selectedMethod?'sel':''}" onclick="selectMethod(${i})">
       <div style="font-size:20px;">${m.icon}</div><span style="font-size:11px;">${m.name}</span>
     </div>`).join('');
-  document.getElementById('wdAmount').placeholder = 'Min ' + (CFG.minWithdraw||1000);
 
-  const hist = STATE.withdrawHistory || [];
-  document.getElementById('wdHistory').innerHTML = hist.length ? hist.map(h=>`
+  const hist = document.getElementById('wdHistory');
+  hist.innerHTML = (STATE.withdrawHistory||[]).slice().reverse().map(h=>`
     <div class="task-item" style="align-items:center;">
       <div class="ads-left"><div class="ads-logo">💎</div>
-      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method} • ${h.status}</div></div></div>
-      <div class="reward-tag" style="color:${h.status==='approved'?'#8fdc96':h.status==='rejected'?'#ff9e93':'#ffcf9e'}">${h.status}</div>
-    </div>`).join('') : '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history yet</div>';
+      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method}</div></div></div>
+      <div class="reward-tag">${h.status}</div>
+    </div>`).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
 function selectMethod(i){ selectedMethod=i; renderWithdraw(); }
 
@@ -1259,7 +1549,7 @@ async function watchWithdrawAd(){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
   setTimeout(async ()=>{
-    btn.textContent = old; btn.disabled = false;
+    btn.textContent = old; btn.disabled=false;
     STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
     await saveState();
     renderWithdraw();
@@ -1269,68 +1559,61 @@ async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
   const msg = document.getElementById('wdMsg');
-  if(!amt || amt < (CFG.minWithdraw||1000)){ msg.style.color='#ff9e93'; msg.textContent='Min '+(CFG.minWithdraw||1000); return; }
-  if(amt > STATE.coins){ msg.style.color='#ff9e93'; msg.textContent='Insufficient balance'; return; }
-  if(!addr){ msg.style.color='#ff9e93'; msg.textContent='Enter wallet address'; return; }
+  if(!amt || amt < CFG.minWithdraw){ msg.textContent='Min '+CFG.minWithdraw; return; }
+  if(amt > STATE.coins){ msg.textContent='Insufficient balance'; return; }
+  if(!addr){ msg.textContent='Enter wallet address'; return; }
 
-  const wdId = 'wd_'+Date.now()+'_'+USER_ID;
-  await db.ref('withdraw_requests/'+wdId).set({
-    userId: USER_ID, username: USER_USERNAME, name: tgUser.first_name||'Player',
-    photo: USER_PHOTO, amount: amt,
-    method: CFG.withdrawMethods[selectedMethod].name,
-    address: addr, status: 'pending', time: Date.now()
-  });
+  STATE.withdrawHistory = STATE.withdrawHistory || [];
+  STATE.withdrawHistory.push({amount:amt, method:CFG.withdrawMethods[selectedMethod].name, address:addr, status:'pending', time:Date.now()});
   STATE.wdAdsWatched = 0;
   await addCoins(-amt);
   await saveState();
-  msg.style.color='#8fdc96'; msg.textContent='Submitted! Awaiting admin approval.';
-  document.getElementById('wdAmount').value='';
-  document.getElementById('wdAddress').value='';
+  msg.textContent='Submitted! Awaiting admin approval.';
   renderAll();
 }
 
-/* ---------- SPIN ---------- */
+/* ---------- SPIN WHEEL ---------- */
 function buildWheel(){
-  const p = CFG.spinPrizes;
-  const seg = 360/p.length;
-  const grad = p.map((x,i)=>`${x.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
-  document.getElementById('wheelSvg').style.background = `conic-gradient(${grad})`;
-  let lbl = '';
-  p.forEach((x,i)=>{
-    const a = i*seg + seg/2;
-    lbl += `<div class="wheel-label" style="transform:translate(-50%,-50%) rotate(${a}deg) translateY(-80px) rotate(${-a}deg);">${x.value}</div>`;
+  const prizes = CFG.spinPrizes;
+  const seg = 360/prizes.length;
+  const gradParts = prizes.map((p,i)=> `${p.color} ${i*seg}deg ${(i+1)*seg}deg`).join(',');
+  document.getElementById('wheelSvg').style.background = `conic-gradient(${gradParts})`;
+  let labelsHtml='';
+  prizes.forEach((p,i)=>{
+    const angle = i*seg + seg/2;
+    labelsHtml += `<div class="wheel-label" style="transform:translate(-50%,-50%) rotate(${angle}deg) translateY(-80px) rotate(${-angle}deg);">${p.value}</div>`;
   });
-  document.getElementById('wheelLabels').innerHTML = lbl;
+  document.getElementById('wheelLabels').innerHTML = labelsHtml;
 }
 function refreshSpinCredits(){
   const activeRefs = STATE.referrals.filter(r=>r.active).length;
-  const spinsPer = CFG.refSpinsPerActive || 1;
   if(activeRefs > STATE.referralSpinsGranted){
-    STATE.spinsAvailable += (activeRefs - STATE.referralSpinsGranted) * spinsPer;
+    STATE.spinsAvailable += (activeRefs - STATE.referralSpinsGranted);
     STATE.referralSpinsGranted = activeRefs;
     saveState();
   }
-  const b = document.getElementById('spinFeatureBadge');
-  b.textContent = STATE.spinsAvailable;
-  b.classList.toggle('show', STATE.spinsAvailable>0);
+  document.getElementById('spinFeatureBadge').textContent = STATE.spinsAvailable;
+  document.getElementById('spinFeatureBadge').classList.toggle('show', STATE.spinsAvailable>0);
 }
 document.getElementById('openSpin').addEventListener('click', ()=>{
-  refreshSpinCredits(); renderSpinModal(); document.getElementById('spinModal').classList.add('show');
+  refreshSpinCredits();
+  renderSpinModal();
+  document.getElementById('spinModal').classList.add('show');
 });
 function renderSpinModal(){
   document.getElementById('spinCountText').textContent = STATE.spinsAvailable + (STATE.spinsAvailable===1?' spin left':' spins left');
   document.getElementById('btnSpinNow').disabled = STATE.spinsAvailable<=0;
   const today = new Date().toDateString();
+  const adBtn = document.getElementById('btnWatchAdSpin');
   const used = STATE.lastSpinAdDate === today;
-  const ab = document.getElementById('btnWatchAdSpin');
-  ab.disabled = used;
-  ab.textContent = used ? '✅ Ad Used Today' : '▶️ Watch Ad (+1 Spin)';
+  adBtn.disabled = used;
+  adBtn.textContent = used ? '✅ Ad Used Today' : '▶️ Watch Ad (+1 Spin)';
 }
 async function watchAdForSpin(){
   const today = new Date().toDateString();
   if(STATE.lastSpinAdDate === today) return;
-  const b = document.getElementById('btnWatchAdSpin');
-  b.textContent='Loading...'; b.disabled=true;
+  const btn = document.getElementById('btnWatchAdSpin');
+  btn.textContent='Loading...'; btn.disabled=true;
   setTimeout(async ()=>{
     STATE.lastSpinAdDate = today;
     STATE.spinsAvailable += 1;
@@ -1340,28 +1623,33 @@ async function watchAdForSpin(){
 }
 async function doSpin(){
   if(STATE.spinsAvailable<=0) return;
-  const p = CFG.spinPrizes;
-  const totalW = p.reduce((a,x)=>a+x.weight,0);
-  let r = Math.random()*totalW, idx=0;
-  for(let i=0;i<p.length;i++){ if(r<p[i].weight){ idx=i; break; } r-=p[i].weight; }
-  const seg = 360/p.length;
-  const tgt = idx*seg + seg/2;
-  const cur = ((wheelRotation%360)+360)%360;
-  wheelRotation += 360*5 + ((360 - tgt) - cur + 360)%360;
+  const prizes = CFG.spinPrizes;
+  const totalWeight = prizes.reduce((a,p)=>a+p.weight,0);
+  let r = Math.random()*totalWeight, idx=0;
+  for(let i=0;i<prizes.length;i++){ if(r<prizes[i].weight){ idx=i; break; } r-=prizes[i].weight; }
+
+  const seg = 360/prizes.length;
+  const targetCenter = idx*seg + seg/2;
+  const currentMod = ((wheelRotation % 360)+360)%360;
+  const neededExtra = ((360 - targetCenter) - currentMod + 360)%360;
+  wheelRotation += 360*5 + neededExtra;
+
   document.getElementById('wheelSvg').style.transform = `rotate(${wheelRotation}deg)`;
   STATE.spinsAvailable--;
   document.getElementById('btnSpinNow').disabled = true;
   await saveState();
+
   setTimeout(async ()=>{
-    await addCoins(p[idx].value);
+    await addCoins(prizes[idx].value);
     await saveState();
-    renderAll(); renderSpinModal();
-    showReward(p[idx].value);
-    await creditReferrerCommission(p[idx].value);
+    renderAll();
+    renderSpinModal();
+    showReward(prizes[idx].value);
+    await creditReferrerCommission(prizes[idx].value);
   }, 4200);
 }
 
-/* ---------- REDEEM ---------- */
+/* ---------- REDEEM CODE ---------- */
 document.getElementById('openRedeem').addEventListener('click', ()=>{
   document.getElementById('redeemCodeInput').value = '';
   document.getElementById('redeemMsg').textContent = '';
@@ -1371,39 +1659,49 @@ async function submitRedeem(){
   const input = document.getElementById('redeemCodeInput');
   const msg = document.getElementById('redeemMsg');
   const raw = input.value.trim().toUpperCase();
-  if(!raw){ msg.style.color='#ff9e93'; msg.textContent='Enter a code'; return; }
-  if((STATE.redeemedCodes||[]).includes(raw)){ msg.style.color='#ff9e93'; msg.textContent='Already redeemed'; return; }
+  if(!raw){ msg.style.color='#ff9e93'; msg.textContent='Please enter a code'; return; }
+  if((STATE.redeemedCodes||[]).includes(raw)){ msg.style.color='#ff9e93'; msg.textContent='You already redeemed this code'; return; }
+
   const codes = CFG.redeemCodes || [];
   const entry = codes.find(c=>(c.code||'').toUpperCase()===raw);
-  if(!entry){ msg.style.color='#ff9e93'; msg.textContent='Invalid code'; return; }
-  entry.usedBy = entry.usedBy || [];
-  if(entry.usedBy.length >= (entry.maxUses||1000)){ msg.style.color='#ff9e93'; msg.textContent='Code limit reached'; return; }
-  if(entry.expires && Date.now() > new Date(entry.expires).getTime()){ msg.style.color='#ff9e93'; msg.textContent='Code expired'; return; }
-  entry.usedBy.push(USER_ID);
+  if(!entry){ msg.style.color='#ff9e93'; msg.textContent='Invalid or expired code'; return; }
+
+  const usedBy = entry.usedBy || [];
+  if(usedBy.length >= (entry.maxUses||1000)){ msg.style.color='#ff9e93'; msg.textContent='This code has reached its usage limit'; return; }
+  if(usedBy.includes(USER_ID)){ msg.style.color='#ff9e93'; msg.textContent='You already used this code'; return; }
+
+  usedBy.push(USER_ID);
+  entry.usedBy = usedBy;
   STATE.redeemedCodes = STATE.redeemedCodes || [];
   STATE.redeemedCodes.push(raw);
+
   await sSet('admin_config/redeemCodes', CFG.redeemCodes);
   await addCoins(entry.amount);
   await saveState();
   await creditReferrerCommission(entry.amount);
-  msg.style.color='#8fdc96'; msg.textContent=`+${entry.amount} Meaw added!`;
+
+  msg.style.color='#8fdc96'; msg.textContent=`Success! +${entry.amount} Meaw added`;
   renderAll();
   setTimeout(()=>{ closeModal('redeemModal'); showReward(entry.amount); }, 800);
 }
 
-/* ---------- NAV / MODALS ---------- */
+/* ---------- NAV ---------- */
 function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
-  document.getElementById('tab'+cap(id.replace('tab-',''))).style.display='block';
+  document.getElementById('tab'+capitalize(id.replace('tab-',''))).style.display='block';
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.tab===id));
 }
-function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 document.querySelectorAll('.nav-item[data-tab]').forEach(n=>n.addEventListener('click', ()=>switchTab(n.dataset.tab)));
-document.getElementById('taskCatTabs').addEventListener('click', e=>{
-  const t = e.target.closest('.task-cat-tab'); if(!t) return;
-  currentTaskCat = t.dataset.cat; renderTask();
+
+document.getElementById('taskCatTabs').addEventListener('click', (e)=>{
+  const tab = e.target.closest('.task-cat-tab');
+  if(!tab) return;
+  currentTaskCat = tab.dataset.cat;
+  renderTask();
 });
 
+/* ✅ LIVE LEADERBOARD render */
 document.getElementById('openLeaderboard').addEventListener('click', ()=>{
   document.getElementById('lbModal').classList.add('show');
   renderLeaderboard();
@@ -1411,39 +1709,270 @@ document.getElementById('openLeaderboard').addEventListener('click', ()=>{
 function renderLeaderboard(){
   const list = window.__leaderboardCache || [];
   const el = document.getElementById('lbList');
-  if(!list.length){ el.innerHTML = '<div class="lb-empty">No players yet 🐾</div>'; return; }
-  const m = ['🥇','🥈','🥉'];
+  if(list.length===0){
+    el.innerHTML = `<div class="lb-empty">No players yet — be the first! 🐾</div>`;
+    return;
+  }
+  const medals = ['🥇','🥈','🥉'];
   el.innerHTML = list.map((u,i)=>`
     <div class="lb-row ${u.me?'me':''}">
-      <div class="lb-rank">${i<3?m[i]:(i+1)}</div>
-      <div class="avatar">${u.photo?`<img src="${u.photo}">`:(u.name||'P')[0].toUpperCase()}</div>
+      <div class="lb-rank">${i<3?medals[i]:(i+1)}</div>
+      <div class="avatar">${(u.name||'P')[0].toUpperCase()}</div>
       <div class="lb-name">${u.name}${u.me?' (You)':''}<small>${u.refs} referrals</small></div>
       <div class="lb-val">${fmt(u.coins)} 🪙</div>
     </div>`).join('');
 }
+
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-function showReward(amt){
-  document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw';
-  document.getElementById('rewardPop').classList.add('show');
-}
+function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
-/* ---------- SAVE STATE (partial update — no overwrites) ---------- */
+/* ---------- ADMIN PANEL ---------- */
+function toggleAdminPanel(){
+  document.getElementById('adminPanel').classList.toggle('show');
+  if(document.getElementById('adminPanel').classList.contains('show')){
+    // Prefill current values
+    document.getElementById('adminRefBonus').value = CFG.refBonus;
+    document.getElementById('adminRefAds').value = CFG.refAdsNeeded;
+    document.getElementById('adminRefPct').value = CFG.refCommissionPct;
+    document.getElementById('adminMiningReward').value = CFG.miningReward;
+    document.getElementById('adminMiningHours').value = CFG.miningHours;
+  }
+}
+function switchAdminTab(name){
+  document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('adminTab-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='telegram') renderAdminTaskPreview('telegram');
+  if(name==='twitter')  renderAdminTaskPreview('twitter');
+  if(name==='mission')  renderAdminTaskPreview('mission');
+  if(name==='ads')      renderAdminAdsPreview();
+  if(name==='mining')   renderAdminBoostPreview();
+  if(name==='redeem')   renderAdminRedeemPreview();
+}
+function saveAdminSettings(){
+  const token = document.getElementById('adminToken').value.trim();
+  if(token){
+    BOT_TOKEN = token;
+    sSet('secure/config', {botToken: token});
+  }
+  const botUsername = document.getElementById('adminBotUsername').value.trim();
+  if(botUsername) CFG.botUsername = botUsername;
+  sSet('admin_config', CFG);
+  alert('Settings saved!');
+}
+function saveChannels(){
+  try{
+    const raw = document.getElementById('adminChannels').value;
+    const lines = raw.split('\n').filter(l=>l.trim());
+    const channels = lines.map(l=>{
+      try{ return JSON.parse(l); }catch{
+        const m = l.match(/t\.me\/(@?[A-Za-z0-9_]+)/);
+        return m ? {name:m[1], link:'https://t.me/'+m[1]} : null;
+      }
+    }).filter(Boolean);
+    if(channels.length>0){
+      CFG.channels = channels;
+      sSet('admin_config', CFG);
+      alert('Channels updated!');
+    }
+  }catch(e){ alert('Error: '+e.message); }
+}
+function saveRefSettings(){
+  CFG.refBonus = parseInt(document.getElementById('adminRefBonus').value)||CFG.refBonus;
+  CFG.refAdsNeeded = parseInt(document.getElementById('adminRefAds').value)||CFG.refAdsNeeded;
+  CFG.refCommissionPct = parseInt(document.getElementById('adminRefPct').value)||CFG.refCommissionPct;
+  sSet('admin_config', CFG);
+  alert('Referral settings saved!');
+}
+function saveMiningSettings(){
+  CFG.miningReward = parseInt(document.getElementById('adminMiningReward').value)||CFG.miningReward;
+  CFG.miningHours = parseInt(document.getElementById('adminMiningHours').value)||CFG.miningHours;
+  sSet('admin_config', CFG);
+  alert('Mining settings saved!');
+  renderFarm();
+}
+function addMiningBoost(){
+  const name = document.getElementById('adminBoostName').value.trim();
+  const cost = parseInt(document.getElementById('adminBoostCost').value)||0;
+  const mult = parseInt(document.getElementById('adminBoostMult').value)||2;
+  if(!name || !cost) return alert('Fill name + cost');
+  CFG.boosts = CFG.boosts || [];
+  CFG.boosts.push({name, cost, mult});
+  sSet('admin_config', CFG);
+  alert('Boost added!');
+  document.getElementById('adminBoostName').value='';
+  document.getElementById('adminBoostCost').value='';
+  document.getElementById('adminBoostMult').value='';
+  renderFarm();
+  renderAdminBoostPreview();
+}
+function renderAdminBoostPreview(){
+  const el = document.getElementById('boostPreview');
+  if(!el) return;
+  if(!CFG.boosts.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing boosts:</div>' + CFG.boosts.map((b,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;">${b.name}<br><small style="opacity:.6;">Cost: ${b.cost} • x${b.mult}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteBoost(${i})">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteBoost(i){
+  if(!confirm('Delete this boost?')) return;
+  CFG.boosts.splice(i,1);
+  sSet('admin_config', CFG);
+  renderFarm();
+  renderAdminBoostPreview();
+}
+function addAdsNetwork(){
+  const name = document.getElementById('adminAdName').value.trim();
+  const reward = parseInt(document.getElementById('adminAdReward').value)||10;
+  const daily = parseInt(document.getElementById('adminAdDaily').value)||10;
+  if(!name) return;
+  CFG.adsNetworks = CFG.adsNetworks || [];
+  CFG.adsNetworks.push({name, reward, dailyLimit:daily});
+  sSet('admin_config', CFG);
+  STATE.adsToday[name] = 0;
+  saveState();
+  alert('Ads network added!');
+  document.getElementById('adminAdName').value='';
+  document.getElementById('adminAdReward').value='';
+  document.getElementById('adminAdDaily').value='';
+  renderTask();
+  renderAdminAdsPreview();
+}
+function addTelegramTask(){
+  const name = document.getElementById('tgTaskName').value.trim();
+  const link = document.getElementById('tgTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('tgTaskReward').value)||10;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'tg_'+Date.now(), category:'telegram', name, link, reward, seconds:0});
+  sSet('admin_config', CFG);
+  alert('Telegram task added!');
+  document.getElementById('tgTaskName').value='';
+  document.getElementById('tgTaskLink').value='';
+  document.getElementById('tgTaskReward').value='';
+  renderTask();
+  renderAdminTaskPreview('telegram');
+}
+function addTwitterTask(){
+  const name = document.getElementById('twTaskName').value.trim();
+  const link = document.getElementById('twTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('twTaskReward').value)||10;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'tw_'+Date.now(), category:'twitter', name, link, reward, seconds:0});
+  sSet('admin_config', CFG);
+  alert('Twitter task added!');
+  document.getElementById('twTaskName').value='';
+  document.getElementById('twTaskLink').value='';
+  document.getElementById('twTaskReward').value='';
+  renderTask();
+  renderAdminTaskPreview('twitter');
+}
+function addMissionTask(){
+  const name = document.getElementById('msTaskName').value.trim();
+  const link = document.getElementById('msTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('msTaskReward').value)||10;
+  const seconds = parseInt(document.getElementById('msTaskSeconds').value)||0;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'ms_'+Date.now(), category:'mission', name, link, reward, seconds});
+  sSet('admin_config', CFG);
+  alert('Mission task added!');
+  document.getElementById('msTaskName').value='';
+  document.getElementById('msTaskLink').value='';
+  document.getElementById('msTaskReward').value='';
+  document.getElementById('msTaskSeconds').value='';
+  renderTask();
+  renderAdminTaskPreview('mission');
+}
+function renderAdminTaskPreview(cat){
+  const el = document.getElementById(cat==='telegram'?'tgTaskPreview':cat==='twitter'?'twTaskPreview':'msTaskPreview');
+  if(!el) return;
+  const items = CFG.tasks.filter(t=>t.category===cat);
+  if(!items.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing tasks:</div>' + items.map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;">${t.name}<br><small style="opacity:.6;">+${t.reward} Meaw ${t.seconds?'• '+t.seconds+'s':''}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteTask('${t.id}','${cat}')">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteTask(id, cat){
+  if(!confirm('Delete this task?')) return;
+  CFG.tasks = CFG.tasks.filter(t=>t.id!==id);
+  sSet('admin_config', CFG);
+  renderTask();
+  renderAdminTaskPreview(cat);
+}
+function renderAdminAdsPreview(){
+  const el = document.getElementById('adsPreview');
+  if(!el) return;
+  if(!CFG.adsNetworks.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing ad networks:</div>' + CFG.adsNetworks.map(n=>`
+    <div style="font-size:11px;padding:6px;background:rgba(255,255,255,.06);border-radius:6px;margin-bottom:4px;">
+      ${n.name} — +${n.reward} Meaw • ${n.dailyLimit}/day
+    </div>
+  `).join('');
+}
+function updateSpinRewards(){
+  const raw = document.getElementById('adminSpinRewards').value;
+  const vals = raw.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));
+  if(vals.length>0){
+    CFG.spinPrizes = vals.map((v,i)=>({value:v, weight:Math.max(1,Math.ceil(25-i*2)), color:['#e05a4e','#f4c430','#5fbf6b','#4a86c8','#c8871a','#8a5cf6','#e08a4e','#ff5ecb','#66c2ff'][i%9]}));
+    sSet('admin_config', CFG);
+    buildWheel();
+    alert('Spin rewards updated!');
+  }
+}
+/* Redeem code management */
+function addRedeemCode(){
+  const code = document.getElementById('adminRedeemCode').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('adminRedeemAmount').value)||0;
+  const maxUses = parseInt(document.getElementById('adminRedeemUses').value)||100;
+  if(!code || !amount) return alert('Fill code + amount');
+  CFG.redeemCodes = CFG.redeemCodes || [];
+  if(CFG.redeemCodes.find(c=>c.code.toUpperCase()===code)) return alert('Code already exists');
+  CFG.redeemCodes.push({code, amount, maxUses, usedBy: []});
+  sSet('admin_config', CFG);
+  alert('Redeem code created!');
+  document.getElementById('adminRedeemCode').value='';
+  document.getElementById('adminRedeemAmount').value='';
+  document.getElementById('adminRedeemUses').value='';
+  renderAdminRedeemPreview();
+}
+function renderAdminRedeemPreview(){
+  const el = document.getElementById('redeemPreview');
+  if(!el) return;
+  if(!CFG.redeemCodes || !CFG.redeemCodes.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Active codes:</div>' + CFG.redeemCodes.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;"><b style="color:#ffe08a;">${c.code}</b><br><small style="opacity:.6;">+${c.amount} Meaw • used ${(c.usedBy||[]).length}/${c.maxUses}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteRedeemCode(${i})">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteRedeemCode(i){
+  if(!confirm('Delete this code?')) return;
+  CFG.redeemCodes.splice(i,1);
+  sSet('admin_config', CFG);
+  renderAdminRedeemPreview();
+}
+
+/* ---------- SAVE STATE ---------- */
 async function saveState(){
   if(!STATE) return;
   const patch = {
     name: tgUser.first_name || 'Player',
     firstName: tgUser.first_name || 'Player',
-    username: USER_USERNAME,
-    photo: USER_PHOTO,
-    referralCount: STATE.referrals.length,
-    activeReferralCount: STATE.referrals.filter(r=>r.active).length,
     farmStart: STATE.farmStart,
     adsToday: STATE.adsToday,
     adsDay: STATE.adsDay,
     tasksDone: STATE.tasksDone,
     boostsOwned: STATE.boostsOwned,
     wdAdsWatched: STATE.wdAdsWatched,
+    withdrawHistory: STATE.withdrawHistory,
     spinsAvailable: STATE.spinsAvailable,
     lastSpinAdDate: STATE.lastSpinAdDate,
     referralSpinsGranted: STATE.referralSpinsGranted,
@@ -1454,10 +1983,10 @@ async function saveState(){
     totalAdsWatchedEver: STATE.totalAdsWatchedEver,
     redeemedCodes: STATE.redeemedCodes
   };
-  await sUpdate('user_state/'+USER_ID, patch);
+  await sUpdate('user_state_'+USER_ID, patch);
 }
 
 init();
 </script>
 </body>
-</html>
+                </html>
