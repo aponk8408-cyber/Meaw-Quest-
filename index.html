@@ -7,6 +7,8 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://ad.gigapub.tech/script?id=8142"></script>
+<script src='//libtl.com/sdk.js' data-zone='11782670' data-sdk='show_11782670'></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -154,7 +156,6 @@ body{
 }
 .section-title{font-size:15px;font-weight:800;color:var(--gold-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 
-/* ✅ Home Balance Card (replaces farm-card) */
 .balance-home-card{
   text-align:center;padding:22px 16px 20px;position:relative;overflow:hidden;
   background:linear-gradient(160deg,#241a52,#150c38);
@@ -453,7 +454,6 @@ body{
     </div>
 
     <div class="tab-content" id="tabHome">
-      <!-- ✅ Home Balance + Withdraw Entry -->
       <div class="balance-home-card">
         <div class="balance-home-label">TOTAL BALANCE</div>
         <div class="balance-home-amount" id="homeBalanceMeaw">0</div>
@@ -820,13 +820,12 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition v4
-   ✅ Admin se task add korle user app e add hobe
-   ✅ Admin se ads add korle user app e add hobe
-   ✅ Admin se refer bonus/commission set korle apply hobe
-   ✅ Admin se withdraw approve/reject korle user dekhte pabe
-   ✅ Home theke Start Farming remove, balance + USDT dekhabe
-   ✅ Withdraw click korle 5 ta ads dekhte bolbe, tarpor form asbe
+   MEAW QUEST — Firebase Edition v5
+   ✅ Gigapub ads integration (window.showGiga())
+   ✅ Monetag ads integration (show_11782670)
+   ✅ Gigapub + Monetag added to Task tab
+   ✅ No active referral bonus — only commission
+   ✅ No bot message for active referral
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -889,9 +888,8 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Adsgram', reward:15, dailyLimit:10},
-    {name:'Monetag', reward:12, dailyLimit:10},
-    {name:'Gigapub', reward:10, dailyLimit:10}
+    {name:'Gigapub', reward:15, dailyLimit:10, type:'giga'},
+    {name:'Monetag', reward:12, dailyLimit:10, type:'monetag'}
   ],
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
@@ -945,7 +943,8 @@ const DEFAULT_STATE = {
   spinsAvailable: 0,
   lastSpinAdDate: null,
   referralSpinsGranted: 0,
-  redeemedCodes: []
+  redeemedCodes: [],
+  welcomeAdsShown: false
 };
 
 let CFG = null;
@@ -966,6 +965,35 @@ function safeGoScreen(){
   goScreen(STATE.joined ? 'screen-app' : 'screen-join');
 }
 setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe screen switch'); safeGoScreen(); } }, 8000);
+
+/* ---------- GIGAPUB ADS HELPER ---------- */
+async function showGigapubAd(){
+  return new Promise((resolve, reject)=>{
+    if(typeof window.showGiga === 'function'){
+      window.showGiga()
+        .then(()=>resolve(true))
+        .catch(e=>{ console.warn('Gigapub error:', e); reject(e); });
+    } else {
+      console.warn('window.showGiga not available');
+      reject(new Error('Gigapub SDK not loaded'));
+    }
+  });
+}
+
+/* ---------- MONETAG ADS HELPER ---------- */
+async function showMonetagAd(){
+  return new Promise((resolve, reject)=>{
+    if(typeof window.show_11782670 === 'function'){
+      try{
+        window.show_11782670();
+        resolve(true);
+      }catch(e){ reject(e); }
+    } else {
+      console.warn('Monetag show_11782670 not available');
+      reject(new Error('Monetag SDK not loaded'));
+    }
+  });
+}
 
 /* ---------- BOT API ---------- */
 function extractTgUsername(link){
@@ -1014,6 +1042,14 @@ async function init(){
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
+    // Ensure Gigapub + Monetag are in adsNetworks
+    if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
+      CFG.adsNetworks.unshift({name:'Gigapub', reward:15, dailyLimit:10, type:'giga'});
+    }
+    if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
+      CFG.adsNetworks.push({name:'Monetag', reward:12, dailyLimit:10, type:'monetag'});
+    }
+
     STATE = await sGet('user_state_'+USER_ID);
     if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
     else {
@@ -1024,11 +1060,6 @@ async function init(){
       STATE.adsToday = {};
       CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
       STATE.adsDay = new Date().toDateString();
-    }
-
-    if(USER_ID === '123456789'){
-      const el = document.getElementById('navAdmin');
-      if(el) el.style.display='flex';
     }
 
     document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
@@ -1058,7 +1089,21 @@ async function init(){
     try{ renderAll(); }catch(e){}
   }finally{
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
-    setTimeout(()=>{ safeGoScreen(); }, 1500);
+    setTimeout(()=>{
+      safeGoScreen();
+      // ✅ Show Gigapub ad after loading (for both new + old users)
+      setTimeout(()=>{ tryShowWelcomeAd(); }, 1200);
+    }, 1500);
+  }
+}
+
+/* ✅ Show Gigapub ad after loading (once per session) */
+async function tryShowWelcomeAd(){
+  try{
+    await showGigapubAd();
+    console.log('Welcome Gigapub ad shown');
+  }catch(e){
+    console.warn('Welcome ad skipped:', e.message);
   }
 }
 
@@ -1120,7 +1165,7 @@ function attachLeaderboardListener(){
   });
 }
 
-/* ✅ LIVE WITHDRAW LISTENER — admin approve/reject user dekhte pabe */
+/* ✅ LIVE WITHDRAW LISTENER */
 function attachWithdrawListener(){
   db.ref('user_state_'+USER_ID+'/withdrawHistory').on('value', snap=>{
     const hist = snap.val();
@@ -1150,14 +1195,11 @@ async function registerReferralIfNeeded(){
     joinedAt: Date.now()
   });
 
-  await sendBotMessage(
-    referrerId,
-    `🎉 *New Referral Joined!*\n\n` +
-    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-    `joined using your link!\n\n` +
-    `💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active & you'll get ${CFG.refBonus} Meaw bonus!`
-  );
+  // ✅ No bot message for new referral join — silent registration
 }
+
+/* ✅ Referral activation — NO bonus to referrer, NO bot message.
+   Only marks referral as active so commission starts working. */
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -1167,21 +1209,12 @@ async function checkReferralActivation(){
 
   const referrerId = STATE.referredBy;
   await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
-  await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
-  await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
 
-  const refState = await sGet('user_state_'+referrerId);
-  const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
-
-  await sendBotMessage(
-    referrerId,
-    `🌟 *Active Referral!*\n\n` +
-    `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-    `just became *ACTIVE* (watched ${CFG.refAdsNeeded||5} ads)!\n\n` +
-    `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
-    `📊 Total from referrals: *${fmt(totalEarn)} Meaw*`
-  );
+  // ✅ No bonus coins added — only commission (which is handled via creditReferrerCommission on every earn)
+  // ✅ No bot message sent to referrer
 }
+
+/* ✅ Commission — only way referrer earns from referrals */
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
@@ -1242,11 +1275,16 @@ async function verifyChannel(i){
   }
   renderJoinList();
 }
+
+/* ✅ User clicks "Enter Kingdom" — show Gigapub ad, then open dashboard */
 document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
-  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start mining, complete tasks, and invite friends to earn more!`);
+
+  // Show Gigapub ad right after joining (for new users)
+  try{ await showGigapubAd(); }catch(e){ console.warn('Post-join ad skipped:', e.message); }
+
   goScreen('screen-app');
 });
 
@@ -1262,7 +1300,6 @@ function renderAll(){
 }
 function fmt(n){ return Math.floor(n||0).toLocaleString(); }
 
-/* ✅ Home balance + USDT conversion */
 function updateHomeBalance(){
   const coins = STATE.coins || 0;
   const rate = CFG.coinPrice || 0.0021;
@@ -1283,7 +1320,7 @@ async function addCoins(amount){
 function renderTask(){
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
-    const icon = {'Adsgram':'📺','Monetag':'🎬','Gigapub':'🟣'}[net.name] || '📡';
+    const icon = net.type === 'giga' ? '🎮' : net.type === 'monetag' ? '🎬' : '📡';
     let dashHtml = '';
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
@@ -1364,6 +1401,7 @@ function renderTask(){
   }).join('');
 }
 
+/* ✅ Watch Ad — uses Gigapub or Monetag SDK depending on network type */
 async function watchAd(netName){
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
@@ -1372,17 +1410,37 @@ async function watchAd(netName){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
 
-  setTimeout(async ()=>{
-    btn.textContent = old; btn.disabled=false;
-    STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
-    STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
-    await addCoins(net.reward);
-    await saveState();
-    showReward(net.reward);
-    await creditReferrerCommission(net.reward);
-    await checkReferralActivation();
-    renderAll();
-  }, 1500);
+  let adSuccess = false;
+  try{
+    if(net.type === 'giga'){
+      await showGigapubAd();
+      adSuccess = true;
+    } else if(net.type === 'monetag'){
+      await showMonetagAd();
+      adSuccess = true;
+    } else {
+      // Fallback — simple timer
+      await new Promise(r=>setTimeout(r, 1500));
+      adSuccess = true;
+    }
+  }catch(e){
+    console.warn('Ad failed:', e);
+  }
+
+  btn.textContent = old;
+  btn.disabled = false;
+
+  if(!adSuccess){ alert('Ad not available, try again.'); return; }
+
+  // Reward the user
+  STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
+  STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
+  await addCoins(net.reward);
+  await saveState();
+  showReward(net.reward);
+  await creditReferrerCommission(net.reward);
+  await checkReferralActivation();
+  renderAll();
 }
 
 function openTelegramTask(id){
@@ -1509,14 +1567,12 @@ async function buyBoost(i){
   renderAll();
 }
 
-/* ✅ Home Withdraw button — jump to Withdraw tab, scroll to lock area */
 document.getElementById('homeWithdrawBtn').addEventListener('click', ()=>{
   switchTab('tab-withdraw');
   setTimeout(()=>{
     const lock = document.getElementById('lockBox');
     if(lock) lock.scrollIntoView({behavior:'smooth', block:'center'});
     if(STATE.wdAdsWatched < CFG.wdAdsNeeded){
-      // Highlight watch ad button
       const btn = lock.querySelector('button');
       if(btn) btn.focus();
     }
@@ -1590,18 +1646,24 @@ function renderWithdraw(){
 }
 function selectMethod(i){ selectedMethod=i; renderWithdraw(); }
 
+/* ✅ Watch withdraw unlock ad — uses Gigapub */
 async function watchWithdrawAd(){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
-  setTimeout(async ()=>{
-    btn.textContent = old; btn.disabled=false;
-    STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
-    await saveState();
-    renderWithdraw();
-    // Sync with Firebase so admin sees it
-    await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
-  }, 1500);
+
+  try{
+    await showGigapubAd();
+  }catch(e){
+    console.warn('Withdraw ad skipped:', e.message);
+  }
+
+  btn.textContent = old; btn.disabled=false;
+  STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
+  await saveState();
+  renderWithdraw();
+  await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
 }
+
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
@@ -1673,12 +1735,13 @@ async function watchAdForSpin(){
   if(STATE.lastSpinAdDate === today) return;
   const btn = document.getElementById('btnWatchAdSpin');
   btn.textContent='Loading...'; btn.disabled=true;
-  setTimeout(async ()=>{
-    STATE.lastSpinAdDate = today;
-    STATE.spinsAvailable += 1;
-    await saveState();
-    renderSpinModal();
-  }, 1500);
+
+  try{ await showGigapubAd(); }catch(e){ console.warn('Spin ad skipped:', e.message); }
+
+  STATE.lastSpinAdDate = today;
+  STATE.spinsAvailable += 1;
+  await saveState();
+  renderSpinModal();
 }
 async function doSpin(){
   if(STATE.spinsAvailable<=0) return;
@@ -1760,7 +1823,6 @@ document.getElementById('taskCatTabs').addEventListener('click', (e)=>{
   renderTask();
 });
 
-/* ✅ LIVE LEADERBOARD render */
 document.getElementById('openLeaderboard').addEventListener('click', ()=>{
   document.getElementById('lbModal').classList.add('show');
   renderLeaderboard();
@@ -1786,7 +1848,7 @@ function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
-/* ---------- ADMIN PANEL ---------- */
+/* ---------- ADMIN PANEL (kept for in-app fallback) ---------- */
 function toggleAdminPanel(){
   document.getElementById('adminPanel').classList.toggle('show');
   if(document.getElementById('adminPanel').classList.contains('show')){
@@ -1904,7 +1966,11 @@ function addAdsNetwork(){
   const daily = parseInt(document.getElementById('adminAdDaily').value)||10;
   if(!name) return;
   CFG.adsNetworks = CFG.adsNetworks || [];
-  CFG.adsNetworks.push({name, reward, dailyLimit:daily});
+  // Auto-detect type
+  let type = 'generic';
+  if(name.toLowerCase().includes('giga')) type = 'giga';
+  else if(name.toLowerCase().includes('monetag')) type = 'monetag';
+  CFG.adsNetworks.push({name, reward, dailyLimit:daily, type});
   sSet('admin_config', CFG);
   STATE.adsToday[name] = 0;
   saveState();
@@ -2039,7 +2105,6 @@ function deleteRedeemCode(i){
   renderAdminRedeemPreview();
 }
 
-/* ✅ ADMIN WITHDRAWAL MANAGEMENT */
 async function renderAdminWithdrawals(){
   const el = document.getElementById('withdrawAdminList');
   if(!el) return;
@@ -2089,7 +2154,6 @@ async function approveWithdraw(userId, idx){
   if(!record) return;
   record.status = 'approved';
   await ref.set(record);
-  // Send notification to user
   await sendBotMessage(userId, `✅ *Withdrawal Approved!*\n\n💎 ${record.amount} Meaw\n📤 ${record.method}\n📬 ${record.address}\n\nThank you for using Meaw Quest! 🐾`);
   alert('Withdrawal approved!');
   renderAdminWithdrawals();
@@ -2102,9 +2166,7 @@ async function rejectWithdraw(userId, idx){
   if(!record) return;
   record.status = 'rejected';
   await ref.set(record);
-  // Refund the coins
   await sIncrement('user_state_'+userId+'/coins', record.amount);
-  // Send notification
   await sendBotMessage(userId, `❌ *Withdrawal Rejected*\n\n💎 ${record.amount} Meaw\n📤 ${record.method}\n\nReason: Contact support for details.\nYour balance has been refunded. 🐾`);
   alert('Withdrawal rejected & refunded.');
   renderAdminWithdrawals();
