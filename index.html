@@ -24,6 +24,7 @@
   --paw:#f2c56b;
   --danger:#e05a4e;
   --ok:#5fbf6b;
+  --ton-blue:#0098EA;
   --panel:#1b1240ee;
   --radius:18px;
 }
@@ -293,17 +294,107 @@ body{
 .ref-status.active{background:rgba(95,191,107,.2);color:var(--ok);}
 .ref-status.pending{background:rgba(224,90,78,.18);color:#ff9e93;}
 
+/* =============== WITHDRAW REDESIGN =============== */
 .balance-hero{text-align:center;padding:10px 0 18px;}
 .balance-hero b{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-light);}
-.lock-box{background:linear-gradient(145deg,#241a52,#180f38);border:1px solid rgba(244,196,48,.3);border-radius:14px;padding:16px;margin-bottom:14px;}
-.lock-progress-bar{height:8px;border-radius:20px;background:rgba(255,255,255,.15);overflow:hidden;margin:10px 0;}
-.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width .3s;}
-.field-label{font-size:12px;opacity:.8;margin:10px 0 6px;}
-.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(244,196,48,.35);background:#140f2e;color:var(--cream);font-family:'Baloo 2';font-size:13px;}
-.method-row{display:flex;gap:10px;margin-bottom:10px;}
-.method-chip{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:12px;border:1.5px solid rgba(244,196,48,.25);background:#180f38;cursor:pointer;}
-.method-chip.sel{border-color:var(--gold-light);background:rgba(244,196,48,.12);}
-.method-chip img{width:26px;height:26px;}
+.lock-box{
+  background:linear-gradient(160deg,#241a52,#150c38);
+  border:1px solid rgba(244,196,48,.35);border-radius:20px;
+  padding:20px 18px;margin-bottom:16px;position:relative;overflow:hidden;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+}
+.lock-box::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(244,196,48,.12), transparent 60%);pointer-events:none;}
+.lock-head{position:relative;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.lock-icon-badge{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));
+  box-shadow:0 4px 12px rgba(244,196,48,.45), inset 0 2px 3px rgba(255,255,255,.55);
+}
+.lock-head-text{flex:1;}
+.lock-head-text h4{font-size:14.5px;font-weight:800;color:var(--gold-light);margin-bottom:2px;}
+.lock-head-text p{font-size:11.5px;opacity:.7;line-height:1.3;}
+.lock-progress-bar{position:relative;height:10px;border-radius:20px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0 8px;box-shadow:inset 0 1px 3px rgba(0,0,0,.4);}
+.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width .4s ease;box-shadow:0 0 12px rgba(244,196,48,.5);}
+.lock-text-row{position:relative;display:flex;justify-content:space-between;align-items:center;font-size:11px;}
+.lock-text-row .lt-count{color:var(--gold-light);font-weight:800;}
+.lock-text-row .lt-pct{opacity:.7;}
+.lock-watch-btn{
+  position:relative;margin-top:14px;width:100%;padding:14px;border-radius:14px;
+  background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);
+  font-weight:800;font-size:14.5px;border:none;cursor:pointer;font-family:'Baloo 2',sans-serif;
+  box-shadow:0 4px 0 #8a5c0f, 0 6px 14px rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.lock-watch-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a5c0f;}
+
+/* ✅ Beautiful TON Withdraw Form */
+.withdraw-form-card{
+  background:linear-gradient(160deg,#241a52,#150c38);
+  border:1px solid rgba(244,196,48,.35);border-radius:20px;
+  padding:20px 18px;margin-bottom:16px;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+  position:relative;overflow:hidden;
+}
+.withdraw-form-card::before{content:"";position:absolute;top:-50%;right:-30%;width:70%;height:150%;background:radial-gradient(circle, rgba(0,152,234,.10), transparent 60%);pointer-events:none;}
+.ton-method-card{
+  position:relative;display:flex;align-items:center;gap:14px;
+  background:linear-gradient(145deg,rgba(0,152,234,.12),rgba(0,152,234,.04));
+  border:1.5px solid rgba(0,152,234,.55);border-radius:16px;
+  padding:14px 16px;margin-bottom:16px;
+  box-shadow:0 4px 14px rgba(0,152,234,.2), inset 0 1px 2px rgba(255,255,255,.1);
+}
+.ton-logo-wrap{
+  width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,152,234,.5), inset 0 2px 3px rgba(255,255,255,.6);
+  padding:6px;
+}
+.ton-logo-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
+.ton-info{flex:1;}
+.ton-info b{font-size:15px;color:#fff;display:block;margin-bottom:2px;letter-spacing:.3px;}
+.ton-info span{font-size:11px;color:#8fd0f5;opacity:.9;}
+.ton-check-badge{
+  font-size:11px;font-weight:800;color:#fff;
+  padding:5px 10px;border-radius:20px;
+  background:linear-gradient(145deg,#00b0ff,#0098EA);
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 2px 6px rgba(0,152,234,.4);
+}
+
+.field-label{font-size:12px;font-weight:700;color:var(--gold-light);margin:14px 0 6px;display:flex;align-items:center;gap:6px;}
+.field-label .fl-icon{font-size:14px;opacity:.9;}
+.input{
+  width:100%;padding:13px 14px;border-radius:12px;
+  border:1.5px solid rgba(244,196,48,.3);
+  background:#140f2e;color:var(--cream);
+  font-family:'Baloo 2',sans-serif;font-size:13.5px;
+  outline:none;transition:border-color .2s, box-shadow .2s;
+}
+.input:focus{border-color:var(--gold-light);box-shadow:0 0 0 3px rgba(244,196,48,.15);}
+.input::placeholder{color:rgba(253,246,227,.35);}
+.withdraw-submit-btn{
+  margin-top:16px;width:100%;padding:15px;border-radius:14px;
+  background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);
+  font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:'Baloo 2',sans-serif;
+  box-shadow:0 4px 0 #8a5c0f, 0 6px 14px rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.3px;
+}
+.withdraw-submit-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a5c0f;}
+.withdraw-info-note{
+  margin-top:12px;padding:10px 12px;border-radius:10px;
+  background:rgba(0,152,234,.08);border:1px solid rgba(0,152,234,.25);
+  font-size:11px;color:#8fd0f5;line-height:1.5;display:flex;gap:8px;align-items:flex-start;
+}
+.withdraw-info-note::before{content:"ℹ️";font-size:13px;flex-shrink:0;}
+.wd-balance-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(244,196,48,.12);border:1px solid rgba(244,196,48,.35);
+  padding:5px 12px;border-radius:20px;font-size:11px;
+  color:var(--gold-light);font-weight:800;margin-top:6px;
+}
+
+/* =============== END WITHDRAW REDESIGN =============== */
 
 .modal-icon-badge{
   width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -590,24 +681,58 @@ body{
         <div style="font-size:12px;opacity:.8;">Available Balance</div>
         <b id="wdBalance">0</b>
       </div>
+
       <div class="lock-box" id="lockBox">
-        <div class="section-title" style="margin-bottom:2px;">🔒 Unlock Withdraw</div>
-        <div style="font-size:12px;opacity:.8;">Watch 5 ads to unlock withdrawal</div>
+        <div class="lock-head">
+          <div class="lock-icon-badge">🔒</div>
+          <div class="lock-head-text">
+            <h4>Unlock Withdrawal</h4>
+            <p>Watch 5 ads to unlock your TON withdrawal</p>
+          </div>
+        </div>
         <div class="lock-progress-bar"><div class="lock-progress-fill" id="lockFill"></div></div>
-        <div style="font-size:11px;opacity:.75;" id="lockText">0 / 5 ads watched</div>
-        <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchWithdrawAd()">▶️ Watch Ad</button>
+        <div class="lock-text-row">
+          <span class="lt-count" id="lockText">0 / 5 ads</span>
+          <span class="lt-pct" id="lockPct">0%</span>
+        </div>
+        <button class="lock-watch-btn" onclick="watchWithdrawAd()">▶️ Watch Ad</button>
       </div>
+
       <div id="withdrawForm" style="display:none;">
-        <div class="field-label">Withdraw Method</div>
-        <div class="method-row" id="methodRow"></div>
-        <div class="field-label">Amount (Meaw Coin)</div>
-        <input class="input" id="wdAmount" type="number" placeholder="Min withdraw amount">
-        <div class="field-label">Wallet / TON Address</div>
-        <input class="input" id="wdAddress" type="text" placeholder="Your TON wallet address">
-        <button class="btn btn-gold btn-block" style="margin-top:14px;" onclick="submitWithdraw()">💎 Submit Withdraw</button>
-        <div id="wdMsg" style="font-size:12px;text-align:center;margin-top:10px;"></div>
+        <div class="withdraw-form-card">
+          <div class="section-title" style="margin-bottom:12px;">💎 Withdraw to TON</div>
+
+          <div class="ton-method-card">
+            <div class="ton-logo-wrap">
+              <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
+            </div>
+            <div class="ton-info">
+              <b>TON Network</b>
+              <span>Fast & low-fee withdrawal</span>
+            </div>
+            <div class="ton-check-badge">✓ Selected</div>
+          </div>
+
+          <div class="field-label"><span class="fl-icon">💰</span> Amount (Meaw Coin)</div>
+          <input class="input" id="wdAmount" type="number" placeholder="Enter amount to withdraw">
+          <div class="wd-balance-pill">💎 Available: <span id="wdAvailInline">0</span> Meaw</div>
+
+          <div class="field-label"><span class="fl-icon">📬</span> TON Wallet Address</div>
+          <input class="input" id="wdAddress" type="text" placeholder="UQ... or EQ... TON address">
+
+          <div class="withdraw-info-note">
+            Double-check your TON address. Withdrawals are processed within 24 hours by admin.
+          </div>
+
+          <button class="withdraw-submit-btn" onclick="submitWithdraw()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 20 8l-8 13.5L4 8Z" stroke="#241408" stroke-width="1.8" fill="none" stroke-linejoin="round"/><path d="M4 8h16M8.5 8 12 21.5 15.5 8" stroke="#241408" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Submit Withdrawal
+          </button>
+          <div id="wdMsg" style="font-size:12px;text-align:center;margin-top:10px;"></div>
+        </div>
       </div>
-      <div class="section-title" style="margin-top:18px;">🧾 History</div>
+
+      <div class="section-title" style="margin-top:6px;">🧾 History</div>
       <div id="wdHistory"></div>
     </div>
 
@@ -820,11 +945,12 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition v5
+   MEAW QUEST — Firebase Edition v6
    ✅ Gigapub ads integration (window.showGiga())
    ✅ Monetag ads integration (show_11782670)
-   ✅ Gigapub + Monetag added to Task tab
-   ✅ Active referral sends bot message + gives reward
+   ✅ Ads now show properly in Task menu
+   ✅ Only TON withdrawal + premium design
+   ✅ Active referral bot message + reward
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -837,6 +963,8 @@ const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
 let BOT_TOKEN = '';
+let SDK_READY = false;
+let SDK_CHECK_INTERVAL = null;
 
 /* ---------- FIREBASE ---------- */
 const firebaseConfig = {
@@ -915,8 +1043,7 @@ const DEFAULT_CONFIG = {
     {value:4,  weight:17, color:'#66c2ff'}
   ],
   withdrawMethods: [
-    {name:'TON', icon:'💎'},
-    {name:'USDT (TON)', icon:'💵'}
+    {name:'TON', icon:'💎'}
   ]
 };
 
@@ -951,7 +1078,6 @@ let STATE = null;
 let joinChecking = -1;
 let joinOpened = [];
 let wheelRotation = 0;
-let selectedMethod = 0;
 let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
@@ -965,33 +1091,91 @@ function safeGoScreen(){
 }
 setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe screen switch'); safeGoScreen(); } }, 8000);
 
-/* ---------- GIGAPUB ADS HELPER ---------- */
+/* ============================================================
+   ✅ FIXED ADS SDK — Wait for SDKs to be ready before using
+   ============================================================ */
+function checkSDKReady(){
+  const gigaReady = typeof window.showGiga === 'function';
+  const monetagReady = typeof window.show_11782670 === 'function';
+  return { gigaReady, monetagReady, allReady: gigaReady || monetagReady };
+}
+
+/* Wait for a specific SDK to be available (max 10s) */
+function waitForSDK(checkFn, maxWaitMs=10000){
+  return new Promise((resolve)=>{
+    const start = Date.now();
+    const check = ()=>{
+      if(checkFn()){
+        resolve(true);
+        return;
+      }
+      if(Date.now() - start > maxWaitMs){
+        resolve(false);
+        return;
+      }
+      setTimeout(check, 300);
+    };
+    check();
+  });
+}
+
+/* ✅ Gigapub Ad */
 async function showGigapubAd(){
+  if(typeof window.showGiga !== 'function'){
+    console.warn('Waiting for Gigapub SDK...');
+    const ok = await waitForSDK(()=>typeof window.showGiga === 'function', 8000);
+    if(!ok){
+      console.error('Gigapub SDK not available');
+      throw new Error('Gigapub SDK not loaded');
+    }
+  }
   return new Promise((resolve, reject)=>{
-    if(typeof window.showGiga === 'function'){
-      window.showGiga()
-        .then(()=>resolve(true))
-        .catch(e=>{ console.warn('Gigapub error:', e); reject(e); });
-    } else {
-      console.warn('window.showGiga not available');
-      reject(new Error('Gigapub SDK not loaded'));
+    try{
+      const result = window.showGiga();
+      if(result && typeof result.then === 'function'){
+        result.then(()=>resolve(true)).catch(e=>{
+          console.warn('Gigapub error:', e);
+          reject(e);
+        });
+      } else {
+        // Some SDK versions resolve via callback
+        resolve(true);
+      }
+    }catch(e){
+      console.warn('Gigapub exception:', e);
+      reject(e);
     }
   });
 }
 
-/* ---------- MONETAG ADS HELPER ---------- */
+/* ✅ Monetag Ad */
 async function showMonetagAd(){
+  if(typeof window.show_11782670 !== 'function'){
+    console.warn('Waiting for Monetag SDK...');
+    const ok = await waitForSDK(()=>typeof window.show_11782670 === 'function', 8000);
+    if(!ok){
+      console.error('Monetag SDK not available');
+      throw new Error('Monetag SDK not loaded');
+    }
+  }
   return new Promise((resolve, reject)=>{
-    if(typeof window.show_11782670 === 'function'){
-      try{
-        window.show_11782670();
-        resolve(true);
-      }catch(e){ reject(e); }
-    } else {
-      console.warn('Monetag show_11782670 not available');
-      reject(new Error('Monetag SDK not loaded'));
+    try{
+      window.show_11782670();
+      resolve(true);
+    }catch(e){
+      console.warn('Monetag exception:', e);
+      reject(e);
     }
   });
+}
+
+/* ✅ Wait for SDKs on page load */
+async function waitForAllSDKs(){
+  const giga = await waitForSDK(()=>typeof window.showGiga === 'function', 12000);
+  const mon = await waitForSDK(()=>typeof window.show_11782670 === 'function', 12000);
+  SDK_READY = giga || mon;
+  console.log('SDK Status → Gigapub:', giga, '| Monetag:', mon);
+  return { giga, mon };
 }
 
 /* ---------- BOT API ---------- */
@@ -1029,6 +1213,9 @@ async function sendBotMessage(chatId, text){
 /* ---------- INIT ---------- */
 async function init(){
   try{
+    // ✅ Wait for ads SDKs first
+    waitForAllSDKs().catch(e=>console.warn('SDK wait failed:', e));
+
     const secureCfg = await sGet('secure/config');
     if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
 
@@ -1040,8 +1227,8 @@ async function init(){
     CFG.tasks = (CFG.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
+    CFG.withdrawMethods = [{name:'TON', icon:'💎'}];
 
-    // Ensure Gigapub + Monetag are in adsNetworks
     if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
       CFG.adsNetworks.unshift({name:'Gigapub', reward:15, dailyLimit:10, type:'giga'});
     }
@@ -1090,13 +1277,12 @@ async function init(){
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
     setTimeout(()=>{
       safeGoScreen();
-      // ✅ Show Gigapub ad after loading (for both new + old users)
-      setTimeout(()=>{ tryShowWelcomeAd(); }, 1200);
+      setTimeout(()=>{ tryShowWelcomeAd(); }, 2000);
     }, 1500);
   }
 }
 
-/* ✅ Show Gigapub ad after loading (once per session) */
+/* ✅ Show Gigapub ad after loading */
 async function tryShowWelcomeAd(){
   try{
     await showGigapubAd();
@@ -1138,12 +1324,12 @@ function attachAdminConfigListener(){
     merged.tasks = (merged.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
     merged.boosts = merged.boosts || DEFAULT_CONFIG.boosts;
     merged.redeemCodes = merged.redeemCodes || DEFAULT_CONFIG.redeemCodes;
+    merged.withdrawMethods = [{name:'TON', icon:'💎'}];
     CFG = merged;
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
 }
 
-/* ✅ LIVE LEADERBOARD */
 function attachLeaderboardListener(){
   db.ref('user_state').on('value', snap=>{
     const all = snap.val() || {};
@@ -1164,7 +1350,6 @@ function attachLeaderboardListener(){
   });
 }
 
-/* ✅ LIVE WITHDRAW LISTENER */
 function attachWithdrawListener(){
   db.ref('user_state_'+USER_ID+'/withdrawHistory').on('value', snap=>{
     const hist = snap.val();
@@ -1194,7 +1379,6 @@ async function registerReferralIfNeeded(){
     joinedAt: Date.now()
   });
 
-  // ✅ Bot message for new referral join
   await sendBotMessage(
     referrerId,
     `🎉 *New Referral Joined!*\n\n` +
@@ -1204,7 +1388,6 @@ async function registerReferralIfNeeded(){
   );
 }
 
-/* ✅ Referral activation — sends bot message + gives bonus reward */
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -1214,12 +1397,9 @@ async function checkReferralActivation(){
 
   const referrerId = STATE.referredBy;
   await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
-
-  // ✅ Give bonus reward to referrer
   await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
   await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
 
-  // ✅ Send bot message to referrer
   const refState = await sGet('user_state_'+referrerId);
   const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
 
@@ -1233,7 +1413,6 @@ async function checkReferralActivation(){
   );
 }
 
-/* ✅ Commission — referrer earns on every user earn */
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
@@ -1295,13 +1474,11 @@ async function verifyChannel(i){
   renderJoinList();
 }
 
-/* ✅ User clicks "Enter Kingdom" — show Gigapub ad, then open dashboard */
 document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
 
-  // Show Gigapub ad right after joining (for new users)
   try{ await showGigapubAd(); }catch(e){ console.warn('Post-join ad skipped:', e.message); }
 
   goScreen('screen-app');
@@ -1354,7 +1531,7 @@ function renderTask(){
           <div class="dash-progress">${dashHtml}</div>
         </div>
       </div>
-      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}')">Watch</button>
+      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}', event)">Watch</button>
     </div>`;
   }).join('');
   document.getElementById('adsNetworkList').innerHTML = adsHtml;
@@ -1420,14 +1597,15 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad — uses Gigapub or Monetag SDK depending on network type */
-async function watchAd(netName){
+/* ✅ FIXED Watch Ad — waits for SDK, passes event properly */
+async function watchAd(netName, evt){
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
   if((STATE.adsToday[netName]||0) >= net.dailyLimit){ alert('Daily limit reached'); return; }
 
-  const btn = event.target;
-  const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
+  const btn = evt && evt.target ? evt.target : (window.event ? window.event.target : null);
+  const old = btn ? btn.textContent : 'Watch';
+  if(btn){ btn.textContent='Loading...'; btn.disabled=true; }
 
   let adSuccess = false;
   try{
@@ -1438,20 +1616,17 @@ async function watchAd(netName){
       await showMonetagAd();
       adSuccess = true;
     } else {
-      // Fallback — simple timer
       await new Promise(r=>setTimeout(r, 1500));
       adSuccess = true;
     }
   }catch(e){
     console.warn('Ad failed:', e);
+    alert('Ad not available. Please try again.');
   }
 
-  btn.textContent = old;
-  btn.disabled = false;
+  if(btn){ btn.textContent = old; btn.disabled = false; }
+  if(!adSuccess) return;
 
-  if(!adSuccess){ alert('Ad not available, try again.'); return; }
-
-  // Reward the user
   STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
   STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
   await addCoins(net.reward);
@@ -1635,10 +1810,17 @@ function shareRefLink(){
 /* ---------- WITHDRAW ---------- */
 function renderWithdraw(){
   document.getElementById('wdBalance').textContent = fmt(STATE.coins) + ' Meaw';
+  const inlineAvail = document.getElementById('wdAvailInline');
+  if(inlineAvail) inlineAvail.textContent = fmt(STATE.coins);
+
   const need = CFG.wdAdsNeeded;
   const have = Math.min(STATE.wdAdsWatched, need);
-  document.getElementById('lockFill').style.width = (have/need*100)+'%';
-  document.getElementById('lockText').textContent = have+' / '+need+' ads watched';
+  const pct = Math.round(have/need*100);
+  document.getElementById('lockFill').style.width = pct+'%';
+  document.getElementById('lockText').textContent = have+' / '+need+' ads';
+  const pctEl = document.getElementById('lockPct');
+  if(pctEl) pctEl.textContent = pct+'%';
+
   if(have>=need){
     document.getElementById('lockBox').style.display='none';
     document.getElementById('withdrawForm').style.display='block';
@@ -1646,24 +1828,18 @@ function renderWithdraw(){
     document.getElementById('lockBox').style.display='block';
     document.getElementById('withdrawForm').style.display='none';
   }
-  const mr = document.getElementById('methodRow');
-  mr.innerHTML = CFG.withdrawMethods.map((m,i)=>`
-    <div class="method-chip ${i===selectedMethod?'sel':''}" onclick="selectMethod(${i})">
-      <div style="font-size:20px;">${m.icon}</div><span style="font-size:11px;">${m.name}</span>
-    </div>`).join('');
 
   const hist = document.getElementById('wdHistory');
   hist.innerHTML = (STATE.withdrawHistory||[]).slice().reverse().map(h=>{
     const statusColor = h.status==='approved' ? 'var(--ok)' : h.status==='rejected' ? 'var(--danger)' : 'var(--gold-light)';
     const statusIcon = h.status==='approved' ? '✅' : h.status==='rejected' ? '❌' : '⏳';
     return `<div class="task-item" style="align-items:center;">
-      <div class="ads-left"><div class="ads-logo">💎</div>
-      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method}</div></div></div>
+      <div class="ads-left"><div class="ads-logo" style="background:#fff;padding:4px;"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">TON</div></div></div>
       <div class="reward-tag" style="color:${statusColor};">${statusIcon} ${h.status}</div>
     </div>`;
   }).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
-function selectMethod(i){ selectedMethod=i; renderWithdraw(); }
 
 /* ✅ Watch withdraw unlock ad — uses Gigapub */
 async function watchWithdrawAd(){
@@ -1674,6 +1850,9 @@ async function watchWithdrawAd(){
     await showGigapubAd();
   }catch(e){
     console.warn('Withdraw ad skipped:', e.message);
+    alert('Ad not available. Please try again.');
+    btn.textContent = old; btn.disabled=false;
+    return;
   }
 
   btn.textContent = old; btn.disabled=false;
@@ -1683,13 +1862,15 @@ async function watchWithdrawAd(){
   await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
 }
 
+/* ✅ TON-only withdrawal submission */
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
   const msg = document.getElementById('wdMsg');
-  if(!amt || amt < CFG.minWithdraw){ msg.textContent='Min '+CFG.minWithdraw; msg.style.color='#ffb4ac'; return; }
+  if(!amt || amt < CFG.minWithdraw){ msg.textContent='Min '+CFG.minWithdraw+' Meaw'; msg.style.color='#ffb4ac'; return; }
   if(amt > STATE.coins){ msg.textContent='Insufficient balance'; msg.style.color='#ffb4ac'; return; }
-  if(!addr){ msg.textContent='Enter wallet address'; msg.style.color='#ffb4ac'; return; }
+  if(!addr){ msg.textContent='Enter your TON wallet address'; msg.style.color='#ffb4ac'; return; }
+  if(addr.length < 20){ msg.textContent='TON address looks invalid'; msg.style.color='#ffb4ac'; return; }
 
   STATE.withdrawHistory = STATE.withdrawHistory || [];
   const record = {
@@ -1697,7 +1878,7 @@ async function submitWithdraw(){
     userId: USER_ID,
     name: tgUser.first_name || 'Player',
     amount: amt,
-    method: CFG.withdrawMethods[selectedMethod].name,
+    method: 'TON',
     address: addr,
     status: 'pending',
     time: Date.now()
@@ -1707,8 +1888,10 @@ async function submitWithdraw(){
   await addCoins(-amt);
   await saveState();
   await sUpdate('user_state_'+USER_ID, { withdrawHistory: STATE.withdrawHistory, wdAdsWatched: 0 });
-  msg.textContent='Submitted! Awaiting admin approval.';
+  msg.textContent='✅ Submitted! Awaiting admin approval.';
   msg.style.color='#8fdc96';
+  document.getElementById('wdAmount').value='';
+  document.getElementById('wdAddress').value='';
   renderAll();
 }
 
@@ -1755,7 +1938,11 @@ async function watchAdForSpin(){
   const btn = document.getElementById('btnWatchAdSpin');
   btn.textContent='Loading...'; btn.disabled=true;
 
-  try{ await showGigapubAd(); }catch(e){ console.warn('Spin ad skipped:', e.message); }
+  try{ await showGigapubAd(); }catch(e){
+    console.warn('Spin ad skipped:', e.message);
+    btn.textContent='▶️ Watch Ad (+1 Spin)'; btn.disabled=false;
+    return;
+  }
 
   STATE.lastSpinAdDate = today;
   STATE.spinsAvailable += 1;
@@ -1867,7 +2054,7 @@ function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
-/* ---------- ADMIN PANEL (kept for in-app fallback) ---------- */
+/* ---------- ADMIN PANEL ---------- */
 function toggleAdminPanel(){
   document.getElementById('adminPanel').classList.toggle('show');
   if(document.getElementById('adminPanel').classList.contains('show')){
@@ -1985,7 +2172,6 @@ function addAdsNetwork(){
   const daily = parseInt(document.getElementById('adminAdDaily').value)||10;
   if(!name) return;
   CFG.adsNetworks = CFG.adsNetworks || [];
-  // Auto-detect type
   let type = 'generic';
   if(name.toLowerCase().includes('giga')) type = 'giga';
   else if(name.toLowerCase().includes('monetag')) type = 'monetag';
@@ -2173,7 +2359,7 @@ async function approveWithdraw(userId, idx){
   if(!record) return;
   record.status = 'approved';
   await ref.set(record);
-  await sendBotMessage(userId, `✅ *Withdrawal Approved!*\n\n💎 ${record.amount} Meaw\n📤 ${record.method}\n📬 ${record.address}\n\nThank you for using Meaw Quest! 🐾`);
+  await sendBotMessage(userId, `✅ *Withdrawal Approved!*\n\n💎 ${record.amount} Meaw\n📤 TON\n📬 ${record.address}\n\nThank you for using Meaw Quest! 🐾`);
   alert('Withdrawal approved!');
   renderAdminWithdrawals();
 }
@@ -2186,7 +2372,7 @@ async function rejectWithdraw(userId, idx){
   record.status = 'rejected';
   await ref.set(record);
   await sIncrement('user_state_'+userId+'/coins', record.amount);
-  await sendBotMessage(userId, `❌ *Withdrawal Rejected*\n\n💎 ${record.amount} Meaw\n📤 ${record.method}\n\nReason: Contact support for details.\nYour balance has been refunded. 🐾`);
+  await sendBotMessage(userId, `❌ *Withdrawal Rejected*\n\n💎 ${record.amount} Meaw\n📤 TON\n\nReason: Contact support for details.\nYour balance has been refunded. 🐾`);
   alert('Withdrawal rejected & refunded.');
   renderAdminWithdrawals();
 }
