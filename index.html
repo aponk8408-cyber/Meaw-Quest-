@@ -222,6 +222,7 @@ body{
 .ads-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;background:linear-gradient(155deg,var(--gold-light),var(--gold-deep));box-shadow:inset 0 2px 3px rgba(255,255,255,.5), inset 0 -3px 5px rgba(0,0,0,.3), 0 3px 8px rgba(0,0,0,.3);}
 .ads-name{font-size:13.5px;font-weight:700;}
 .ads-sub{font-size:11px;opacity:.7;}
+.ads-reward-tag{font-size:10.5px;color:var(--gold-light);font-weight:800;background:rgba(244,196,48,.15);padding:2px 8px;border-radius:20px;border:1px solid rgba(244,196,48,.35);display:inline-block;margin-top:3px;}
 .dash-progress{display:flex;gap:3px;margin-top:5px;}
 .dash{width:10px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);}
 .dash.filled{background:var(--gold-light);}
@@ -229,7 +230,6 @@ body{
 .task-item .ads-left{flex:1;}
 .reward-tag{font-size:11px;color:var(--gold-light);font-weight:700;}
 
-/* === Task category tabs with real premium icons === */
 .task-cat-tabs{display:flex;gap:10px;margin:14px 0 16px;}
 .task-cat-tab{
   flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -302,11 +302,12 @@ body{
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
 .lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.06);}
 .lb-row.me{background:rgba(244,196,48,.08);border-radius:10px;}
-.lb-rank{width:22px;text-align:center;font-weight:800;color:var(--gold-light);font-size:13px;}
+.lb-rank{width:26px;text-align:center;font-weight:800;color:var(--gold-light);font-size:14px;}
 .lb-row .avatar{width:30px;height:30px;font-size:12px;}
 .lb-name{flex:1;font-size:12.5px;font-weight:700;display:flex;flex-direction:column;}
 .lb-name small{font-size:9.5px;font-weight:600;opacity:.6;color:#c9d6ff;}
 .lb-val{font-size:12px;color:var(--gold-light);font-weight:700;text-align:right;}
+.lb-empty{text-align:center;padding:20px;opacity:.6;font-size:12px;}
 
 .spin-sheet{text-align:center;}
 .spin-count-pill{display:inline-block;background:rgba(244,196,48,.14);border:1px solid rgba(244,196,48,.4);color:var(--gold-light);font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:16px;}
@@ -338,6 +339,35 @@ body{
 .reward-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:16px;margin-bottom:4px;}
 .reward-amt{font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
 
+/* Redeem section on Home */
+.redeem-card{
+  position:relative;background:linear-gradient(160deg,#241a52,#150c38);
+  border:1px solid rgba(244,196,48,.32);border-radius:20px;
+  padding:20px 16px;text-align:center;cursor:pointer;overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);margin-top:12px;
+}
+.redeem-card:active{transform:scale(.97);}
+.redeem-card::after{
+  content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;
+  background:linear-gradient(120deg, rgba(255,255,255,.14), transparent 60%);
+  transform:rotate(20deg);pointer-events:none;
+}
+.redeem-card-ic{
+  width:60px;height:60px;margin:0 auto 10px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep));
+  box-shadow:0 6px 14px rgba(244,196,48,.4), inset 0 3px 5px rgba(255,255,255,.6);
+}
+.redeem-card-ic svg{width:32px;height:32px;position:relative;z-index:2;}
+.redeem-card h4{font-size:14px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
+.redeem-card p{font-size:11px;opacity:.7;}
+
+.redeem-illustration{width:74px;height:74px;margin:4px auto 14px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep) 100%);box-shadow:0 8px 20px rgba(244,196,48,.4);}
+.redeem-illustration svg{width:38px;height:38px;}
+.redeem-input-wrap{display:flex;gap:8px;margin:6px 0 4px;}
+.redeem-input-wrap input{flex:1;text-transform:uppercase;letter-spacing:2px;text-align:center;font-weight:800;}
+.redeem-msg{font-size:12px;text-align:center;margin-top:10px;min-height:16px;}
+
 #screen-maint{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#1a1440,#0c0824);}
 #screen-maint .m-ic{font-size:52px;margin-bottom:14px;}
 
@@ -350,7 +380,7 @@ body{
 .admin-btn{background:var(--gold);color:var(--brown-deep);border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;margin:4px;}
 .admin-close{background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;position:absolute;top:10px;right:10px;}
 .admin-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
-.admin-tab-btn{flex:1;min-width:80px;padding:8px;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:rgba(255,255,255,.05);color:#fff;font-weight:700;font-size:11px;cursor:pointer;}
+.admin-tab-btn{flex:1;min-width:70px;padding:8px 4px;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:rgba(255,255,255,.05);color:#fff;font-weight:700;font-size:10.5px;cursor:pointer;}
 .admin-tab-btn.active{background:var(--gold);color:var(--brown-deep);}
 .admin-tab-content{display:none;}
 .admin-tab-content.active{display:block;}
@@ -413,7 +443,7 @@ body{
         <div class="farm-label">FARM MEAW</div>
         <div class="farm-coin"></div>
         <div class="farm-price">Coin Price: <b id="coinPriceText">$0.0000</b></div>
-        <button class="btn btn-gold btn-block" id="btnStartFarming">🐾 Start Farming</button>
+        <button class="btn btn-gold btn-block" id="btnStartFarmingHome">🐾 Start Farming</button>
       </div>
 
       <div class="feature-grid">
@@ -449,8 +479,22 @@ body{
             </svg>
           </div>
           <h4>Leaderboard</h4>
-          <p>Live top players &amp; refers</p>
+          <p>Live top players</p>
         </div>
+      </div>
+
+      <!-- ✅ Redeem Code card on Home -->
+      <div class="redeem-card" id="openRedeem">
+        <div class="redeem-card-ic">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/>
+            <path d="M3 9.5h18v3.4H3V9.5Z" fill="#fff" opacity=".3"/>
+            <path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/>
+            <path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/>
+          </svg>
+        </div>
+        <h4>🎁 Redeem Code</h4>
+        <p>Have a promo code? Claim your Meaw bonus</p>
       </div>
     </div>
 
@@ -486,8 +530,8 @@ body{
       <div class="meaw-hero">
         <div class="meaw-coin-big"></div>
         <div class="timer-text font-display" id="farmTimer">04:00:00</div>
-        <div class="timer-sub" id="farmTimerSub">Start farming from Home</div>
-        <button class="btn btn-gold btn-block" id="btnClaimFarm" disabled>🐾 Claim Farming</button>
+        <div class="timer-sub" id="farmTimerSub">Tap Start Mining to begin</div>
+        <button class="btn btn-gold btn-block" id="btnClaimFarm" disabled>🐾 Claim Mining</button>
       </div>
       <div class="section-title" style="margin-top:14px;">🚀 Mining Boosts</div>
       <div id="boostList"></div>
@@ -600,6 +644,21 @@ body{
     </div>
   </div>
 
+  <div class="modal-bg" id="redeemModal">
+    <div class="modal-sheet" style="text-align:center;">
+      <div class="modal-head"><h3><span class="modal-icon-badge"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#3d2413"/></svg></span>Redeem Code</h3><div class="modal-close" onclick="closeModal('redeemModal')">✕</div></div>
+      <div class="redeem-illustration">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9.5" width="18" height="11" rx="1.6" fill="#3d2413"/><path d="M3 9.5h18v3.4H3V9.5Z" fill="#fff" opacity=".3"/><path d="M12 9.5c-2.4 0-4-1.1-4-2.9C8 5 9.2 3.8 10.6 3.8c1.7 0 1.4 3 1.4 5.7Z" fill="#fff"/><path d="M12 9.5c2.4 0 4-1.1 4-2.9C16 5 14.8 3.8 13.4 3.8c-1.7 0-1.4 3-1.4 5.7Z" fill="#fff" opacity=".8"/></svg>
+      </div>
+      <div style="font-size:12px;opacity:.75;margin-bottom:6px;">Enter your promo code below to claim Meaw coins</div>
+      <div class="redeem-input-wrap">
+        <input class="input" id="redeemCodeInput" type="text" placeholder="ENTER CODE">
+      </div>
+      <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="submitRedeem()">🎁 Claim Reward</button>
+      <div class="redeem-msg" id="redeemMsg"></div>
+    </div>
+  </div>
+
   <div class="reward-pop" id="rewardPop">
     <div class="reward-card">
       <div class="reward-coin"></div>
@@ -615,10 +674,12 @@ body{
 
     <div class="admin-tabs">
       <button class="admin-tab-btn active" onclick="switchAdminTab('general')">General</button>
-      <button class="admin-tab-btn" onclick="switchAdminTab('telegram')">TG Task</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('telegram')">TG</button>
       <button class="admin-tab-btn" onclick="switchAdminTab('twitter')">Twitter</button>
       <button class="admin-tab-btn" onclick="switchAdminTab('mission')">Mission</button>
       <button class="admin-tab-btn" onclick="switchAdminTab('ads')">Ads</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('mining')">Mining</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('redeem')">Redeem</button>
     </div>
 
     <div class="admin-tab-content active" id="adminTab-general">
@@ -639,12 +700,19 @@ body{
         <input class="admin-input" id="adminSpinRewards" placeholder="2,5,3,7,10,20,50,12,4">
         <button class="admin-btn" onclick="updateSpinRewards()">Update Rewards</button>
       </div>
+      <div class="admin-section">
+        <label class="admin-label">Referral Settings</label>
+        <input class="admin-input" id="adminRefBonus" type="number" placeholder="Referral bonus (Meaw)">
+        <input class="admin-input" id="adminRefAds" type="number" placeholder="Ads needed to activate">
+        <input class="admin-input" id="adminRefPct" type="number" placeholder="Commission %">
+        <button class="admin-btn" onclick="saveRefSettings()">Save Referral Settings</button>
+      </div>
     </div>
 
     <div class="admin-tab-content" id="adminTab-telegram">
       <div class="admin-section">
         <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Telegram Channel/Group Task</div>
-        <input class="admin-input" id="tgTaskName" placeholder="Task name (e.g. Join Main Channel)">
+        <input class="admin-input" id="tgTaskName" placeholder="Task name">
         <input class="admin-input" id="tgTaskLink" placeholder="https://t.me/channelname">
         <input class="admin-input" id="tgTaskReward" type="number" placeholder="Reward (Meaw)">
         <button class="admin-btn" onclick="addTelegramTask()">➕ Add Telegram Task</button>
@@ -655,7 +723,7 @@ body{
     <div class="admin-tab-content" id="adminTab-twitter">
       <div class="admin-section">
         <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Twitter Task</div>
-        <input class="admin-input" id="twTaskName" placeholder="Task name (e.g. Follow @MeawQuest)">
+        <input class="admin-input" id="twTaskName" placeholder="Task name">
         <input class="admin-input" id="twTaskLink" placeholder="https://twitter.com/...">
         <input class="admin-input" id="twTaskReward" type="number" placeholder="Reward (Meaw)">
         <button class="admin-btn" onclick="addTwitterTask()">➕ Add Twitter Task</button>
@@ -666,8 +734,8 @@ body{
     <div class="admin-tab-content" id="adminTab-mission">
       <div class="admin-section">
         <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Mission Task (FB/Web/Any)</div>
-        <input class="admin-input" id="msTaskName" placeholder="Task name (e.g. FB Follow)">
-        <input class="admin-input" id="msTaskLink" placeholder="https://... (task link)">
+        <input class="admin-input" id="msTaskName" placeholder="Task name">
+        <input class="admin-input" id="msTaskLink" placeholder="https://...">
         <input class="admin-input" id="msTaskReward" type="number" placeholder="Reward (Meaw)">
         <input class="admin-input" id="msTaskSeconds" type="number" placeholder="Visit seconds (e.g. 30)">
         <button class="admin-btn" onclick="addMissionTask()">➕ Add Mission Task</button>
@@ -685,22 +753,48 @@ body{
       </div>
       <div id="adsPreview"></div>
     </div>
+
+    <div class="admin-tab-content" id="adminTab-mining">
+      <div class="admin-section">
+        <label class="admin-label">Mining Reward (Meaw)</label>
+        <input class="admin-input" id="adminMiningReward" type="number" placeholder="e.g. 250">
+        <label class="admin-label">Mining Duration (hours)</label>
+        <input class="admin-input" id="adminMiningHours" type="number" placeholder="e.g. 4">
+        <button class="admin-btn" onclick="saveMiningSettings()">Save Mining Settings</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Add Mining Boost</label>
+        <input class="admin-input" id="adminBoostName" placeholder="Boost name (e.g. Speed x2)">
+        <input class="admin-input" id="adminBoostCost" type="number" placeholder="Cost (Meaw)">
+        <input class="admin-input" id="adminBoostMult" type="number" placeholder="Multiplier (e.g. 2)">
+        <button class="admin-btn" onclick="addMiningBoost()">➕ Add Boost</button>
+      </div>
+      <div id="boostPreview"></div>
+    </div>
+
+    <div class="admin-tab-content" id="adminTab-redeem">
+      <div class="admin-section">
+        <label class="admin-label">Create Redeem Code</label>
+        <input class="admin-input" id="adminRedeemCode" placeholder="Code (e.g. WELCOME50)">
+        <input class="admin-input" id="adminRedeemAmount" type="number" placeholder="Reward (Meaw)">
+        <input class="admin-input" id="adminRedeemUses" type="number" placeholder="Max uses (e.g. 100)">
+        <button class="admin-btn" onclick="addRedeemCode()">➕ Create Code</button>
+      </div>
+      <div id="redeemPreview"></div>
+    </div>
   </div>
 
 </div>
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition v2
-   Fixes:
-   1) Farming start/claim now works reliably
-   2) Ads list includes Gigapub + Monetag
-   3) Task category tabs (Telegram / Twitter / Mission) with real icons
-   4) Admin panel can add tasks per category
-   5) Telegram task → getChatMember verification
-   6) Twitter task → follow verification via link open
-   7) Mission task → timed visit (X seconds)
-   8) Referral menu shows Total / Active / Reward live
+   MEAW QUEST — Firebase Edition v3
+   Changes:
+   1) Home "Start Farming" → Meaw tab, then "Start Mining" begins
+   2) Mining reward + duration + boosts editable from admin panel
+   3) Ads networks show reward per ad (admin editable)
+   4) Redeem Code button + modal on Home (admin created codes)
+   5) Live leaderboard from Firebase (default mock removed)
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -712,7 +806,11 @@ const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
 const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
-let BOT_TOKEN = '8407604887:AAGY8RK8JRoiaJCa844T-JnKguift3ZB0hE';
+/* 🔐 BOT TOKEN — moved to a per-session value loaded from config at start.
+   NEVER hardcoded here. Set via admin panel once, stored in Firebase
+   under a restricted node. For full security, proxy through a Cloud
+   Function. This keeps casual snooping away from the raw source. */
+let BOT_TOKEN = '';
 
 /* ---------- FIREBASE ---------- */
 const firebaseConfig = {
@@ -748,8 +846,9 @@ async function sIncrement(path, amount){
 
 const DEFAULT_CONFIG = {
   coinPrice: 0.0021,
-  farmReward: 250,
-  farmDurationH: 4,
+  /* ✅ Mining settings — editable from admin panel */
+  miningReward: 250,
+  miningHours: 4,
   adReward: 15,
   adLimit: 10,
   refAdsNeeded: 5,
@@ -764,17 +863,25 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Support',  link:'https://t.me/MeawQuestSupport'},
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
-  /* ✅ 3 ads networks incl. Gigapub + Monetag */
   adsNetworks: [
     {name:'Adsgram', reward:15, dailyLimit:10},
     {name:'Monetag', reward:12, dailyLimit:10},
     {name:'Gigapub', reward:10, dailyLimit:10}
   ],
-  /* ✅ Tasks split by category */
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
     {id:'tw_default_1', category:'twitter',  name:'Follow us on Twitter/X', reward:50, link:'https://twitter.com/', seconds:0},
     {id:'ms_default_1', category:'mission',  name:'Visit Partner Website (30s)', reward:30, link:'https://example.com', seconds:30}
+  ],
+  /* ✅ Mining boosts — editable from admin panel */
+  boosts: [
+    {name:'Speed Boost x2', cost:500,  mult:2},
+    {name:'Speed Boost x3', cost:1500, mult:3},
+    {name:'Speed Boost x5', cost:4000, mult:5}
+  ],
+  /* ✅ Redeem codes — admin creates them */
+  redeemCodes: [
+    {code:'WELCOME50', amount:50, maxUses:1000, usedBy:[]}
   ],
   spinPrizes: [
     {value:2,  weight:22, color:'#e05a4e'},
@@ -786,11 +893,6 @@ const DEFAULT_CONFIG = {
     {value:50, weight:2,  color:'#e08a4e'},
     {value:12, weight:8,  color:'#ff5ecb'},
     {value:4,  weight:17, color:'#66c2ff'}
-  ],
-  boosts: [
-    {name:'Speed Boost x2', cost:500,  mult:2},
-    {name:'Speed Boost x3', cost:1500, mult:3},
-    {name:'Speed Boost x5', cost:4000, mult:5}
   ],
   withdrawMethods: [
     {name:'TON', icon:'💎'},
@@ -820,7 +922,7 @@ const DEFAULT_STATE = {
   spinsAvailable: 0,
   lastSpinAdDate: null,
   referralSpinsGranted: 0,
-  missionTimers: {}
+  redeemedCodes: []
 };
 
 let CFG = null;
@@ -864,6 +966,7 @@ async function checkChannelMembership(channelLink){
   }
 }
 async function sendBotMessage(chatId, text){
+  if(!BOT_TOKEN) return;
   try{
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method:'POST',
@@ -876,14 +979,18 @@ async function sendBotMessage(chatId, text){
 /* ---------- INIT ---------- */
 async function init(){
   try{
+    // Load bot token from secure node (set once via admin panel)
+    const secureCfg = await sGet('secure/config');
+    if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
+
     CFG = await sGet('admin_config');
     if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
     else {
       Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
     }
-
-    // Migrate old tasks without category → telegram
     CFG.tasks = (CFG.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
+    CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
+    CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
     STATE = await sGet('user_state_'+USER_ID);
     if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
@@ -915,6 +1022,7 @@ async function init(){
 
     attachReferralsListener();
     attachAdminConfigListener();
+    attachLeaderboardListener();
 
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
@@ -947,7 +1055,6 @@ function attachReferralsListener(){
     STATE.referrals = val ? Object.keys(val).map(k=>({...val[k]})) : [];
     try{ refreshSpinCredits(); renderRefer(); }catch(e){}
   });
-  // Also listen to my own user_state for realtime coins/bonus updates
   db.ref('user_state_'+USER_ID).on('value', snap=>{
     const v = snap.val();
     if(!v) return;
@@ -964,8 +1071,31 @@ function attachAdminConfigListener(){
     const merged = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     Object.assign(merged, remote);
     merged.tasks = (merged.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
+    merged.boosts = merged.boosts || DEFAULT_CONFIG.boosts;
+    merged.redeemCodes = merged.redeemCodes || DEFAULT_CONFIG.redeemCodes;
     CFG = merged;
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
+  });
+}
+
+/* ✅ LIVE LEADERBOARD — real Firebase data, no more mock */
+function attachLeaderboardListener(){
+  db.ref('user_state').on('value', snap=>{
+    const all = snap.val() || {};
+    const list = Object.keys(all).map(uid=>{
+      const u = all[uid] || {};
+      return {
+        id: uid,
+        name: u.name || u.firstName || ('Player '+uid.slice(-4)),
+        coins: u.coins || 0,
+        refs: u.referralsCount || 0,
+        me: uid === USER_ID
+      };
+    }).sort((a,b)=>b.coins-a.coins).slice(0, 50);
+    window.__leaderboardCache = list;
+    if(document.getElementById('lbModal').classList.contains('show')){
+      renderLeaderboard();
+    }
   });
 }
 
@@ -1086,7 +1216,7 @@ document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
-  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start farming, complete tasks, and invite friends to earn more!`);
+  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start mining, complete tasks, and invite friends to earn more!`);
   goScreen('screen-app');
 });
 
@@ -1110,7 +1240,7 @@ async function addCoins(amount){
 
 /* ---------- TASKS RENDERING ---------- */
 function renderTask(){
-  // Ads networks
+  // Ads networks with REWARD display
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
     const icon = {'Adsgram':'📺','Monetag':'🎬','Gigapub':'🟣'}[net.name] || '📡';
@@ -1124,6 +1254,7 @@ function renderTask(){
         <div>
           <div class="ads-name">${net.name}</div>
           <div class="ads-sub">${watched} / ${net.dailyLimit} today</div>
+          <div class="ads-reward-tag">+${net.reward} Meaw / ad</div>
           <div class="dash-progress">${dashHtml}</div>
         </div>
       </div>
@@ -1132,8 +1263,6 @@ function renderTask(){
   }).join('');
   document.getElementById('adsNetworkList').innerHTML = adsHtml;
 
-  // Category counts (badge)
-  const cats = ['telegram','twitter','mission'];
   const counts = {telegram:0, twitter:0, mission:0};
   CFG.tasks.forEach(t=>{ if(!STATE.tasksDone.includes(t.id)) counts[t.category] = (counts[t.category]||0)+1; });
   document.querySelectorAll('.task-cat-tab').forEach(tab=>{
@@ -1146,7 +1275,6 @@ function renderTask(){
     } else if(badge){ badge.remove(); }
   });
 
-  // Icon per category for task item
   const catIcon = {
     telegram:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg>`,
     twitter:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg>`,
@@ -1158,11 +1286,10 @@ function renderTask(){
     mission:'linear-gradient(145deg,#ffe08a,#c8871a)'
   };
 
-  // Filter tasks for current category
   const filtered = CFG.tasks.filter(t=>t.category===currentTaskCat);
   const ml = document.getElementById('missionList');
   if(filtered.length===0){
-    ml.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:18px;">No ${currentTaskCat} tasks yet — check back soon 🐾</div>`;
+    ml.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:18px;">No ${currentTaskCat} tasks yet 🐾</div>`;
     return;
   }
   ml.innerHTML = filtered.map(t=>{
@@ -1182,7 +1309,6 @@ function renderTask(){
         ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
         : `<button class="btn btn-outline" onclick="openTwitterTask('${t.id}')">Follow</button>`;
     } else {
-      // mission with optional timed visit
       rightHtml = opened
         ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
         : `<button class="btn btn-outline" onclick="openMissionTask('${t.id}')">Visit</button>`;
@@ -1198,7 +1324,6 @@ function renderTask(){
   }).join('');
 }
 
-/* ---------- ADS ---------- */
 async function watchAd(netName){
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
@@ -1220,7 +1345,6 @@ async function watchAd(netName){
   }, 1500);
 }
 
-/* ---------- TASK ACTIONS ---------- */
 function openTelegramTask(id){
   const t = CFG.tasks.find(x=>x.id===id);
   if(!t) return;
@@ -1269,35 +1393,41 @@ async function completeTask(id){
   renderAll();
 }
 
-/* ---------- FARMING (FIXED) ---------- */
+/* ---------- MINING ---------- */
 function renderFarm(){
   const btn = document.getElementById('btnClaimFarm');
   const timerEl = document.getElementById('farmTimer');
   const subEl = document.getElementById('farmTimerSub');
 
   if(!STATE.farmStart){
-    timerEl.textContent = `0${CFG.farmDurationH}:00:00`;
-    subEl.textContent = 'Start farming from Home';
-    btn.disabled = true;
+    timerEl.textContent = `0${CFG.miningHours}:00:00`;
+    subEl.textContent = 'Tap Start Mining to begin';
+    btn.textContent = '⛏️ Start Mining';
+    btn.disabled = false;
+    btn.onclick = startMining;
   } else {
-    const durMs = CFG.farmDurationH*3600*1000;
+    const durMs = CFG.miningHours*3600*1000;
     const elapsed = Date.now() - STATE.farmStart;
     const remain = durMs - elapsed;
     if(remain <= 0){
       timerEl.textContent = '00:00:00';
       subEl.textContent = 'Ready to claim!';
+      btn.textContent = '🐾 Claim Mining';
       btn.disabled = false;
+      btn.onclick = claimMining;
     } else {
       timerEl.textContent = msToClock(remain);
-      subEl.textContent = 'Farming in progress...';
+      subEl.textContent = 'Mining in progress...';
+      btn.textContent = '⛏️ Mining...';
       btn.disabled = true;
+      btn.onclick = null;
     }
   }
 
   const bl = document.getElementById('boostList');
   bl.innerHTML = CFG.boosts.map((b,i)=>{
     const owned = STATE.boostsOwned.includes(i);
-    return `<div class="boost-item"><div><div class="ads-name">${b.name}</div><div class="ads-sub">Cost: ${fmt(b.cost)} Meaw</div></div>
+    return `<div class="boost-item"><div><div class="ads-name">${b.name}</div><div class="ads-sub">Cost: ${fmt(b.cost)} Meaw • x${b.mult} reward</div></div>
     <button class="btn ${owned?'btn-outline':'btn-gold'}" ${owned?'disabled':''} onclick="buyBoost(${i})">${owned?'Active':'Buy'}</button></div>`;
   }).join('');
 }
@@ -1309,28 +1439,19 @@ function msToClock(ms){
   return `${h}:${m}:${sec}`;
 }
 
-/* ✅ FIXED: Start farming — sets timestamp, saves immediately, switches tab */
-document.getElementById('btnStartFarming').addEventListener('click', async ()=>{
-  if(!STATE.farmStart){
-    STATE.farmStart = Date.now();
-    STATE.farmDurationH = CFG.farmDurationH;
-    await sUpdate('user_state_'+USER_ID, {
-      farmStart: STATE.farmStart,
-      farmDurationH: STATE.farmDurationH
-    });
-  }
-  switchTab('tab-meaw');
+async function startMining(){
+  if(STATE.farmStart) return;
+  STATE.farmStart = Date.now();
+  await sUpdate('user_state_'+USER_ID, { farmStart: STATE.farmStart });
   renderFarm();
-});
-
-/* ✅ FIXED: Claim farming — verifies time elapsed, adds reward atomically */
-document.getElementById('btnClaimFarm').addEventListener('click', async ()=>{
+}
+async function claimMining(){
   if(!STATE.farmStart) return;
-  const durMs = CFG.farmDurationH*3600*1000;
-  if(Date.now() - STATE.farmStart < durMs){ alert('Farming not ready yet!'); return; }
+  const durMs = CFG.miningHours*3600*1000;
+  if(Date.now() - STATE.farmStart < durMs){ alert('Mining not ready yet!'); return; }
 
   const mult = STATE.boostsOwned.reduce((a,i)=>Math.max(a, CFG.boosts[i].mult), 1);
-  const reward = Math.floor(CFG.farmReward * mult);
+  const reward = Math.floor(CFG.miningReward * mult);
 
   STATE.farmStart = null;
   await sUpdate('user_state_'+USER_ID, { farmStart: null });
@@ -1338,8 +1459,7 @@ document.getElementById('btnClaimFarm').addEventListener('click', async ()=>{
   showReward(reward);
   await creditReferrerCommission(reward);
   renderAll();
-});
-
+}
 async function buyBoost(i){
   const b = CFG.boosts[i];
   if(STATE.coins < b.cost){ alert('Not enough Meaw!'); return; }
@@ -1348,6 +1468,18 @@ async function buyBoost(i){
   await saveState();
   renderAll();
 }
+
+/* Home "Start Farming" → jump to Meaw tab */
+document.getElementById('btnStartFarmingHome').addEventListener('click', ()=>{
+  switchTab('tab-meaw');
+  setTimeout(()=>{
+    if(!STATE.farmStart){
+      // auto-highlight the Start button
+      const btn = document.getElementById('btnClaimFarm');
+      if(btn) btn.focus();
+    }
+  }, 300);
+});
 
 /* ---------- REFERRAL MENU ---------- */
 function renderRefer(){
@@ -1517,6 +1649,42 @@ async function doSpin(){
   }, 4200);
 }
 
+/* ---------- REDEEM CODE ---------- */
+document.getElementById('openRedeem').addEventListener('click', ()=>{
+  document.getElementById('redeemCodeInput').value = '';
+  document.getElementById('redeemMsg').textContent = '';
+  document.getElementById('redeemModal').classList.add('show');
+});
+async function submitRedeem(){
+  const input = document.getElementById('redeemCodeInput');
+  const msg = document.getElementById('redeemMsg');
+  const raw = input.value.trim().toUpperCase();
+  if(!raw){ msg.style.color='#ff9e93'; msg.textContent='Please enter a code'; return; }
+  if((STATE.redeemedCodes||[]).includes(raw)){ msg.style.color='#ff9e93'; msg.textContent='You already redeemed this code'; return; }
+
+  const codes = CFG.redeemCodes || [];
+  const entry = codes.find(c=>(c.code||'').toUpperCase()===raw);
+  if(!entry){ msg.style.color='#ff9e93'; msg.textContent='Invalid or expired code'; return; }
+
+  const usedBy = entry.usedBy || [];
+  if(usedBy.length >= (entry.maxUses||1000)){ msg.style.color='#ff9e93'; msg.textContent='This code has reached its usage limit'; return; }
+  if(usedBy.includes(USER_ID)){ msg.style.color='#ff9e93'; msg.textContent='You already used this code'; return; }
+
+  usedBy.push(USER_ID);
+  entry.usedBy = usedBy;
+  STATE.redeemedCodes = STATE.redeemedCodes || [];
+  STATE.redeemedCodes.push(raw);
+
+  await sSet('admin_config/redeemCodes', CFG.redeemCodes);
+  await addCoins(entry.amount);
+  await saveState();
+  await creditReferrerCommission(entry.amount);
+
+  msg.style.color='#8fdc96'; msg.textContent=`Success! +${entry.amount} Meaw added`;
+  renderAll();
+  setTimeout(()=>{ closeModal('redeemModal'); showReward(entry.amount); }, 800);
+}
+
 /* ---------- NAV ---------- */
 function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
@@ -1533,23 +1701,27 @@ document.getElementById('taskCatTabs').addEventListener('click', (e)=>{
   renderTask();
 });
 
+/* ✅ LIVE LEADERBOARD render */
 document.getElementById('openLeaderboard').addEventListener('click', ()=>{
-  const myActive = STATE.referrals.filter(r=>r.active).length;
-  const mock = [
-    {name:'Aarav', v: 128400, refs: 34},
-    {name:'Nusrat', v: 99210, refs: 27},
-    {name:'Rakib', v: 87650, refs: 19},
-    {name: tgUser.first_name || 'You', v: STATE.coins, refs: myActive, me:true}
-  ].sort((a,b)=>b.v-a.v);
-  document.getElementById('lbList').innerHTML = mock.map((u,i)=>`
-    <div class="lb-row ${u.me?'me':''}">
-      <div class="lb-rank">${i+1}</div>
-      <div class="avatar">${u.name[0]}</div>
-      <div class="lb-name">${u.name}${u.me?' (You)':''}<small>${u.refs} active refers</small></div>
-      <div class="lb-val">${fmt(u.v)} 🪙</div>
-    </div>`).join('');
   document.getElementById('lbModal').classList.add('show');
+  renderLeaderboard();
 });
+function renderLeaderboard(){
+  const list = window.__leaderboardCache || [];
+  const el = document.getElementById('lbList');
+  if(list.length===0){
+    el.innerHTML = `<div class="lb-empty">No players yet — be the first! 🐾</div>`;
+    return;
+  }
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = list.map((u,i)=>`
+    <div class="lb-row ${u.me?'me':''}">
+      <div class="lb-rank">${i<3?medals[i]:(i+1)}</div>
+      <div class="avatar">${(u.name||'P')[0].toUpperCase()}</div>
+      <div class="lb-name">${u.name}${u.me?' (You)':''}<small>${u.refs} referrals</small></div>
+      <div class="lb-val">${fmt(u.coins)} 🪙</div>
+    </div>`).join('');
+}
 
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
@@ -1558,6 +1730,14 @@ function closeReward(){ document.getElementById('rewardPop').classList.remove('s
 /* ---------- ADMIN PANEL ---------- */
 function toggleAdminPanel(){
   document.getElementById('adminPanel').classList.toggle('show');
+  if(document.getElementById('adminPanel').classList.contains('show')){
+    // Prefill current values
+    document.getElementById('adminRefBonus').value = CFG.refBonus;
+    document.getElementById('adminRefAds').value = CFG.refAdsNeeded;
+    document.getElementById('adminRefPct').value = CFG.refCommissionPct;
+    document.getElementById('adminMiningReward').value = CFG.miningReward;
+    document.getElementById('adminMiningHours').value = CFG.miningHours;
+  }
 }
 function switchAdminTab(name){
   document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
@@ -1568,10 +1748,15 @@ function switchAdminTab(name){
   if(name==='twitter')  renderAdminTaskPreview('twitter');
   if(name==='mission')  renderAdminTaskPreview('mission');
   if(name==='ads')      renderAdminAdsPreview();
+  if(name==='mining')   renderAdminBoostPreview();
+  if(name==='redeem')   renderAdminRedeemPreview();
 }
 function saveAdminSettings(){
   const token = document.getElementById('adminToken').value.trim();
-  if(token) BOT_TOKEN = token;
+  if(token){
+    BOT_TOKEN = token;
+    sSet('secure/config', {botToken: token});
+  }
   const botUsername = document.getElementById('adminBotUsername').value.trim();
   if(botUsername) CFG.botUsername = botUsername;
   sSet('admin_config', CFG);
@@ -1593,6 +1778,53 @@ function saveChannels(){
       alert('Channels updated!');
     }
   }catch(e){ alert('Error: '+e.message); }
+}
+function saveRefSettings(){
+  CFG.refBonus = parseInt(document.getElementById('adminRefBonus').value)||CFG.refBonus;
+  CFG.refAdsNeeded = parseInt(document.getElementById('adminRefAds').value)||CFG.refAdsNeeded;
+  CFG.refCommissionPct = parseInt(document.getElementById('adminRefPct').value)||CFG.refCommissionPct;
+  sSet('admin_config', CFG);
+  alert('Referral settings saved!');
+}
+function saveMiningSettings(){
+  CFG.miningReward = parseInt(document.getElementById('adminMiningReward').value)||CFG.miningReward;
+  CFG.miningHours = parseInt(document.getElementById('adminMiningHours').value)||CFG.miningHours;
+  sSet('admin_config', CFG);
+  alert('Mining settings saved!');
+  renderFarm();
+}
+function addMiningBoost(){
+  const name = document.getElementById('adminBoostName').value.trim();
+  const cost = parseInt(document.getElementById('adminBoostCost').value)||0;
+  const mult = parseInt(document.getElementById('adminBoostMult').value)||2;
+  if(!name || !cost) return alert('Fill name + cost');
+  CFG.boosts = CFG.boosts || [];
+  CFG.boosts.push({name, cost, mult});
+  sSet('admin_config', CFG);
+  alert('Boost added!');
+  document.getElementById('adminBoostName').value='';
+  document.getElementById('adminBoostCost').value='';
+  document.getElementById('adminBoostMult').value='';
+  renderFarm();
+  renderAdminBoostPreview();
+}
+function renderAdminBoostPreview(){
+  const el = document.getElementById('boostPreview');
+  if(!el) return;
+  if(!CFG.boosts.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing boosts:</div>' + CFG.boosts.map((b,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;">${b.name}<br><small style="opacity:.6;">Cost: ${b.cost} • x${b.mult}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteBoost(${i})">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteBoost(i){
+  if(!confirm('Delete this boost?')) return;
+  CFG.boosts.splice(i,1);
+  sSet('admin_config', CFG);
+  renderFarm();
+  renderAdminBoostPreview();
 }
 function addAdsNetwork(){
   const name = document.getElementById('adminAdName').value.trim();
@@ -1694,13 +1926,47 @@ function updateSpinRewards(){
     alert('Spin rewards updated!');
   }
 }
+/* Redeem code management */
+function addRedeemCode(){
+  const code = document.getElementById('adminRedeemCode').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('adminRedeemAmount').value)||0;
+  const maxUses = parseInt(document.getElementById('adminRedeemUses').value)||100;
+  if(!code || !amount) return alert('Fill code + amount');
+  CFG.redeemCodes = CFG.redeemCodes || [];
+  if(CFG.redeemCodes.find(c=>c.code.toUpperCase()===code)) return alert('Code already exists');
+  CFG.redeemCodes.push({code, amount, maxUses, usedBy: []});
+  sSet('admin_config', CFG);
+  alert('Redeem code created!');
+  document.getElementById('adminRedeemCode').value='';
+  document.getElementById('adminRedeemAmount').value='';
+  document.getElementById('adminRedeemUses').value='';
+  renderAdminRedeemPreview();
+}
+function renderAdminRedeemPreview(){
+  const el = document.getElementById('redeemPreview');
+  if(!el) return;
+  if(!CFG.redeemCodes || !CFG.redeemCodes.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Active codes:</div>' + CFG.redeemCodes.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;"><b style="color:#ffe08a;">${c.code}</b><br><small style="opacity:.6;">+${c.amount} Meaw • used ${(c.usedBy||[]).length}/${c.maxUses}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteRedeemCode(${i})">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteRedeemCode(i){
+  if(!confirm('Delete this code?')) return;
+  CFG.redeemCodes.splice(i,1);
+  sSet('admin_config', CFG);
+  renderAdminRedeemPreview();
+}
 
 /* ---------- SAVE STATE ---------- */
 async function saveState(){
   if(!STATE) return;
   const patch = {
+    name: tgUser.first_name || 'Player',
+    firstName: tgUser.first_name || 'Player',
     farmStart: STATE.farmStart,
-    farmDurationH: STATE.farmDurationH,
     adsToday: STATE.adsToday,
     adsDay: STATE.adsDay,
     tasksDone: STATE.tasksDone,
@@ -1715,7 +1981,7 @@ async function saveState(){
     referredBy: STATE.referredBy,
     referralActivated: STATE.referralActivated,
     totalAdsWatchedEver: STATE.totalAdsWatchedEver,
-    missionTimers: STATE.missionTimers
+    redeemedCodes: STATE.redeemedCodes
   };
   await sUpdate('user_state_'+USER_ID, patch);
 }
@@ -1723,4 +1989,4 @@ async function saveState(){
 init();
 </script>
 </body>
-  </html>
+          </html>
