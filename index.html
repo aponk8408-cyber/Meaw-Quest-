@@ -20,7 +20,6 @@
   --danger:#e05a4e;
   --ok:#5fbf6b;
   --panel:#1b1240ee;
-  --radius:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
@@ -32,18 +31,12 @@ body{
   width:100%;
   max-width:480px;
   margin:0 auto;
-  position:relative;
   height:100vh;
+  position:relative;
 }
 .font-display{font-family:'Cinzel',serif;}
 #app{position:relative;width:100%;height:100%;overflow:hidden;}
-.screen{
-  position:absolute;inset:0;
-  display:none;
-  flex-direction:column;
-  background:linear-gradient(180deg,#5a9bd8 0%,#7fb8e8 35%,#dff0fb 100%);
-  overflow:hidden;
-}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
 
 #screen-loading{
@@ -51,10 +44,7 @@ body{
   background-size:cover;background-position:center;
   align-items:center;justify-content:center;
 }
-#screen-loading::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,30,.15),rgba(10,10,30,.55));
-}
+#screen-loading::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,30,.15),rgba(10,10,30,.55));}
 .load-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px;}
 .coin-spin{
   width:150px;height:150px;border-radius:50%;
@@ -63,8 +53,8 @@ body{
   box-shadow:0 0 0 6px rgba(244,196,48,.25),0 10px 40px rgba(0,0,0,.5);
   animation:coinPulse 1.1s ease-in-out infinite;
 }
-@keyframes coinPulse{0%,100%{transform:scale(1) rotateY(0)}50%{transform:scale(1.06) rotateY(10deg)}}
-.load-title{font-size:26px;font-weight:800;color:var(--gold-light);text-shadow:0 3px 10px rgba(0,0,0,.6);letter-spacing:1px;}
+@keyframes coinPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.load-title{font-size:26px;font-weight:800;color:var(--gold-light);text-shadow:0 3px 10px rgba(0,0,0,.6);}
 .load-bar{width:200px;height:8px;border-radius:20px;background:rgba(255,255,255,.25);overflow:hidden;}
 .load-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-light));border-radius:20px;transition:width 1.4s ease;}
 
@@ -77,11 +67,7 @@ body{
 .join-panel{position:relative;z-index:2;padding:22px 18px 26px;}
 .join-title{font-size:22px;text-align:center;color:var(--gold-light);margin-bottom:4px;}
 .join-sub{text-align:center;font-size:13px;color:#e9e4ff;opacity:.85;margin-bottom:16px;}
-.join-card{
-  display:flex;align-items:center;gap:12px;
-  background:var(--panel);border:1px solid rgba(244,196,48,.35);
-  border-radius:14px;padding:12px 14px;margin-bottom:10px;
-}
+.join-card{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid rgba(244,196,48,.35);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
 .join-card.verified{border-color:rgba(95,191,107,.55);background:linear-gradient(145deg,#1b1240ee,#173a1fee);}
 .join-ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(145deg,var(--gold),var(--gold-deep));flex-shrink:0;}
 .join-info{flex:1;}
@@ -95,14 +81,8 @@ body{
 .btn-block{width:100%;padding:14px;font-size:15px;}
 .btn[disabled]{opacity:.45;pointer-events:none;}
 
-#screen-app{
-  background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');
-  background-size:cover;background-position:center;background-attachment:fixed;
-}
-#screen-app::before{
-  content:"";position:absolute;inset:0;z-index:0;
-  background:linear-gradient(180deg, rgba(20,15,46,.88) 0%, rgba(18,13,42,.94) 40%, rgba(12,9,32,.98) 100%);
-}
+#screen-app{background-image:url('https://i.ibb.co.com/6R08F4QB/Chat-GPT-Image-Sep-9-2026-08-14-37-PM.png');background-size:cover;background-position:center;background-attachment:fixed;}
+#screen-app::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg, rgba(20,15,46,.88) 0%, rgba(18,13,42,.94) 40%, rgba(12,9,32,.98) 100%);}
 .topbar,.tab-content,.bottom-nav{position:relative;z-index:2;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);}
 .user-chip{display:flex;align-items:center;gap:8px;}
@@ -114,32 +94,31 @@ body{
 .tab-content{flex:1;overflow-y:auto;padding:6px 16px 90px;}
 .tab-content::-webkit-scrollbar{display:none;}
 
-.balance-home-card{text-align:center;padding:22px 16px 20px;position:relative;overflow:hidden;background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.35);border-radius:22px;box-shadow:0 8px 22px rgba(0,0,0,.4);}
-.balance-home-label{position:relative;font-size:12px;letter-spacing:.8px;color:#d9c9ff;opacity:.85;margin-bottom:8px;}
-.balance-home-amount{position:relative;font-family:'Cinzel',serif;font-size:38px;font-weight:800;color:var(--gold-light);line-height:1.1;}
-.balance-home-usdt{position:relative;font-size:14px;color:#c9d6ff;margin-top:6px;}
+.balance-home-card{text-align:center;padding:22px 16px 20px;background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.35);border-radius:22px;box-shadow:0 8px 22px rgba(0,0,0,.4);}
+.balance-home-label{font-size:12px;letter-spacing:.8px;color:#d9c9ff;opacity:.85;margin-bottom:8px;}
+.balance-home-amount{font-family:'Cinzel',serif;font-size:38px;font-weight:800;color:var(--gold-light);line-height:1.1;}
+.balance-home-usdt{font-size:14px;color:#c9d6ff;margin-top:6px;}
 .balance-home-usdt b{color:#8fdc96;}
-.balance-home-rate{position:relative;font-size:11px;opacity:.6;margin-top:4px;}
-.withdraw-home-btn{position:relative;margin-top:16px;width:100%;padding:14px;border-radius:14px;background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);font-weight:800;font-size:15px;border:none;cursor:pointer;box-shadow:0 4px 0 #8a5c0f;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Baloo 2',sans-serif;}
+.balance-home-rate{font-size:11px;opacity:.6;margin-top:4px;}
+.withdraw-home-btn{margin-top:16px;width:100%;padding:14px;border-radius:14px;background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));color:var(--brown-deep);font-weight:800;font-size:15px;border:none;cursor:pointer;box-shadow:0 4px 0 #8a5c0f;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Baloo 2',sans-serif;}
 
 .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
-.feature-card{position:relative;background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 12px 16px;text-align:center;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.35);}
-.feature-card:active{transform:scale(.96);}
+.feature-card{position:relative;background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 12px 16px;text-align:center;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.35);}
 .feature-icon{width:60px;height:60px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%, var(--gold-light) 0%, var(--gold) 45%, var(--gold-deep) 100%);}
 .feature-icon svg{width:30px;height:30px;}
 .feature-card h4{font-size:13.5px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
-.feature-card p{font-size:10px;opacity:.65;line-height:1.3;}
+.feature-card p{font-size:10px;opacity:.65;}
 .feature-badge{position:absolute;top:8px;right:8px;background:rgba(224,90,78,.85);color:#fff;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;display:none;}
 .feature-badge.show{display:block;}
 
 .bottom-nav{position:absolute;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:space-around;align-items:center;padding:10px 6px 14px;background:linear-gradient(180deg, rgba(18,12,42,.4), rgba(12,8,30,.97) 30%);border-top:1px solid rgba(244,196,48,.25);}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;position:relative;opacity:.65;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;opacity:.65;}
 .nav-item.active{opacity:1;}
 .nav-ic{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#2c2260,#1a1440);border:1px solid rgba(244,196,48,.28);transition:transform .18s, background .18s;}
 .nav-ic svg{width:19px;height:19px;}
 .nav-item.active .nav-ic{background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep) 90%);transform:scale(1.08) translateY(-2px);}
 .nav-item.active .nav-ic svg *{fill:var(--brown-deep) !important;stroke:var(--brown-deep) !important;}
-.nav-item.meaw .nav-ic{background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;font-size:0;border:1px solid rgba(244,196,48,.45);}
+.nav-item.meaw .nav-ic{background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;font-size:0;}
 .nav-item span{font-size:10.5px;font-weight:700;}
 
 .section-title{font-size:15px;font-weight:800;color:var(--gold-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
@@ -193,7 +172,7 @@ body{
 .balance-hero{text-align:center;padding:10px 0 18px;}
 .balance-hero b{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-light);}
 .lock-box{background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.35);border-radius:20px;padding:20px 18px;margin-bottom:16px;}
-.lock-head{position:relative;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.lock-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .lock-icon-badge{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));}
 .lock-head-text h4{font-size:14.5px;font-weight:800;color:var(--gold-light);margin-bottom:2px;}
 .lock-head-text p{font-size:11.5px;opacity:.7;}
@@ -232,12 +211,11 @@ body{
 .reward-title{font-family:'Cinzel',serif;color:var(--gold-light);font-size:16px;margin-bottom:4px;}
 .reward-amt{font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
 
-.redeem-card{position:relative;background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 16px;text-align:center;cursor:pointer;margin-top:12px;}
+.redeem-card{background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.32);border-radius:20px;padding:20px 16px;text-align:center;cursor:pointer;margin-top:12px;}
 .redeem-card-ic{width:60px;height:60px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%, var(--gold-light), var(--gold-deep));}
 .redeem-card-ic svg{width:32px;height:32px;}
 .redeem-card h4{font-size:14px;font-weight:800;color:var(--gold-light);margin-bottom:3px;}
 .redeem-card p{font-size:11px;opacity:.7;}
-
 .redeem-illustration{width:74px;height:74px;margin:4px auto 14px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));}
 .redeem-illustration svg{width:38px;height:38px;}
 .redeem-input-wrap{display:flex;gap:8px;margin:6px 0 4px;}
@@ -253,7 +231,7 @@ body{
 .wheel-label{position:absolute;left:50%;top:50%;font-family:'Cinzel',serif;font-weight:800;font-size:13px;color:#241408;}
 .wheel-center{position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 32% 28%,var(--gold-light),var(--gold-deep));z-index:4;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .spin-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
-.spin-hint{font-size:11px;opacity:.7;margin-top:12px;line-height:1.5;}
+.spin-hint{font-size:11px;opacity:.7;margin-top:12px;}
 
 .lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.06);}
 .lb-row.me{background:rgba(244,196,48,.08);border-radius:10px;}
@@ -263,10 +241,134 @@ body{
 .lb-name small{font-size:9.5px;opacity:.6;color:#c9d6ff;}
 .lb-val{font-size:12px;color:var(--gold-light);font-weight:700;}
 .lb-empty{text-align:center;padding:20px;opacity:.6;font-size:12px;}
+
+/* ============================================================
+   ✅ AD OVERLAY — iframe-based popup
+   ============================================================ */
+.ad-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.95);
+  display:none;
+  flex-direction:column;
+}
+.ad-overlay.show{display:flex;}
+.ad-overlay-header{
+  padding:10px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:#12163a;
+  border-bottom:1px solid rgba(244,196,48,.3);
+  flex-shrink:0;
+}
+.ad-overlay-title{
+  font-size:13px;font-weight:800;color:var(--gold-light);
+  display:flex;align-items:center;gap:8px;
+}
+.ad-timer{
+  font-size:12px;font-weight:800;color:var(--gold-light);
+  background:rgba(244,196,48,.15);
+  padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(244,196,48,.35);
+}
+.ad-iframe-wrap{
+  flex:1;position:relative;background:#000;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#adFrame{
+  width:100%;height:100%;border:0;
+  background:#000;
+}
+.ad-loading{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#0a0620;
+  gap:16px;
+}
+.ad-loading.hide{display:none;}
+.ad-spinner{
+  width:50px;height:50px;border-radius:50%;
+  border:4px solid rgba(244,196,48,.2);
+  border-top-color:var(--gold-light);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ad-loading-text{
+  font-size:13px;color:var(--gold-light);font-weight:700;
+}
+.ad-overlay-footer{
+  padding:12px 14px;
+  background:#12163a;
+  border-top:1px solid rgba(244,196,48,.3);
+  flex-shrink:0;
+  display:flex;gap:10px;
+}
+.ad-close-btn{
+  flex:1;padding:12px;border-radius:12px;
+  background:linear-gradient(145deg,var(--gold-light),var(--gold-deep));
+  color:var(--brown-deep);font-weight:800;font-size:13px;
+  border:none;cursor:pointer;font-family:'Baloo 2',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.ad-close-btn[disabled]{opacity:.5;pointer-events:none;}
+
+.ad-skip-hint{
+  text-align:center;font-size:11px;color:#e9e4ff;opacity:.6;
+  padding:6px;
+}
+
+/* fallback content for iframe */
+.fallback-ad-content{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#1a1440,#0c0824);
+  color:#fff;text-align:center;padding:30px;
+}
+.fallback-ad-content .fa-logo{
+  width:100px;height:100px;border-radius:50%;
+  background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');
+  background-size:cover;background-position:center;
+  box-shadow:0 0 30px rgba(244,196,48,.5);
+  margin-bottom:20px;
+}
+.fallback-ad-content h3{
+  font-family:'Cinzel',serif;color:var(--gold-light);
+  font-size:18px;margin-bottom:10px;
+}
+.fallback-ad-content p{
+  font-size:13px;opacity:.7;line-height:1.5;
+}
+.fallback-ad-content .fa-timer{
+  margin-top:24px;font-size:24px;font-weight:800;
+  color:var(--gold-light);font-family:'Cinzel',serif;
+}
 </style>
 </head>
 <body>
 <div id="app">
+
+  <!-- AD OVERLAY (hidden by default) -->
+  <div class="ad-overlay" id="adOverlay">
+    <div class="ad-overlay-header">
+      <div class="ad-overlay-title">
+        <span>📺</span>
+        <span id="adOverlayName">Advertisement</span>
+      </div>
+      <div class="ad-timer" id="adTimer">15s</div>
+    </div>
+    <div class="ad-iframe-wrap">
+      <iframe id="adFrame" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allow="autoplay; fullscreen"></iframe>
+      <div class="ad-loading" id="adLoading">
+        <div class="ad-spinner"></div>
+        <div class="ad-loading-text">Loading advertisement...</div>
+      </div>
+    </div>
+    <div class="ad-overlay-footer">
+      <button class="ad-close-btn" id="adCloseBtn" disabled>
+        ⏳ Please wait...
+      </button>
+    </div>
+    <div class="ad-skip-hint">Complete the ad to earn your reward</div>
+  </div>
 
   <div class="screen active" id="screen-loading">
     <div class="load-wrap">
@@ -380,7 +482,7 @@ body{
           </div>
           <div style="flex:1;">
             <div class="section-title" style="margin-bottom:2px;">🎉 Invite Friends</div>
-            <div style="font-size:11.5px;opacity:.75;">Earn a bonus per friend + <b style="color:var(--gold-light);">10% lifetime commission</b></div>
+            <div style="font-size:11.5px;opacity:.75;">Earn a bonus per friend + <b style="color:var(--gold-light);">10% commission</b></div>
           </div>
         </div>
       </div>
@@ -498,9 +600,8 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — FINAL — Click → Reward Ad Opens
-   Gigapub: inject SDK + call showGiga()
-   Monetag: inject SDK + call show_11782670()
+   MEAW QUEST — IFRAME-BASED AD SYSTEM
+   Ads open in a fullscreen overlay with an iframe
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -603,141 +704,132 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
-   ✅ ADS — Fresh SDK injection on every click
+   ✅ IFRAME AD OVERLAY SYSTEM
    ============================================================ */
 
-/* --- GIGAPUB SDK --- */
-function injectGigapubSDK(){
+let adCountdownTimer = null;
+let adCompleted = false;
+
+/* Show ad in overlay with iframe */
+function openAdOverlay(net, durationSec=15){
   return new Promise((resolve)=>{
-    console.log('[Gigapub] Injecting SDK script...');
-    const old = document.getElementById('gigapub-sdk-script');
-    if(old) old.remove();
+    adCompleted = false;
+    const overlay = document.getElementById('adOverlay');
+    const frame = document.getElementById('adFrame');
+    const loading = document.getElementById('adLoading');
+    const nameEl = document.getElementById('adOverlayName');
+    const timerEl = document.getElementById('adTimer');
+    const closeBtn = document.getElementById('adCloseBtn');
 
-    const s = document.createElement('script');
-    s.id = 'gigapub-sdk-script';
-    s.src = 'https://ad.gigapub.tech/script?id=8142';
-    s.onload = ()=>{
-      console.log('[Gigapub] Script loaded');
-      // Wait for window.showGiga to register
-      let tries = 0;
-      const check = setInterval(()=>{
-        tries++;
-        if(typeof window.showGiga === 'function'){
-          clearInterval(check);
-          console.log('[Gigapub] showGiga ready');
-          resolve(true);
-        }
-        if(tries > 40){ // 8 seconds
-          clearInterval(check);
-          console.warn('[Gigapub] showGiga never registered');
-          resolve(false);
-        }
-      }, 200);
-    };
-    s.onerror = ()=>{
-      console.warn('[Gigapub] Script failed to load');
-      resolve(false);
-    };
-    document.head.appendChild(s);
-  });
-}
+    nameEl.textContent = net.name + ' Ad';
+    timerEl.textContent = durationSec + 's';
+    closeBtn.disabled = true;
+    closeBtn.textContent = '⏳ Please wait...';
+    loading.classList.remove('hide');
 
-/* --- MONETAG SDK --- */
-function injectMonetagSDK(){
-  return new Promise((resolve)=>{
-    console.log('[Monetag] Injecting SDK script...');
-    const old = document.getElementById('monetag-sdk-script');
-    if(old) old.remove();
+    // Generate ad content inside iframe
+    let adHtml = '';
 
-    const s = document.createElement('script');
-    s.id = 'monetag-sdk-script';
-    s.src = '//libtl.com/sdk.js';
-    s.setAttribute('data-zone', '11782670');
-    s.setAttribute('data-sdk', 'show_11782670');
-    s.onload = ()=>{
-      console.log('[Monetag] Script loaded');
-      let tries = 0;
-      const check = setInterval(()=>{
-        tries++;
-        if(typeof window.show_11782670 === 'function'){
-          clearInterval(check);
-          console.log('[Monetag] show_11782670 ready');
-          resolve(true);
-        }
-        if(tries > 40){
-          clearInterval(check);
-          console.warn('[Monetag] show_11782670 never registered');
-          resolve(false);
-        }
-      }, 200);
-    };
-    s.onerror = ()=>{
-      console.warn('[Monetag] Script failed to load');
-      resolve(false);
-    };
-    document.head.appendChild(s);
-  });
-}
-
-/* ✅ GIGAPUB Ad — inject then call */
-async function showGigapubAd(){
-  console.log('=== Gigapub Ad Start ===');
-  const ok = await injectGigapubSDK();
-  if(!ok || typeof window.showGiga !== 'function'){
-    throw new Error('Gigapub SDK not available');
-  }
-
-  return new Promise((resolve, reject)=>{
-    try{
-      console.log('[Gigapub] Calling showGiga()');
-      const result = window.showGiga();
-
-      if(result && typeof result.then === 'function'){
-        result.then(()=>{
-          console.log('[Gigapub] ✅ Reward received');
-          resolve(true);
-        }).catch(err=>{
-          console.warn('[Gigapub] ❌ No reward', err);
-          reject(new Error('Ad not completed'));
-        });
-      } else {
-        // Non-promise — ad opened
-        setTimeout(()=>{ console.log('[Gigapub] Ad shown'); resolve(true); }, 1500);
-      }
-    }catch(err){
-      console.error('[Gigapub] Exception:', err);
-      reject(err);
+    if(net.type === 'giga'){
+      // Gigapub iframe content — includes SDK script + auto-call
+      adHtml = `<!DOCTYPE html><html><head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <style>body{margin:0;background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
+        .w{max-width:400px;} .ic{font-size:64px;margin-bottom:20px;}
+        h2{font-family:serif;color:#ffe08a;font-size:20px;margin-bottom:12px;}
+        p{font-size:13px;opacity:.7;line-height:1.6;}
+        </style></head><body>
+        <div class="w">
+          <div class="ic">🎮</div>
+          <h2>GIGAPUB AD</h2>
+          <p>Your reward is being processed.<br>Please wait while we display the advertisement.</p>
+        </div>
+        <script src="https://ad.gigapub.tech/script?id=8142"><\/script>
+        <script>
+          setTimeout(function(){
+            if(typeof window.showGiga === 'function'){
+              try{ window.showGiga(); }catch(e){ console.log(e); }
+            }
+          }, 800);
+        <\/script>
+        </body></html>`;
+    } else if(net.type === 'monetag'){
+      // Monetag iframe content — includes SDK script + auto-call
+      adHtml = `<!DOCTYPE html><html><head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <style>body{margin:0;background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
+        .w{max-width:400px;} .ic{font-size:64px;margin-bottom:20px;}
+        h2{font-family:serif;color:#ffe08a;font-size:20px;margin-bottom:12px;}
+        p{font-size:13px;opacity:.7;line-height:1.6;}
+        </style></head><body>
+        <div class="w">
+          <div class="ic">🎬</div>
+          <h2>MONETAG AD</h2>
+          <p>Your reward is being processed.<br>Please wait while we display the advertisement.</p>
+        </div>
+        <script src="//libtl.com/sdk.js" data-zone="11782670" data-sdk="show_11782670"><\/script>
+        <script>
+          setTimeout(function(){
+            if(typeof window.show_11782670 === 'function'){
+              try{ window.show_11782670(); }catch(e){ console.log(e); }
+            }
+          }, 800);
+        <\/script>
+        </body></html>`;
+    } else {
+      // Fallback for generic ads
+      adHtml = `<!DOCTYPE html><html><head>
+        <meta charset="utf-8">
+        <style>body{margin:0;background:#1a1440;color:#ffe08a;font-family:serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;font-size:22px;}
+        </style></head><body>Advertisement</body></html>`;
     }
+
+    // Load into iframe
+    frame.srcdoc = adHtml;
+
+    // Show overlay
+    overlay.classList.add('show');
+
+    // Hide loading spinner after 1s
+    setTimeout(()=>{ loading.classList.add('hide'); }, 1000);
+
+    // Start countdown
+    let remaining = durationSec;
+    if(adCountdownTimer) clearInterval(adCountdownTimer);
+    adCountdownTimer = setInterval(()=>{
+      remaining--;
+      timerEl.textContent = remaining + 's';
+      if(remaining <= 0){
+        clearInterval(adCountdownTimer);
+        adCompleted = true;
+        closeBtn.disabled = false;
+        closeBtn.textContent = '✅ Claim Reward';
+        timerEl.textContent = 'Done!';
+      }
+    }, 1000);
+
+    // Close button handler
+    closeBtn.onclick = ()=>{
+      if(!adCompleted) return;
+      if(adCountdownTimer) clearInterval(adCountdownTimer);
+      overlay.classList.remove('show');
+      frame.srcdoc = '';
+      resolve(true);
+    };
   });
 }
 
-/* ✅ MONETAG Ad — inject then call */
-async function showMonetagAd(){
-  console.log('=== Monetag Ad Start ===');
-  const ok = await injectMonetagSDK();
-  if(!ok || typeof window.show_11782670 !== 'function'){
-    throw new Error('Monetag SDK not available');
-  }
-
-  return new Promise((resolve, reject)=>{
+/* ✅ Watch Ad with iframe overlay */
+async function showAdWithOverlay(net){
+  return new Promise(async (resolve, reject)=>{
     try{
-      console.log('[Monetag] Calling show_11782670()');
-      const result = window.show_11782670();
-
-      if(result && typeof result.then === 'function'){
-        result.then(()=>{
-          console.log('[Monetag] ✅ Reward received');
-          resolve(true);
-        }).catch(err=>{
-          console.warn('[Monetag] ❌ No reward', err);
-          reject(new Error('Ad not completed'));
-        });
-      } else {
-        setTimeout(()=>{ console.log('[Monetag] Ad shown'); resolve(true); }, 1500);
-      }
-    }catch(err){
-      console.error('[Monetag] Exception:', err);
-      reject(err);
+      const ok = await openAdOverlay(net, 15);
+      if(ok) resolve(true);
+      else reject(new Error('Ad not completed'));
+    }catch(e){
+      reject(e);
     }
   });
 }
@@ -1029,8 +1121,6 @@ function renderTask(){
   }).join('');
   document.getElementById('adsNetworkList').innerHTML = adsHtml;
 
-  const counts = {telegram:0, twitter:0, mission:0};
-  CFG.tasks.forEach(t=>{ if(!STATE.tasksDone.includes(t.id)) counts[t.category] = (counts[t.category]||0)+1; });
   document.querySelectorAll('.task-cat-tab').forEach(tab=>{
     tab.classList.toggle('active', tab.dataset.cat===currentTaskCat);
   });
@@ -1078,9 +1168,9 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad — Click → Reward ad opens */
+/* ✅ Watch Ad — Opens iframe overlay */
 async function watchAd(netName, btnEl){
-  if(adInProgress){ console.warn('Already in progress'); return; }
+  if(adInProgress){ return; }
 
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
@@ -1088,25 +1178,15 @@ async function watchAd(netName, btnEl){
 
   const btn = btnEl || window.event?.target;
   const old = btn ? btn.textContent : 'Watch';
-  if(btn){ btn.textContent='Opening Ad...'; btn.disabled=true; }
+  if(btn){ btn.textContent='Opening...'; btn.disabled=true; }
 
   adInProgress = true;
   let adSuccess = false;
 
   try{
-    if(net.type === 'giga'){
-      await showGigapubAd();
-      adSuccess = true;
-    } else if(net.type === 'monetag'){
-      await showMonetagAd();
-      adSuccess = true;
-    } else {
-      await new Promise(r=>setTimeout(r, 1500));
-      adSuccess = true;
-    }
+    adSuccess = await showAdWithOverlay(net);
   }catch(e){
     console.warn('Ad failed:', e);
-    alert('Ad not completed. Please try again.');
   }finally{
     adInProgress = false;
     if(btn){ btn.textContent = old; btn.disabled = false; }
@@ -1297,11 +1377,10 @@ function renderWithdraw(){
 }
 
 async function watchWithdrawAd(){
-  const btn = event.target;
-  const old = btn.textContent; btn.textContent='Opening Ad...'; btn.disabled=true;
-  try{ await showGigapubAd(); }
-  catch(e){ btn.textContent=old; btn.disabled=false; return; }
-  btn.textContent = old; btn.disabled=false;
+  const net = CFG.adsNetworks.find(n=>n.type === 'giga') || CFG.adsNetworks[0];
+  try{
+    await showAdWithOverlay(net);
+  }catch(e){ return; }
   STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
   await saveState();
   renderWithdraw();
@@ -1372,10 +1451,9 @@ function renderSpinModal(){
 async function watchAdForSpin(){
   const today = new Date().toDateString();
   if(STATE.lastSpinAdDate === today) return;
-  const btn = document.getElementById('btnWatchAdSpin');
-  btn.textContent='Opening Ad...'; btn.disabled=true;
-  try{ await showGigapubAd(); }
-  catch(e){ btn.textContent='▶️ Watch Ad (+1 Spin)'; btn.disabled=false; return; }
+  const net = CFG.adsNetworks.find(n=>n.type === 'giga') || CFG.adsNetworks[0];
+  try{ await showAdWithOverlay(net); }
+  catch(e){ return; }
   STATE.lastSpinAdDate = today;
   STATE.spinsAvailable += 1;
   await saveState();
@@ -1502,4 +1580,4 @@ async function saveState(){
 init();
 </script>
 </body>
-          </html>
+                                                                                                                                                                                                                                                                    </html>
