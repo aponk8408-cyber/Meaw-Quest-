@@ -482,11 +482,11 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Full fix
-   ✅ Withdraw push() to Firebase (never overwritten)
-   ✅ Dual-write to withdraw_requests (admin always sees it)
-   ✅ Gigapub auto-ad on bot open
-   ✅ Gigapub + Monetag reward ads on Watch click
+   MEAW QUEST — FULL FIXED VERSION
+   ✅ Atomic withdraw (no double request, balance safe)
+   ✅ Admin approve/reject visible in app
+   ✅ Bot messages on referral join + activation
+   ✅ Spin lock (no double reward)
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -579,6 +579,10 @@ let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
 let adInProgress = false;
+
+/* ✅ Global locks to prevent double actions */
+let withdrawInProgress = false;
+let spinInProgress = false;
 
 let screenReady = false;
 function safeGoScreen(){
@@ -673,6 +677,7 @@ function extractTgUsername(link){
   const m = link.match(/t\.me\/(?:@)?([A-Za-z0-9_]+)/i);
   return m ? m[1] : '';
 }
+
 async function checkChannelMembership(channelLink){
   const username = extractTgUsername(channelLink);
   if(!username || !BOT_TOKEN) return { joined:false };
@@ -685,6 +690,7 @@ async function checkChannelMembership(channelLink){
     return { joined: ['creator','administrator','member','restricted'].includes(status) };
   }catch(e){ return { joined:false }; }
 }
+
 async function sendBotMessage(chatId, text){
   if(!BOT_TOKEN) return;
   try{
@@ -695,11 +701,44 @@ async function sendBotMessage(chatId, text){
   }catch(e){}
 }
 
+/* ✅ Robust referrer notification with logging */
+async function notifyReferrer(referrerId, text){
+  if(!referrerId){
+    console.warn('⚠️ notifyReferrer: no referrerId');
+    return;
+  }
+  if(!BOT_TOKEN){
+    console.warn('⚠️ notifyReferrer: BOT_TOKEN missing. Set secure/config/botToken in Firebase.');
+    return;
+  }
+  try{
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        chat_id: referrerId,
+        text,
+        parse_mode: 'Markdown',
+        disable_web_page_preview: true
+      })
+    });
+    const data = await res.json();
+    if(!data.ok){
+      console.warn('❌ Bot send failed to', referrerId, ':', data.description);
+    } else {
+      console.log('✅ Bot message sent to', referrerId);
+    }
+  }catch(e){
+    console.warn('Bot msg network error:', e);
+  }
+}
+
 /* ---------- INIT ---------- */
 async function init(){
   try{
     const secureCfg = await sGet('secure/config');
     if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
+    console.log('BOT_TOKEN loaded:', BOT_TOKEN ? 'YES (len ' + BOT_TOKEN.length + ')' : 'NO');
 
     CFG = await sGet('admin_config');
     if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
@@ -725,7 +764,7 @@ async function init(){
     document.getElementById('refLinkText').textContent =
       'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
-    await registerReferralIfNeeded().catch(e=>{});
+    await registerReferralIfNeeded().catch(e=>console.warn('ref register err', e));
 
     renderJoinList();
     buildWheel();
@@ -781,6 +820,7 @@ function attachReferralsListener(){
     try{ renderAll(); }catch(e){}
   });
 }
+
 function attachAdminConfigListener(){
   db.ref('admin_config').on('value', snap=>{
     if(!snap.exists()) return;
@@ -795,6 +835,7 @@ function attachAdminConfigListener(){
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
 }
+
 function attachLeaderboardListener(){
   db.ref('user_state').on('value', snap=>{
     const all = snap.val() || {};
@@ -809,10 +850,26 @@ function attachLeaderboardListener(){
     if(document.getElementById('lbModal').classList.contains('show')) renderLeaderboard();
   });
 }
+
+/* ✅ FIXED: Listen to BOTH user history AND global withdraw_requests */
 function attachWithdrawListener(){
   db.ref('user_state_'+USER_ID+'/withdrawHistory').on('value', snap=>{
     const hist = snap.val();
     if(hist) STATE.withdrawHistory = hist;
+    renderWithdraw();
+  });
+
+  // ✅ Also listen to global withdraw_requests filtered by userId
+  // so admin approve/reject (which may update either place) shows up in the app
+  db.ref('withdraw_requests').orderByChild('userId').equalTo(USER_ID).on('value', snap=>{
+    const all = snap.val();
+    if(!all) return;
+    STATE.withdrawHistory = STATE.withdrawHistory || {};
+    Object.keys(all).forEach(k=>{
+      // Prefer fresh admin status from global node
+      const existing = STATE.withdrawHistory[k] || {};
+      STATE.withdrawHistory[k] = Object.assign({}, existing, all[k]);
+    });
     renderWithdraw();
   });
 }
@@ -827,22 +884,45 @@ async function registerReferralIfNeeded(){
 
   STATE.referredBy = referrerId;
   await saveState();
+
   await sSet('referrals/'+referrerId+'/'+USER_ID, {
-    id: USER_ID, name: tgUser.first_name || 'Player',
-    username: USER_USERNAME, active: false, earned: 0, adsWatched: 0, joinedAt: Date.now()
+    id: USER_ID,
+    name: tgUser.first_name || 'Player',
+    username: USER_USERNAME,
+    active: false,
+    earned: 0,
+    adsWatched: 0,
+    joinedAt: Date.now()
   });
+
+  // ✅ Notify referrer that a new user joined
+  console.log('→ Notifying referrer', referrerId, 'about new join');
+  await notifyReferrer(
+    referrerId,
+    `🎉 *New Referral Joined!*\n\n👤 *${tgUser.first_name || 'Player'}*\n${USER_USERNAME !== 'unknown' ? '@'+USER_USERNAME : ''}\n\nThey need to watch *${CFG.refAdsNeeded} ads* to activate.\n\n⏳ Status: Pending`
+  );
 }
+
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
+
   STATE.referralActivated = true;
   await saveState();
+
   const referrerId = STATE.referredBy;
   await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
   await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
   await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
-  await sendBotMessage(referrerId, `🌟 Active Referral! +${CFG.refBonus} Meaw bonus!`);
+
+  // ✅ Notify referrer that referral is now ACTIVE + bonus credited
+  console.log('→ Notifying referrer', referrerId, 'about activation');
+  await notifyReferrer(
+    referrerId,
+    `🌟 *Referral Activated!*\n\n👤 *${tgUser.first_name || 'Player'}* is now active! ✅\n\n💰 *+${CFG.refBonus} Meaw* bonus credited to your balance!\n\nKeep inviting to earn more! 🐾`
+  );
 }
+
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
@@ -851,6 +931,14 @@ async function creditReferrerCommission(amount){
   await sIncrement('user_state_'+referrerId+'/coins', commission);
   await sIncrement('user_state_'+referrerId+'/totalCommissionEarned', commission);
   await sIncrement('referrals/'+referrerId+'/'+USER_ID+'/earned', commission);
+
+  // ✅ Notify referrer of commission (only if >= 5 to avoid spam)
+  if(commission >= 5){
+    await notifyReferrer(
+      referrerId,
+      `💸 *Commission Earned!*\n\n+*${commission} Meaw* (${CFG.refCommissionPct}% of ${amount}) from your referral *${tgUser.first_name || 'Player'}* 🎉`
+    );
+  }
 }
 
 /* ---------- JOIN ---------- */
@@ -1204,13 +1292,13 @@ function renderWithdraw(){
     document.getElementById('withdrawForm').style.display='none';
   }
 
-  // Withdraw history — read from STATE (fresh from Firebase)
+  // Build withdraw history
   const histArr = [];
   const wh = STATE.withdrawHistory || {};
   if(Array.isArray(wh)){
     wh.forEach(h => { if(h) histArr.push(h); });
   } else {
-    Object.keys(wh).forEach(k => { if(wh[k]) histArr.push(wh[k]); });
+    Object.keys(wh).forEach(k => { if(wh[k]) histArr.push(Object.assign({id:k}, wh[k])); });
   }
 
   histArr.sort((a,b)=> (b.time||0) - (a.time||0));
@@ -1239,102 +1327,106 @@ async function watchWithdrawAd(){
 }
 
 /* ============================================================
-   ✅ FIXED submitWithdraw() — Uses push() for unique keys
-   Saves to BOTH:
-     1. user_state/{uid}/withdrawHistory/{pushKey}
-     2. withdraw_requests/{pushKey}   (global, admin always finds)
-   Never overwritten by saveState() because it uses its own key.
+   ✅ FIXED submitWithdraw()
+   - Global lock prevents double-click
+   - Firebase transaction = ATOMIC balance check + deduct
+   - Record only saved after successful deduction
+   - Saves to user_state + withdraw_requests (push keys)
    ============================================================ */
 async function submitWithdraw(){
+  // ✅ LOCK: Prevent concurrent/double submissions
+  if(withdrawInProgress){
+    console.log('⚠️ Withdraw already in progress, ignoring');
+    return;
+  }
+  withdrawInProgress = true;
+
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
   const msg = document.getElementById('wdMsg');
-
-  if(!amt || amt < CFG.minWithdraw){
-    msg.textContent = 'Min ' + CFG.minWithdraw;
-    msg.style.color = '#ffb4ac';
-    return;
-  }
-  if(amt > STATE.coins){
-    msg.textContent = 'Insufficient balance';
-    msg.style.color = '#ffb4ac';
-    return;
-  }
-  if(!addr){
-    msg.textContent = 'Enter TON address';
-    msg.style.color = '#ffb4ac';
-    return;
-  }
-
-  // Disable button while processing
   const submitBtn = document.querySelector('.withdraw-submit-btn');
-  if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
 
-  const record = {
-    userId: USER_ID,
-    name: tgUser.first_name || 'Player',
-    username: USER_USERNAME,
-    amount: amt,
-    method: 'TON',
-    address: addr,
-    status: 'pending',
-    time: Date.now(),
-    createdAt: new Date().toISOString()
-  };
-
-  let savedOK = false;
-
-  // ✅ 1. Save to user_state/{uid}/withdrawHistory (push gives unique key — never overwrites)
-  try{
-    const ref = db.ref('user_state/' + USER_ID + '/withdrawHistory');
-    const pushRef = ref.push();
-    record.id = pushRef.key;
-    await pushRef.set(record);
-    console.log('✅ Saved to user_state/withdrawHistory with key:', pushRef.key);
-    savedOK = true;
-  }catch(e){
-    console.error('❌ user_state save failed:', e);
-  }
-
-  // ✅ 2. Save to global withdraw_requests/{key} too (admin cross-check)
-  try{
-    await db.ref('withdraw_requests/' + record.id).set(record);
-    console.log('✅ Saved to withdraw_requests/' + record.id);
-    savedOK = true;
-  }catch(e){
-    console.warn('⚠️ withdraw_requests save failed (non-critical):', e);
-  }
-
-  if(!savedOK){
-    msg.textContent = '❌ Network error. Please retry.';
+  const fail = (text) => {
+    msg.textContent = text;
     msg.style.color = '#ffb4ac';
     if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Withdrawal'; }
-    return;
+    withdrawInProgress = false;
+  };
+
+  if(!amt || amt < CFG.minWithdraw){ return fail('Min ' + CFG.minWithdraw); }
+  if(!addr){ return fail('Enter TON address'); }
+
+  if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
+
+  try{
+    // ✅ ATOMIC balance check + deduct (no race condition)
+    const balRef = db.ref('user_state/' + USER_ID + '/coins');
+    const tx = await balRef.transaction(current => {
+      const bal = current || 0;
+      if(bal < amt) return; // abort — insufficient
+      return bal - amt;
+    });
+
+    if(!tx.committed){
+      return fail('❌ Insufficient balance');
+    }
+
+    const newBalance = tx.snapshot.val();
+    console.log('✅ Balance deducted atomically. New balance:', newBalance);
+
+    // ✅ Save withdraw record ONLY after successful deduction
+    const record = {
+      userId: USER_ID,
+      name: tgUser.first_name || 'Player',
+      username: USER_USERNAME,
+      amount: amt,
+      method: 'TON',
+      address: addr,
+      status: 'pending',
+      time: Date.now(),
+      createdAt: new Date().toISOString()
+    };
+
+    // push() gives a unique key → never overwrites previous history
+    const userPushRef = db.ref('user_state/' + USER_ID + '/withdrawHistory').push();
+    record.id = userPushRef.key;
+
+    // Save to user_state
+    await userPushRef.set(record);
+    console.log('✅ Saved to user_state/withdrawHistory key:', userPushRef.key);
+
+    // Save to global withdraw_requests (admin panel reads this)
+    try{
+      await db.ref('withdraw_requests/' + record.id).set(record);
+      console.log('✅ Saved to withdraw_requests/' + record.id);
+    }catch(e){
+      console.warn('⚠️ withdraw_requests save failed (non-critical):', e);
+    }
+
+    // Update local state
+    STATE.coins = newBalance;
+    STATE.withdrawHistory = STATE.withdrawHistory || {};
+    STATE.withdrawHistory[record.id] = record;
+    STATE.wdAdsWatched = 0;
+
+    msg.textContent = '✅ Submitted! Awaiting admin approval.';
+    msg.style.color = '#8fdc96';
+
+    document.getElementById('wdAmount').value = '';
+    document.getElementById('wdAddress').value = '';
+
+    renderAll();
+    renderWithdraw();
+
+    setTimeout(()=>{ if(msg.textContent.startsWith('✅')) msg.textContent = ''; }, 3500);
+
+  }catch(e){
+    console.error('❌ Withdraw error:', e);
+    return fail('❌ Network error. Please retry.');
+  }finally{
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Withdrawal'; }
+    withdrawInProgress = false;
   }
-
-  // ✅ 3. Update local state + deduct coins
-  STATE.withdrawHistory = STATE.withdrawHistory || {};
-  STATE.withdrawHistory[record.id] = record;
-  STATE.wdAdsWatched = 0;
-
-  await addCoins(-amt);
-  await saveState();
-
-  // ✅ 4. Success message
-  msg.textContent = '✅ Submitted! Awaiting admin approval.';
-  msg.style.color = '#8fdc96';
-
-  document.getElementById('wdAmount').value = '';
-  document.getElementById('wdAddress').value = '';
-
-  if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Withdrawal'; }
-
-  // ✅ 5. Refresh UI
-  renderAll();
-  renderWithdraw();
-
-  // ✅ 6. Auto-hide message
-  setTimeout(()=>{ if(msg.textContent.startsWith('✅')) msg.textContent = ''; }, 3500);
 }
 
 /* ---------- SPIN ---------- */
@@ -1366,7 +1458,7 @@ document.getElementById('openSpin').addEventListener('click', ()=>{
 });
 function renderSpinModal(){
   document.getElementById('spinCountText').textContent = STATE.spinsAvailable + (STATE.spinsAvailable===1?' spin left':' spins left');
-  document.getElementById('btnSpinNow').disabled = STATE.spinsAvailable<=0;
+  document.getElementById('btnSpinNow').disabled = STATE.spinsAvailable<=0 || spinInProgress;
   const today = new Date().toDateString();
   const used = STATE.lastSpinAdDate === today;
   const adBtn = document.getElementById('btnWatchAdSpin');
@@ -1384,29 +1476,47 @@ async function watchAdForSpin(){
   await saveState();
   renderSpinModal();
 }
+
+/* ✅ SPIN with lock — prevents double reward */
 async function doSpin(){
+  if(spinInProgress) return;
   if(STATE.spinsAvailable<=0) return;
-  const prizes = CFG.spinPrizes;
-  const totalWeight = prizes.reduce((a,p)=>a+p.weight,0);
-  let r = Math.random()*totalWeight, idx=0;
-  for(let i=0;i<prizes.length;i++){ if(r<prizes[i].weight){ idx=i; break; } r-=prizes[i].weight; }
-  const seg = 360/prizes.length;
-  const targetCenter = idx*seg + seg/2;
-  const currentMod = ((wheelRotation % 360)+360)%360;
-  const neededExtra = ((360 - targetCenter) - currentMod + 360)%360;
-  wheelRotation += 360*5 + neededExtra;
-  document.getElementById('wheelSvg').style.transform = `rotate(${wheelRotation}deg)`;
-  STATE.spinsAvailable--;
-  document.getElementById('btnSpinNow').disabled = true;
-  await saveState();
-  setTimeout(async ()=>{
-    await addCoins(prizes[idx].value);
+  spinInProgress = true;
+
+  try{
+    const prizes = CFG.spinPrizes;
+    const totalWeight = prizes.reduce((a,p)=>a+p.weight,0);
+    let r = Math.random()*totalWeight, idx=0;
+    for(let i=0;i<prizes.length;i++){ if(r<prizes[i].weight){ idx=i; break; } r-=prizes[i].weight; }
+    const seg = 360/prizes.length;
+    const targetCenter = idx*seg + seg/2;
+    const currentMod = ((wheelRotation % 360)+360)%360;
+    const neededExtra = ((360 - targetCenter) - currentMod + 360)%360;
+    wheelRotation += 360*5 + neededExtra;
+    document.getElementById('wheelSvg').style.transform = `rotate(${wheelRotation}deg)`;
+    STATE.spinsAvailable--;
+    document.getElementById('btnSpinNow').disabled = true;
     await saveState();
-    renderAll();
-    renderSpinModal();
-    showReward(prizes[idx].value);
-    await creditReferrerCommission(prizes[idx].value);
-  }, 4200);
+
+    setTimeout(async ()=>{
+      try{
+        await addCoins(prizes[idx].value);
+        await saveState();
+        renderAll();
+        renderSpinModal();
+        showReward(prizes[idx].value);
+        await creditReferrerCommission(prizes[idx].value);
+      }catch(e){
+        console.warn('Spin reward error:', e);
+      }finally{
+        spinInProgress = false;
+        renderSpinModal();
+      }
+    }, 4200);
+  }catch(e){
+    console.warn('Spin error:', e);
+    spinInProgress = false;
+  }
 }
 
 /* ---------- REDEEM ---------- */
@@ -1478,9 +1588,8 @@ function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
 /* ============================================================
-   ✅ SAVE — withdrawHistory REMOVED from here
-   (submitWithdraw() writes it directly with push(), so 5s
-   auto-save never overwrites it)
+   ✅ SAVE — withdrawHistory NOT included here
+   (submitWithdraw() writes it directly with push())
    ============================================================ */
 async function saveState(){
   if(!STATE) return;
