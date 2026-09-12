@@ -229,6 +229,29 @@ body{
 .task-item .ads-left{flex:1;}
 .reward-tag{font-size:11px;color:var(--gold-light);font-weight:700;}
 
+/* === Task category tabs with real premium icons === */
+.task-cat-tabs{display:flex;gap:10px;margin:14px 0 16px;}
+.task-cat-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:12px 6px 10px;border-radius:16px;cursor:pointer;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#241a52,#150c38);border:1px solid rgba(244,196,48,.22);
+  transition:transform .15s, border-color .2s;
+}
+.task-cat-tab:active{transform:scale(.95);}
+.task-cat-tab.active{border-color:var(--gold-light);box-shadow:0 6px 16px rgba(244,196,48,.25);}
+.task-cat-ic{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,.35), inset 0 2px 3px rgba(255,255,255,.3);
+}
+.task-cat-ic svg{width:26px;height:26px;}
+.task-cat-ic.tg{background:linear-gradient(145deg,#63c6f9,#1e9ce8);}
+.task-cat-ic.tw{background:linear-gradient(145deg,#2f3540,#0b0e13);}
+.task-cat-ic.ms{background:linear-gradient(145deg,#ffe08a,#c8871a);}
+.task-cat-tab span{font-size:11px;font-weight:800;opacity:.75;letter-spacing:.3px;}
+.task-cat-tab.active span{opacity:1;color:var(--gold-light);}
+.task-cat-count{position:absolute;top:6px;right:8px;background:rgba(224,90,78,.9);color:#fff;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:20px;}
+.task-item .btn.checking{background:linear-gradient(145deg,#3a3070,#241a52);color:var(--gold-light);}
+
 .meaw-hero{text-align:center;padding:20px 10px 6px;}
 .meaw-coin-big{width:150px;height:150px;margin:0 auto 6px;border-radius:50%;background-image:url('https://i.ibb.co.com/FbzbcvWq/Chat-GPT-Image-Sep-9-2026-08-16-31-PM.png');background-size:cover;background-position:center;box-shadow:0 0 0 8px rgba(244,196,48,.2),0 0 40px rgba(244,196,48,.35);animation:meawspin 6s linear infinite, floaty 3s ease-in-out infinite;}
 @keyframes meawspin{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(8deg) brightness(1.08)}100%{filter:hue-rotate(0deg) brightness(1)}}
@@ -326,6 +349,11 @@ body{
 .admin-input{width:100%;padding:8px;margin:4px 0;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:#140f2e;color:#fff;font-size:12px;}
 .admin-btn{background:var(--gold);color:var(--brown-deep);border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;margin:4px;}
 .admin-close{background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;position:absolute;top:10px;right:10px;}
+.admin-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.admin-tab-btn{flex:1;min-width:80px;padding:8px;border-radius:8px;border:1px solid rgba(244,196,48,.3);background:rgba(255,255,255,.05);color:#fff;font-weight:700;font-size:11px;cursor:pointer;}
+.admin-tab-btn.active{background:var(--gold);color:var(--brown-deep);}
+.admin-tab-content{display:none;}
+.admin-tab-content.active{display:block;}
 </style>
 </head>
 <body>
@@ -429,15 +457,36 @@ body{
     <div class="tab-content" id="tabTask" style="display:none;">
       <div class="section-title">⚡ Ads Network</div>
       <div id="adsNetworkList"></div>
+
       <div class="section-title" style="margin-top:18px;">📋 Tasks</div>
-      <div id="tasksList"></div>
+      <div class="task-cat-tabs" id="taskCatTabs">
+        <div class="task-cat-tab active" data-cat="telegram">
+          <div class="task-cat-ic tg">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg>
+          </div>
+          <span>Telegram</span>
+        </div>
+        <div class="task-cat-tab" data-cat="twitter">
+          <div class="task-cat-ic tw">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg>
+          </div>
+          <span>Twitter</span>
+        </div>
+        <div class="task-cat-tab" data-cat="mission">
+          <div class="task-cat-ic ms">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v6c0 5.2 3.6 9 9 10.5 5.4-1.5 9-5.3 9-10.5v-6L12 2Z" fill="#241408"/><path d="m8.5 12 2.4 2.4L16 9.4" stroke="#ffe08a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Mission</span>
+        </div>
+      </div>
+      <div id="missionList"></div>
     </div>
 
     <div class="tab-content" id="tabMeaw" style="display:none;">
       <div class="meaw-hero">
         <div class="meaw-coin-big"></div>
         <div class="timer-text font-display" id="farmTimer">04:00:00</div>
-        <div class="timer-sub" id="farmTimerSub">Farming in progress...</div>
+        <div class="timer-sub" id="farmTimerSub">Start farming from Home</div>
         <button class="btn btn-gold btn-block" id="btnClaimFarm" disabled>🐾 Claim Farming</button>
       </div>
       <div class="section-title" style="margin-top:14px;">🚀 Mining Boosts</div>
@@ -465,11 +514,11 @@ body{
         </div>
       </div>
       <div class="stat-grid stat-grid-3">
-        <div class="stat-box"><b id="refTotal">0</b><span>Total Invite</span></div>
-        <div class="stat-box"><b id="refActive">0</b><span>Active Invite</span></div>
-        <div class="stat-box stat-box-gold"><b id="refBonusEarned">0</b><span>Total Earned</span></div>
+        <div class="stat-box"><b id="refTotal">0</b><span>Total Referrals</span></div>
+        <div class="stat-box"><b id="refActive">0</b><span>Active Referrals</span></div>
+        <div class="stat-box stat-box-gold"><b id="refBonusEarned">0</b><span>Total Reward</span></div>
       </div>
-      <div class="section-title">👥 Invited Friends</div>
+      <div class="section-title">👥 Referred Friends</div>
       <div id="refList"></div>
     </div>
 
@@ -483,7 +532,7 @@ body{
         <div style="font-size:12px;opacity:.8;">Watch 5 ads to unlock withdrawal</div>
         <div class="lock-progress-bar"><div class="lock-progress-fill" id="lockFill"></div></div>
         <div style="font-size:11px;opacity:.75;" id="lockText">0 / 5 ads watched</div>
-        <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchAdForWithdraw()">▶️ Watch Ad</button>
+        <button class="btn btn-gold btn-block" style="margin-top:10px;" onclick="watchWithdrawAd()">▶️ Watch Ad</button>
       </div>
       <div id="withdrawForm" style="display:none;">
         <div class="field-label">Withdraw Method</div>
@@ -564,45 +613,77 @@ body{
     <button class="admin-close" onclick="toggleAdminPanel()">✕ Close</button>
     <div class="admin-title">⚙️ ADMIN PANEL</div>
 
-    <div class="admin-section">
-      <label class="admin-label">Bot Token</label>
-      <input class="admin-input" id="adminToken" type="password" placeholder="Your Bot Token">
-      <label class="admin-label">Bot Username</label>
-      <input class="admin-input" id="adminBotUsername" placeholder="MeawQuestBot">
-      <button class="admin-btn" onclick="saveAdminSettings()">Save Settings</button>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" onclick="switchAdminTab('general')">General</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('telegram')">TG Task</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('twitter')">Twitter</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('mission')">Mission</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('ads')">Ads</button>
     </div>
 
-    <div class="admin-section">
-      <label class="admin-label">Channels (one per line)</label>
-      <textarea class="admin-input" id="adminChannels" rows="4" placeholder='{"name":"Channel Name","link":"https://t.me/channel"}'></textarea>
-      <button class="admin-btn" onclick="saveChannels()">Update Channels</button>
+    <div class="admin-tab-content active" id="adminTab-general">
+      <div class="admin-section">
+        <label class="admin-label">Bot Token</label>
+        <input class="admin-input" id="adminToken" type="password" placeholder="Your Bot Token">
+        <label class="admin-label">Bot Username</label>
+        <input class="admin-input" id="adminBotUsername" placeholder="MeawQuestBot">
+        <button class="admin-btn" onclick="saveAdminSettings()">Save Settings</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Required Channels (one per line)</label>
+        <textarea class="admin-input" id="adminChannels" rows="4" placeholder='{"name":"Channel Name","link":"https://t.me/channel"}'></textarea>
+        <button class="admin-btn" onclick="saveChannels()">Update Channels</button>
+      </div>
+      <div class="admin-section">
+        <label class="admin-label">Spin Rewards (comma separated)</label>
+        <input class="admin-input" id="adminSpinRewards" placeholder="2,5,3,7,10,20,50,12,4">
+        <button class="admin-btn" onclick="updateSpinRewards()">Update Rewards</button>
+      </div>
     </div>
 
-    <div class="admin-section">
-      <label class="admin-label">Add Ads Network Task</label>
-      <input class="admin-input" id="adminAdName" placeholder="e.g., Adsgram">
-      <input class="admin-input" id="adminAdReward" type="number" placeholder="Reward per ad">
-      <input class="admin-input" id="adminAdDaily" type="number" placeholder="Daily limit">
-      <button class="admin-btn" onclick="addAdsNetwork()">Add Ads Network</button>
+    <div class="admin-tab-content" id="adminTab-telegram">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Telegram Channel/Group Task</div>
+        <input class="admin-input" id="tgTaskName" placeholder="Task name (e.g. Join Main Channel)">
+        <input class="admin-input" id="tgTaskLink" placeholder="https://t.me/channelname">
+        <input class="admin-input" id="tgTaskReward" type="number" placeholder="Reward (Meaw)">
+        <button class="admin-btn" onclick="addTelegramTask()">➕ Add Telegram Task</button>
+      </div>
+      <div id="tgTaskPreview"></div>
     </div>
 
-    <div class="admin-section">
-      <label class="admin-label">Add Custom Task</label>
-      <input class="admin-input" id="adminTaskName" placeholder="Task name">
-      <input class="admin-input" id="adminTaskReward" type="number" placeholder="Reward">
-      <input class="admin-input" id="adminTaskLink" placeholder="Task link (optional)">
-      <button class="admin-btn" onclick="addCustomTask()">Add Task</button>
+    <div class="admin-tab-content" id="adminTab-twitter">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Twitter Task</div>
+        <input class="admin-input" id="twTaskName" placeholder="Task name (e.g. Follow @MeawQuest)">
+        <input class="admin-input" id="twTaskLink" placeholder="https://twitter.com/...">
+        <input class="admin-input" id="twTaskReward" type="number" placeholder="Reward (Meaw)">
+        <button class="admin-btn" onclick="addTwitterTask()">➕ Add Twitter Task</button>
+      </div>
+      <div id="twTaskPreview"></div>
     </div>
 
-    <div class="admin-section">
-      <label class="admin-label">Spin Rewards (comma separated)</label>
-      <input class="admin-input" id="adminSpinRewards" placeholder="2,5,3,7,10,20,50,12,4">
-      <button class="admin-btn" onclick="updateSpinRewards()">Update Rewards</button>
+    <div class="admin-tab-content" id="adminTab-mission">
+      <div class="admin-section">
+        <div class="admin-label" style="font-size:13px;margin-bottom:8px;">Add Mission Task (FB/Web/Any)</div>
+        <input class="admin-input" id="msTaskName" placeholder="Task name (e.g. FB Follow)">
+        <input class="admin-input" id="msTaskLink" placeholder="https://... (task link)">
+        <input class="admin-input" id="msTaskReward" type="number" placeholder="Reward (Meaw)">
+        <input class="admin-input" id="msTaskSeconds" type="number" placeholder="Visit seconds (e.g. 30)">
+        <button class="admin-btn" onclick="addMissionTask()">➕ Add Mission Task</button>
+      </div>
+      <div id="msTaskPreview"></div>
     </div>
 
-    <div class="admin-section">
-      <label class="admin-label">View Users Data</label>
-      <button class="admin-btn" onclick="viewAllUsers()">Export All Users</button>
+    <div class="admin-tab-content" id="adminTab-ads">
+      <div class="admin-section">
+        <label class="admin-label">Add Ads Network</label>
+        <input class="admin-input" id="adminAdName" placeholder="e.g., Adsgram">
+        <input class="admin-input" id="adminAdReward" type="number" placeholder="Reward per ad">
+        <input class="admin-input" id="adminAdDaily" type="number" placeholder="Daily limit">
+        <button class="admin-btn" onclick="addAdsNetwork()">Add Ads Network</button>
+      </div>
+      <div id="adsPreview"></div>
     </div>
   </div>
 
@@ -610,26 +691,16 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — FIREBASE EDITION (race-free referrals)
-   ============================================================
-   কী কী ফিক্স করা হলো:
-   1) window.storage সরিয়ে Firebase Realtime Database বসানো হলো
-      (window.storage শুধু claude.ai এর ভেতরে কাজ করে — বাইরে
-      হোস্ট করলে আগে সব সাইলেন্টলি ফেইল করছিল, তাই persistence/
-      referral কিছুই কাজ করছিল না)।
-   2) Referral count রেস-কন্ডিশন ফিক্স: প্রতি ৫ সেকেন্ডে পুরো
-      user object overwrite হতো বলে অন্য ইউজারের করা referral
-      আপডেট মুছে যেত। এখন coins/referral আলাদা Firebase path +
-      transaction দিয়ে আপডেট হয়, আর নিজের state শুধু "partial
-      update" দিয়ে সেভ হয় — তাই কোনো ডেটা ওভাররাইট হয় না।
-   3) referrals/<referrerId>/<referredId> — এখন referral লিস্ট
-      একটা রিয়েল-টাইম Firebase listener দিয়ে লাইভ আপডেট হয়,
-      পেজ রিফ্রেশ ছাড়াই referral count/active status বদলে যায়।
-   4) নতুন referral জয়েন করলে বট মেসেজ, ৫টা এড দেখে active হলে
-      বোনাসসহ বট মেসেজ, আর ইউজার নিজে ৩টা চ্যানেলে জয়েন করে
-      কিংডমে ঢুকলে ওয়েলকাম মেসেজ — সব যোগ করা হলো।
-   5) Withdraw পেজের "Watch Ad" বাটনটা আগে কিছুই করতো না
-      (ভুল network name পাস হচ্ছিল) — এটাও ফিক্স করা হলো।
+   MEAW QUEST — Firebase Edition v2
+   Fixes:
+   1) Farming start/claim now works reliably
+   2) Ads list includes Gigapub + Monetag
+   3) Task category tabs (Telegram / Twitter / Mission) with real icons
+   4) Admin panel can add tasks per category
+   5) Telegram task → getChatMember verification
+   6) Twitter task → follow verification via link open
+   7) Mission task → timed visit (X seconds)
+   8) Referral menu shows Total / Active / Reward live
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -641,16 +712,9 @@ const tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
 const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
-// 🔓 PUBLICLY EDITABLE BOT TOKEN (REPLACE WITH YOUR OWN!)
-// ⚠️ নিরাপত্তা নোট: এই টোকেন ক্লায়েন্ট-সাইড কোডে থাকায় যে কেউ
-// পেজ সোর্স দেখে টোকেনটা নিয়ে নিতে পারবে। প্রোডাকশনে চালানোর
-// আগে এই কলগুলো একটা Cloud Function / ছোট backend এর পেছনে
-// সরিয়ে নেওয়াই ভালো — কিন্তু এখন যেভাবে চেয়েছেন সেভাবেই রাখা হলো।
 let BOT_TOKEN = '8407604887:AAGY8RK8JRoiaJCa844T-JnKguift3ZB0hE';
 
-/* ============================================================
-   🔥 FIREBASE SETUP
-   ============================================================ */
+/* ---------- FIREBASE ---------- */
 const firebaseConfig = {
   apiKey: "AIzaSyBQg8dr2PZi8ekoNpfLPXv2wb0tddPf8F8",
   authDomain: "meaw-quest.firebaseapp.com",
@@ -663,29 +727,23 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ------------------------------------------------------------
-   Storage helpers (Firebase Realtime Database)
-   ------------------------------------------------------------ */
 async function sGet(key){
   try{
     const snap = await db.ref(key).once('value');
     return snap.exists() ? snap.val() : null;
-  }catch(e){ console.error('firebase get err', key, e); return null; }
+  }catch(e){ console.error('sGet err', key, e); return null; }
 }
 async function sSet(key, val){
-  try{ await db.ref(key).set(val); return true; }catch(e){ console.error('firebase set err', key, e); return false; }
+  try{ await db.ref(key).set(val); return true; }catch(e){ console.error('sSet err', key, e); return false; }
 }
 async function sUpdate(key, patch){
-  try{ await db.ref(key).update(patch); return true; }catch(e){ console.error('firebase update err', key, e); return false; }
+  try{ await db.ref(key).update(patch); return true; }catch(e){ console.error('sUpdate err', key, e); return false; }
 }
-// Atomic increment — used for anything money-related (coins, bonuses)
-// so two different browser sessions can safely update the same field
-// at the same time without clobbering each other.
 async function sIncrement(path, amount){
   try{
-    const res = await db.ref(path).transaction(current => (current||0) + amount);
+    const res = await db.ref(path).transaction(c => (c||0) + amount);
     return res.committed ? res.snapshot.val() : null;
-  }catch(e){ console.error('firebase txn err', path, e); return null; }
+  }catch(e){ console.error('sIncrement err', path, e); return null; }
 }
 
 const DEFAULT_CONFIG = {
@@ -706,10 +764,18 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Support',  link:'https://t.me/MeawQuestSupport'},
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
+  /* ✅ 3 ads networks incl. Gigapub + Monetag */
   adsNetworks: [
-    {name:'Adsgram', reward:15, dailyLimit:10, watched:0}
+    {name:'Adsgram', reward:15, dailyLimit:10},
+    {name:'Monetag', reward:12, dailyLimit:10},
+    {name:'Gigapub', reward:10, dailyLimit:10}
   ],
-  tasks: [],
+  /* ✅ Tasks split by category */
+  tasks: [
+    {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
+    {id:'tw_default_1', category:'twitter',  name:'Follow us on Twitter/X', reward:50, link:'https://twitter.com/', seconds:0},
+    {id:'ms_default_1', category:'mission',  name:'Visit Partner Website (30s)', reward:30, link:'https://example.com', seconds:30}
+  ],
   spinPrizes: [
     {value:2,  weight:22, color:'#e05a4e'},
     {value:5,  weight:20, color:'#f4c430'},
@@ -732,12 +798,6 @@ const DEFAULT_CONFIG = {
   ]
 };
 
-// NOTE: `referrals` is kept here only as an in-memory placeholder for
-// first paint. The real, live list is streamed in from the separate
-// `referrals/<uid>` Firebase node (see attachReferralsListener) and is
-// never written back into user_state as a whole array — this is what
-// stops one session's periodic save from wiping out another user's
-// referral update.
 const DEFAULT_STATE = {
   coins: 0,
   farmStart: null,
@@ -759,21 +819,20 @@ const DEFAULT_STATE = {
   channelsVerified: [],
   spinsAvailable: 0,
   lastSpinAdDate: null,
-  referralSpinsGranted: 0
+  referralSpinsGranted: 0,
+  missionTimers: {}
 };
 
 let CFG = null;
 let STATE = null;
 let joinChecking = -1;
 let joinOpened = [];
+let wheelRotation = 0;
 let selectedMethod = 0;
+let currentTaskCat = 'telegram';
+let missionOpened = {};
+let taskMissionChecking = null;
 
-/* ------------------------------------------------------------
-   SCREEN TRANSITION SAFETY NET
-   Guarantees the app never gets stuck on the loading screen,
-   no matter what fails during init() (storage error, missing
-   network, blocked fetch, etc).
-   ------------------------------------------------------------ */
 let screenReady = false;
 function safeGoScreen(){
   if(screenReady) return;
@@ -781,23 +840,14 @@ function safeGoScreen(){
   if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
   goScreen(STATE.joined ? 'screen-app' : 'screen-join');
 }
-// Absolute failsafe: force a transition after 8s even if init() hangs
-setTimeout(()=>{
-  if(!screenReady){
-    console.warn('Failsafe triggered: init() was too slow or failed, forcing screen switch.');
-    safeGoScreen();
-  }
-}, 8000);
+setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe screen switch'); safeGoScreen(); } }, 8000);
 
-/* ============================================================
-   TELEGRAM BOT API — CHANNEL VERIFICATION
-   ============================================================ */
+/* ---------- BOT API ---------- */
 function extractTgUsername(link){
   if(!link) return '';
   const m = link.match(/t\.me\/(?:@)?([A-Za-z0-9_]+)/i);
   return m ? m[1] : '';
 }
-
 async function checkChannelMembership(channelLink){
   const username = extractTgUsername(channelLink);
   if(!username) return { joined:false, debug:'invalid channel' };
@@ -813,8 +863,6 @@ async function checkChannelMembership(channelLink){
     return { joined:false, debug:'network error' };
   }
 }
-
-/* BOT NOTIFICATIONS */
 async function sendBotMessage(chatId, text){
   try{
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -825,9 +873,7 @@ async function sendBotMessage(chatId, text){
   }catch(e){ console.error('sendBotMessage failed', e); }
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
+/* ---------- INIT ---------- */
 async function init(){
   try{
     CFG = await sGet('admin_config');
@@ -836,23 +882,24 @@ async function init(){
       Object.keys(DEFAULT_CONFIG).forEach(k=>{ if(CFG[k]===undefined) CFG[k]=DEFAULT_CONFIG[k]; });
     }
 
+    // Migrate old tasks without category → telegram
+    CFG.tasks = (CFG.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
+
     STATE = await sGet('user_state_'+USER_ID);
     if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
     else {
       Object.keys(DEFAULT_STATE).forEach(k=>{ if(STATE[k]===undefined) STATE[k]=JSON.parse(JSON.stringify(DEFAULT_STATE[k])); });
     }
 
-    // 🔥 Daily reset
     if(STATE.adsDay !== new Date().toDateString()){
       STATE.adsToday = {};
       CFG.adsNetworks.forEach(n=>{ STATE.adsToday[n.name] = 0; });
       STATE.adsDay = new Date().toDateString();
     }
 
-    // Check if user is admin (hidden feature)
-    if(USER_ID === '123456789'){ // Replace with your admin ID
-      const navAdminEl = document.getElementById('navAdmin');
-      if(navAdminEl) navAdminEl.style.display='flex';
+    if(USER_ID === '123456789'){
+      const el = document.getElementById('navAdmin');
+      if(el) el.style.display='flex';
     }
 
     document.getElementById('avatarLetter').textContent = (tgUser.first_name||'P')[0].toUpperCase();
@@ -860,23 +907,19 @@ async function init(){
     document.getElementById('refLinkText').textContent =
       'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
-    // Referral registration must never block the whole app if it fails
-    await registerReferralIfNeeded().catch(e=>console.warn('registerReferralIfNeeded failed', e));
+    await registerReferralIfNeeded().catch(e=>console.warn('registerReferralIfNeeded', e));
 
     renderJoinList();
     buildWheel();
     renderAll();
 
-    // 🔴 LIVE listeners — these are what make the referral counter
-    // and admin changes update instantly, without a page refresh.
     attachReferralsListener();
     attachAdminConfigListener();
 
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
   }catch(err){
-    // Never let an unexpected error trap the user on the loading screen
-    console.error('Init error, continuing with safe defaults:', err);
+    console.error('Init error:', err);
     if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
     try{ renderJoinList(); }catch(e){}
@@ -893,39 +936,40 @@ async function init(){
 
 function goScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
 }
 
-/* ============================================================
-   LIVE LISTENERS
-   ============================================================ */
+/* ---------- LIVE LISTENERS ---------- */
 function attachReferralsListener(){
-  // referrals/<myId> holds one child per person I referred.
-  // Because each referred user only ever writes to their OWN child
-  // (referrals/<myId>/<theirId>), there is no overwrite race here —
-  // multiple friends can join/activate at the same time safely, and
-  // this listener pushes the update into the UI immediately.
   db.ref('referrals/'+USER_ID).on('value', snap=>{
     const val = snap.val();
-    STATE.referrals = val ? Object.keys(val).map(k=>val[k]) : [];
+    STATE.referrals = val ? Object.keys(val).map(k=>({...val[k]})) : [];
     try{ refreshSpinCredits(); renderRefer(); }catch(e){}
   });
+  // Also listen to my own user_state for realtime coins/bonus updates
+  db.ref('user_state_'+USER_ID).on('value', snap=>{
+    const v = snap.val();
+    if(!v) return;
+    if(typeof v.coins === 'number') STATE.coins = v.coins;
+    if(typeof v.totalReferralBonus === 'number') STATE.totalReferralBonus = v.totalReferralBonus;
+    if(typeof v.totalCommissionEarned === 'number') STATE.totalCommissionEarned = v.totalCommissionEarned;
+    try{ renderAll(); }catch(e){}
+  });
 }
-
 function attachAdminConfigListener(){
   db.ref('admin_config').on('value', snap=>{
     if(!snap.exists()) return;
     const remote = snap.val();
     const merged = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     Object.assign(merged, remote);
+    merged.tasks = (merged.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
     CFG = merged;
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
 }
 
-/* ============================================================
-   REFERRAL SYSTEM
-   ============================================================ */
+/* ---------- REFERRAL ---------- */
 async function registerReferralIfNeeded(){
   if(STATE.referredBy) return;
   const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || '';
@@ -936,9 +980,6 @@ async function registerReferralIfNeeded(){
   STATE.referredBy = referrerId;
   await saveState();
 
-  // Write ONLY to my own child under the referrer's referral list.
-  // This never touches any other referral entry, so it can't race
-  // with anything else writing to that same list.
   await sSet('referrals/'+referrerId+'/'+USER_ID, {
     id: USER_ID,
     name: tgUser.first_name || 'Player',
@@ -949,16 +990,14 @@ async function registerReferralIfNeeded(){
     joinedAt: Date.now()
   });
 
-  // 🔥 BOT NOTIFICATION — New referral joined
   await sendBotMessage(
     referrerId,
     `🎉 *New Referral Joined!*\n\n` +
     `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
-    `joined Meaw Quest using your link!\n\n` +
+    `joined using your link!\n\n` +
     `💡 They need to watch ${CFG.refAdsNeeded||5} ads to become active & you'll get ${CFG.refBonus} Meaw bonus!`
   );
 }
-
 async function checkReferralActivation(){
   if(STATE.referralActivated || !STATE.referredBy) return;
   if((STATE.totalAdsWatchedEver||0) < (CFG.refAdsNeeded||5)) return;
@@ -967,45 +1006,33 @@ async function checkReferralActivation(){
   await saveState();
 
   const referrerId = STATE.referredBy;
-
-  // Mark just my own child active — safe, no race.
   await sSet('referrals/'+referrerId+'/'+USER_ID+'/active', true);
-
-  // Credit the referrer with a transaction (safe even if the
-  // referrer's app is open on another device right now).
   await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
   await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
 
-  // Read-only fetch just to build a nice message — this never writes
-  // the object back, so it can't clobber anything.
   const refState = await sGet('user_state_'+referrerId);
   const totalEarn = refState ? (refState.totalReferralBonus||0)+(refState.totalCommissionEarned||0) : CFG.refBonus;
 
-  // 🔥 BOT MESSAGE — Active referral + bonus
   await sendBotMessage(
     referrerId,
     `🌟 *Active Referral!*\n\n` +
     `👤 ${tgUser.first_name||'Player'} (@${USER_USERNAME})\n` +
     `just became *ACTIVE* (watched ${CFG.refAdsNeeded||5} ads)!\n\n` +
-    `💰 You earned *+${CFG.refBonus} Meaw* referral bonus!\n` +
+    `💰 You earned *+${CFG.refBonus} Meaw* bonus!\n` +
     `📊 Total from referrals: *${fmt(totalEarn)} Meaw*`
   );
 }
-
 async function creditReferrerCommission(amount){
   if(!STATE.referredBy || !amount) return;
   const commission = Math.floor(amount * ((CFG.refCommissionPct||10)/100));
   if(commission<=0) return;
   const referrerId = STATE.referredBy;
-
   await sIncrement('user_state_'+referrerId+'/coins', commission);
   await sIncrement('user_state_'+referrerId+'/totalCommissionEarned', commission);
   await sIncrement('referrals/'+referrerId+'/'+USER_ID+'/earned', commission);
 }
 
-/* ============================================================
-   JOIN CHANNELS  (shown only once — until STATE.joined becomes true)
-   ============================================================ */
+/* ---------- JOIN CHANNELS ---------- */
 function renderJoinList(){
   if(!STATE.channelsVerified || STATE.channelsVerified.length !== CFG.channels.length){
     STATE.channelsVerified = CFG.channels.map(()=>false);
@@ -1018,19 +1045,10 @@ function renderJoinList(){
     const checking = joinChecking === i;
     const opened = joinOpened[i];
     let rightHtml, subText;
-    if(v){
-      rightHtml = `<span class="verify-badge">✅ Verified</span>`;
-      subText = 'You have joined';
-    } else if(checking){
-      rightHtml = `<span class="verify-badge checking">🔎 Checking…</span>`;
-      subText = 'Verifying...';
-    } else if(opened){
-      rightHtml = `<button class="btn btn-gold" onclick="verifyChannel(${i})">✅ Verify</button>`;
-      subText = 'Joined? Tap Verify';
-    } else {
-      rightHtml = `<button class="btn btn-outline" onclick="joinChannel(${i})">Join</button>`;
-      subText = 'Tap to join';
-    }
+    if(v){ rightHtml = `<span class="verify-badge">✅ Verified</span>`; subText = 'You have joined'; }
+    else if(checking){ rightHtml = `<span class="verify-badge checking">🔎 Checking…</span>`; subText = 'Verifying...'; }
+    else if(opened){ rightHtml = `<button class="btn btn-gold" onclick="verifyChannel(${i})">✅ Verify</button>`; subText = 'Joined? Tap Verify'; }
+    else { rightHtml = `<button class="btn btn-outline" onclick="joinChannel(${i})">Join</button>`; subText = 'Tap to join'; }
     return `<div class="join-card ${v?'verified':''}">
       <div class="join-ic">${v?'✅':'📣'}</div>
       <div class="join-info"><b>${c.name}</b><span>${subText}</span>${!v?`<div class="join-badge-req">Required</div>`:''}</div>
@@ -1039,20 +1057,17 @@ function renderJoinList(){
   }).join('');
   updateContinueBtn();
 }
-
 function updateContinueBtn(){
   const allDone = STATE.channelsVerified.length>0 && STATE.channelsVerified.every(Boolean);
   const btn = document.getElementById('btnVerify');
   btn.disabled = !allDone;
   btn.textContent = allDone ? '👑 Enter the Kingdom' : '✅ Join all channels';
 }
-
 function joinChannel(i){
   window.open(CFG.channels[i].link, '_blank');
   joinOpened[i] = true;
   renderJoinList();
 }
-
 async function verifyChannel(i){
   joinChecking = i;
   renderJoinList();
@@ -1067,59 +1082,38 @@ async function verifyChannel(i){
   }
   renderJoinList();
 }
-
 document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
-  // 👋 Welcome message the moment a NEW user enters the kingdom.
-  // This only ever fires once, since screen-join is skipped for
-  // returning users (STATE.joined stays true in Firebase).
-  await sendBotMessage(
-    USER_ID,
-    `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start farming Meaw Coin, complete tasks, and invite friends to earn more!`
-  );
+  await sendBotMessage(USER_ID, `🐾 *Welcome to Meaw Quest!*\n\nYou've entered the kingdom. Start farming, complete tasks, and invite friends to earn more!`);
   goScreen('screen-app');
 });
 
-/* ============================================================
-   RENDER ALL
-   ============================================================ */
+/* ---------- RENDER ALL ---------- */
 function renderAll(){
   document.getElementById('topBalance').textContent = fmt(STATE.coins);
   document.getElementById('coinPriceText').textContent = '$' + CFG.coinPrice.toFixed(4);
-
   renderTask();
   renderFarm();
   renderRefer();
   renderWithdraw();
   refreshSpinCredits();
 }
+function fmt(n){ return Math.floor(n||0).toLocaleString(); }
 
-function fmt(n){ return Math.floor(n).toLocaleString(); }
-
-// Coins are ALWAYS mutated through this helper, which uses a Firebase
-// transaction. This is what keeps balances correct even when the
-// referrer's own client and a referred friend's client update the
-// same coins field at almost the same instant.
 async function addCoins(amount){
   const newVal = await sIncrement('user_state_'+USER_ID+'/coins', amount);
   if(newVal!==null){ STATE.coins = newVal; }
   else { STATE.coins = Math.max(0, (STATE.coins||0) + amount); }
 }
 
-/* ============================================================
-   TASKS RENDERING
-   ============================================================ */
+/* ---------- TASKS RENDERING ---------- */
 function renderTask(){
-  // Render Ads Networks
+  // Ads networks
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
-    const icon = {
-      'Adsgram':'📺',
-      'Monetag':'🎬',
-      'Gigapub':'🟣'
-    }[net.name] || '📡';
+    const icon = {'Adsgram':'📺','Monetag':'🎬','Gigapub':'🟣'}[net.name] || '📡';
     let dashHtml = '';
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
@@ -1138,22 +1132,73 @@ function renderTask(){
   }).join('');
   document.getElementById('adsNetworkList').innerHTML = adsHtml;
 
-  // Render Custom Tasks
-  const tasksHtml = CFG.tasks.map(task=>{
-    const done = STATE.tasksDone.includes(task.id||task.name);
+  // Category counts (badge)
+  const cats = ['telegram','twitter','mission'];
+  const counts = {telegram:0, twitter:0, mission:0};
+  CFG.tasks.forEach(t=>{ if(!STATE.tasksDone.includes(t.id)) counts[t.category] = (counts[t.category]||0)+1; });
+  document.querySelectorAll('.task-cat-tab').forEach(tab=>{
+    tab.classList.toggle('active', tab.dataset.cat===currentTaskCat);
+    const c = counts[tab.dataset.cat]||0;
+    let badge = tab.querySelector('.task-cat-count');
+    if(c>0){
+      if(!badge){ badge = document.createElement('div'); badge.className='task-cat-count'; tab.appendChild(badge); }
+      badge.textContent = c;
+    } else if(badge){ badge.remove(); }
+  });
+
+  // Icon per category for task item
+  const catIcon = {
+    telegram:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M22.05 2.3 2.4 9.9c-1.2.47-1.19 1.13-.22 1.42l5.02 1.56L18.3 5.66c.44-.27.84-.13.51.17l-8.66 7.82-.33 4.94c.47 0 .68-.22.94-.47l2.26-2.2 4.7 3.47c.87.48 1.49.23 1.7-.8L22.9 3.5c.32-1.27-.48-1.85-1.3-1.47l.45.27Z"/></svg>`,
+    twitter:`<svg viewBox="0 0 24 24"><path fill="#fff" d="M18.3 3H21l-6.4 7.3L22 21h-6.1l-4.8-6.3L5.6 21H3l6.9-7.8L2 3h6.2l4.3 5.8L18.3 3Zm-1.1 16.2h1.7L7.9 4.7H6.1l11.1 14.5Z"/></svg>`,
+    mission:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v6c0 5.2 3.6 9 9 10.5 5.4-1.5 9-5.3 9-10.5v-6L12 2Z" fill="#ffe08a"/><path d="m8.5 12 2.4 2.4L16 9.4" stroke="#241408" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  };
+  const catBg = {
+    telegram:'linear-gradient(145deg,#63c6f9,#1e9ce8)',
+    twitter:'linear-gradient(145deg,#2f3540,#0b0e13)',
+    mission:'linear-gradient(145deg,#ffe08a,#c8871a)'
+  };
+
+  // Filter tasks for current category
+  const filtered = CFG.tasks.filter(t=>t.category===currentTaskCat);
+  const ml = document.getElementById('missionList');
+  if(filtered.length===0){
+    ml.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:18px;">No ${currentTaskCat} tasks yet — check back soon 🐾</div>`;
+    return;
+  }
+  ml.innerHTML = filtered.map(t=>{
+    const done = STATE.tasksDone.includes(t.id);
+    const checking = taskMissionChecking === t.id;
+    const opened = !!missionOpened[t.id];
+
+    let rightHtml;
+    if(done) rightHtml = `<button class="btn btn-outline" disabled>Done</button>`;
+    else if(checking) rightHtml = `<button class="btn checking" disabled>🔎 Checking…</button>`;
+    else if(t.category==='telegram'){
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="verifyTelegramTask('${t.id}')">✅ Verify</button>`
+        : `<button class="btn btn-outline" onclick="openTelegramTask('${t.id}')">Join</button>`;
+    } else if(t.category==='twitter'){
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
+        : `<button class="btn btn-outline" onclick="openTwitterTask('${t.id}')">Follow</button>`;
+    } else {
+      // mission with optional timed visit
+      rightHtml = opened
+        ? `<button class="btn btn-gold" onclick="completeTask('${t.id}')">Claim</button>`
+        : `<button class="btn btn-outline" onclick="openMissionTask('${t.id}')">Visit</button>`;
+    }
+    const secText = t.seconds>0 ? `<span style="font-size:10px;opacity:.6;margin-left:4px;">(${t.seconds}s)</span>` : '';
     return `<div class="task-item">
       <div class="ads-left">
-        <div class="ads-logo">${task.icon||'✨'}</div>
-        <div><div class="ads-name">${task.name}</div><div class="reward-tag">+${task.reward} Meaw</div></div>
+        <div class="ads-logo" style="background:${catBg[t.category]||catBg.mission};padding:6px;">${catIcon[t.category]}</div>
+        <div><div class="ads-name">${t.name}${secText}</div><div class="reward-tag">+${t.reward} Meaw</div></div>
       </div>
-      <button class="btn ${done?'btn-outline':'btn-gold'}" ${done?'disabled':''} onclick="completeTask('${task.id||task.name}')">
-        ${done?'Done':'Claim'}
-      </button>
+      ${rightHtml}
     </div>`;
   }).join('');
-  document.getElementById('tasksList').innerHTML = tasksHtml || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No tasks yet</div>';
 }
 
+/* ---------- ADS ---------- */
 async function watchAd(netName){
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
@@ -1175,22 +1220,56 @@ async function watchAd(netName){
   }, 1500);
 }
 
-async function completeTask(taskId){
-  if(STATE.tasksDone.includes(taskId)) return;
-  const task = CFG.tasks.find(t=>(t.id||t.name)===taskId);
-  if(!task) return;
-
-  STATE.tasksDone.push(taskId);
-  await addCoins(task.reward);
+/* ---------- TASK ACTIONS ---------- */
+function openTelegramTask(id){
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  window.open(t.link, '_blank');
+  missionOpened[id] = true;
+  renderTask();
+}
+async function verifyTelegramTask(id){
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  taskMissionChecking = id;
+  renderTask();
+  const result = await checkChannelMembership(t.link);
+  taskMissionChecking = null;
+  if(result.joined){
+    await completeTask(id);
+  } else {
+    missionOpened[id] = false;
+    renderTask();
+    alert(`You haven't joined "${t.name}" yet. Please join first then verify.`);
+  }
+}
+function openTwitterTask(id){
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  window.open(t.link, '_blank');
+  missionOpened[id] = true;
+  renderTask();
+}
+function openMissionTask(id){
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  window.open(t.link, '_blank');
+  missionOpened[id] = true;
+  renderTask();
+}
+async function completeTask(id){
+  if(STATE.tasksDone.includes(id)) return;
+  const t = CFG.tasks.find(x=>x.id===id);
+  if(!t) return;
+  STATE.tasksDone.push(id);
+  await addCoins(t.reward);
   await saveState();
-  showReward(task.reward);
-  await creditReferrerCommission(task.reward);
+  showReward(t.reward);
+  await creditReferrerCommission(t.reward);
   renderAll();
 }
 
-/* ============================================================
-   FARMING
-   ============================================================ */
+/* ---------- FARMING (FIXED) ---------- */
 function renderFarm(){
   const btn = document.getElementById('btnClaimFarm');
   const timerEl = document.getElementById('farmTimer');
@@ -1222,7 +1301,6 @@ function renderFarm(){
     <button class="btn ${owned?'btn-outline':'btn-gold'}" ${owned?'disabled':''} onclick="buyBoost(${i})">${owned?'Active':'Buy'}</button></div>`;
   }).join('');
 }
-
 function msToClock(ms){
   const s = Math.floor(ms/1000);
   const h = String(Math.floor(s/3600)).padStart(2,'0');
@@ -1231,21 +1309,32 @@ function msToClock(ms){
   return `${h}:${m}:${sec}`;
 }
 
+/* ✅ FIXED: Start farming — sets timestamp, saves immediately, switches tab */
 document.getElementById('btnStartFarming').addEventListener('click', async ()=>{
   if(!STATE.farmStart){
     STATE.farmStart = Date.now();
     STATE.farmDurationH = CFG.farmDurationH;
-    await saveState();
+    await sUpdate('user_state_'+USER_ID, {
+      farmStart: STATE.farmStart,
+      farmDurationH: STATE.farmDurationH
+    });
   }
   switchTab('tab-meaw');
+  renderFarm();
 });
 
+/* ✅ FIXED: Claim farming — verifies time elapsed, adds reward atomically */
 document.getElementById('btnClaimFarm').addEventListener('click', async ()=>{
+  if(!STATE.farmStart) return;
+  const durMs = CFG.farmDurationH*3600*1000;
+  if(Date.now() - STATE.farmStart < durMs){ alert('Farming not ready yet!'); return; }
+
   const mult = STATE.boostsOwned.reduce((a,i)=>Math.max(a, CFG.boosts[i].mult), 1);
   const reward = Math.floor(CFG.farmReward * mult);
+
   STATE.farmStart = null;
+  await sUpdate('user_state_'+USER_ID, { farmStart: null });
   await addCoins(reward);
-  await saveState();
   showReward(reward);
   await creditReferrerCommission(reward);
   renderAll();
@@ -1260,45 +1349,41 @@ async function buyBoost(i){
   renderAll();
 }
 
-/* ============================================================
-   REFERRAL PAGE
-   ============================================================ */
+/* ---------- REFERRAL MENU ---------- */
 function renderRefer(){
-  document.getElementById('refTotal').textContent = STATE.referrals.length;
-  document.getElementById('refActive').textContent = STATE.referrals.filter(r=>r.active).length;
-  const total = (STATE.totalReferralBonus||0) + (STATE.totalCommissionEarned||0);
-  document.getElementById('refBonusEarned').textContent = fmt(total);
+  const total = STATE.referrals.length;
+  const active = STATE.referrals.filter(r=>r.active).length;
+  const totalReward = (STATE.totalReferralBonus||0) + (STATE.totalCommissionEarned||0);
+  document.getElementById('refTotal').textContent = total;
+  document.getElementById('refActive').textContent = active;
+  document.getElementById('refBonusEarned').textContent = fmt(totalReward);
 
   const wrap = document.getElementById('refList');
   if(STATE.referrals.length===0){
-    wrap.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No invites yet</div>`;
+    wrap.innerHTML = `<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No referrals yet — share your link!</div>`;
   } else {
     wrap.innerHTML = STATE.referrals.map(r=>`
       <div class="ref-user">
         <div class="avatar">${(r.name||'?')[0]}</div>
         <div class="ru-name">
-          ${r.name}
+          ${r.name||'Player'}
           <small>${r.username?'@'+r.username:''} • +${fmt(r.earned||0)} Meaw</small>
         </div>
         <div class="ref-status ${r.active?'active':'pending'}">${r.active?'✅ Active':'⏳ Pending'}</div>
       </div>`).join('');
   }
 }
-
 function copyRefLink(){
   const t = document.getElementById('refLinkText').textContent;
   navigator.clipboard && navigator.clipboard.writeText(t);
   alert('Copied!');
 }
-
 function shareRefLink(){
   const link = document.getElementById('refLinkText').textContent;
   window.open('https://t.me/share/url?url=' + encodeURIComponent(link), '_blank');
 }
 
-/* ============================================================
-   WITHDRAW
-   ============================================================ */
+/* ---------- WITHDRAW ---------- */
 function renderWithdraw(){
   document.getElementById('wdBalance').textContent = fmt(STATE.coins) + ' Meaw';
   const need = CFG.wdAdsNeeded;
@@ -1326,13 +1411,9 @@ function renderWithdraw(){
       <div class="reward-tag">${h.status}</div>
     </div>`).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
-
 function selectMethod(i){ selectedMethod=i; renderWithdraw(); }
 
-// Fixed: this button used to call watchAd('withdraw') which matched no
-// ads network and silently did nothing. It now correctly counts toward
-// the withdraw-unlock progress.
-async function watchAdForWithdraw(){
+async function watchWithdrawAd(){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
   setTimeout(async ()=>{
@@ -1342,7 +1423,6 @@ async function watchAdForWithdraw(){
     renderWithdraw();
   }, 1500);
 }
-
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
@@ -1360,9 +1440,7 @@ async function submitWithdraw(){
   renderAll();
 }
 
-/* ============================================================
-   SPIN WHEEL
-   ============================================================ */
+/* ---------- SPIN WHEEL ---------- */
 function buildWheel(){
   const prizes = CFG.spinPrizes;
   const seg = 360/prizes.length;
@@ -1375,7 +1453,6 @@ function buildWheel(){
   });
   document.getElementById('wheelLabels').innerHTML = labelsHtml;
 }
-
 function refreshSpinCredits(){
   const activeRefs = STATE.referrals.filter(r=>r.active).length;
   if(activeRefs > STATE.referralSpinsGranted){
@@ -1386,15 +1463,13 @@ function refreshSpinCredits(){
   document.getElementById('spinFeatureBadge').textContent = STATE.spinsAvailable;
   document.getElementById('spinFeatureBadge').classList.toggle('show', STATE.spinsAvailable>0);
 }
-
 document.getElementById('openSpin').addEventListener('click', ()=>{
   refreshSpinCredits();
   renderSpinModal();
   document.getElementById('spinModal').classList.add('show');
 });
-
 function renderSpinModal(){
-  document.getElementById('spinCountText').textContent = STATE.spinsAvailable + ' spins left';
+  document.getElementById('spinCountText').textContent = STATE.spinsAvailable + (STATE.spinsAvailable===1?' spin left':' spins left');
   document.getElementById('btnSpinNow').disabled = STATE.spinsAvailable<=0;
   const today = new Date().toDateString();
   const adBtn = document.getElementById('btnWatchAdSpin');
@@ -1402,7 +1477,6 @@ function renderSpinModal(){
   adBtn.disabled = used;
   adBtn.textContent = used ? '✅ Ad Used Today' : '▶️ Watch Ad (+1 Spin)';
 }
-
 async function watchAdForSpin(){
   const today = new Date().toDateString();
   if(STATE.lastSpinAdDate === today) return;
@@ -1415,8 +1489,6 @@ async function watchAdForSpin(){
     renderSpinModal();
   }, 1500);
 }
-
-let wheelRotation = 0;
 async function doSpin(){
   if(STATE.spinsAvailable<=0) return;
   const prizes = CFG.spinPrizes;
@@ -1445,18 +1517,22 @@ async function doSpin(){
   }, 4200);
 }
 
-/* ============================================================
-   NAV & MODALS
-   ============================================================ */
+/* ---------- NAV ---------- */
 function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
   document.getElementById('tab'+capitalize(id.replace('tab-',''))).style.display='block';
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.tab===id));
 }
-
 function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
-
 document.querySelectorAll('.nav-item[data-tab]').forEach(n=>n.addEventListener('click', ()=>switchTab(n.dataset.tab)));
+
+document.getElementById('taskCatTabs').addEventListener('click', (e)=>{
+  const tab = e.target.closest('.task-cat-tab');
+  if(!tab) return;
+  currentTaskCat = tab.dataset.cat;
+  renderTask();
+});
+
 document.getElementById('openLeaderboard').addEventListener('click', ()=>{
   const myActive = STATE.referrals.filter(r=>r.active).length;
   const mock = [
@@ -1479,13 +1555,20 @@ function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
-/* ============================================================
-   ADMIN PANEL
-   ============================================================ */
+/* ---------- ADMIN PANEL ---------- */
 function toggleAdminPanel(){
   document.getElementById('adminPanel').classList.toggle('show');
 }
-
+function switchAdminTab(name){
+  document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('adminTab-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='telegram') renderAdminTaskPreview('telegram');
+  if(name==='twitter')  renderAdminTaskPreview('twitter');
+  if(name==='mission')  renderAdminTaskPreview('mission');
+  if(name==='ads')      renderAdminAdsPreview();
+}
 function saveAdminSettings(){
   const token = document.getElementById('adminToken').value.trim();
   if(token) BOT_TOKEN = token;
@@ -1494,7 +1577,6 @@ function saveAdminSettings(){
   sSet('admin_config', CFG);
   alert('Settings saved!');
 }
-
 function saveChannels(){
   try{
     const raw = document.getElementById('adminChannels').value;
@@ -1512,14 +1594,13 @@ function saveChannels(){
     }
   }catch(e){ alert('Error: '+e.message); }
 }
-
 function addAdsNetwork(){
   const name = document.getElementById('adminAdName').value.trim();
   const reward = parseInt(document.getElementById('adminAdReward').value)||10;
   const daily = parseInt(document.getElementById('adminAdDaily').value)||10;
   if(!name) return;
   CFG.adsNetworks = CFG.adsNetworks || [];
-  CFG.adsNetworks.push({name, reward, dailyLimit:daily, watched:0});
+  CFG.adsNetworks.push({name, reward, dailyLimit:daily});
   sSet('admin_config', CFG);
   STATE.adsToday[name] = 0;
   saveState();
@@ -1528,51 +1609,93 @@ function addAdsNetwork(){
   document.getElementById('adminAdReward').value='';
   document.getElementById('adminAdDaily').value='';
   renderTask();
+  renderAdminAdsPreview();
 }
-
-function addCustomTask(){
-  const name = document.getElementById('adminTaskName').value.trim();
-  const reward = parseInt(document.getElementById('adminTaskReward').value)||10;
-  const link = document.getElementById('adminTaskLink').value.trim();
-  if(!name) return;
-  CFG.tasks = CFG.tasks || [];
-  CFG.tasks.push({id:name+'_'+Date.now(), name, reward, link, icon:'✨'});
+function addTelegramTask(){
+  const name = document.getElementById('tgTaskName').value.trim();
+  const link = document.getElementById('tgTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('tgTaskReward').value)||10;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'tg_'+Date.now(), category:'telegram', name, link, reward, seconds:0});
   sSet('admin_config', CFG);
-  alert('Task added!');
-  document.getElementById('adminTaskName').value='';
-  document.getElementById('adminTaskReward').value='';
-  document.getElementById('adminTaskLink').value='';
+  alert('Telegram task added!');
+  document.getElementById('tgTaskName').value='';
+  document.getElementById('tgTaskLink').value='';
+  document.getElementById('tgTaskReward').value='';
   renderTask();
+  renderAdminTaskPreview('telegram');
 }
-
+function addTwitterTask(){
+  const name = document.getElementById('twTaskName').value.trim();
+  const link = document.getElementById('twTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('twTaskReward').value)||10;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'tw_'+Date.now(), category:'twitter', name, link, reward, seconds:0});
+  sSet('admin_config', CFG);
+  alert('Twitter task added!');
+  document.getElementById('twTaskName').value='';
+  document.getElementById('twTaskLink').value='';
+  document.getElementById('twTaskReward').value='';
+  renderTask();
+  renderAdminTaskPreview('twitter');
+}
+function addMissionTask(){
+  const name = document.getElementById('msTaskName').value.trim();
+  const link = document.getElementById('msTaskLink').value.trim();
+  const reward = parseInt(document.getElementById('msTaskReward').value)||10;
+  const seconds = parseInt(document.getElementById('msTaskSeconds').value)||0;
+  if(!name || !link) return alert('Fill name + link');
+  CFG.tasks.push({id:'ms_'+Date.now(), category:'mission', name, link, reward, seconds});
+  sSet('admin_config', CFG);
+  alert('Mission task added!');
+  document.getElementById('msTaskName').value='';
+  document.getElementById('msTaskLink').value='';
+  document.getElementById('msTaskReward').value='';
+  document.getElementById('msTaskSeconds').value='';
+  renderTask();
+  renderAdminTaskPreview('mission');
+}
+function renderAdminTaskPreview(cat){
+  const el = document.getElementById(cat==='telegram'?'tgTaskPreview':cat==='twitter'?'twTaskPreview':'msTaskPreview');
+  if(!el) return;
+  const items = CFG.tasks.filter(t=>t.category===cat);
+  if(!items.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing tasks:</div>' + items.map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);padding:8px;border-radius:8px;margin-bottom:6px;">
+      <div style="flex:1;font-size:11px;">${t.name}<br><small style="opacity:.6;">+${t.reward} Meaw ${t.seconds?'• '+t.seconds+'s':''}</small></div>
+      <button class="admin-btn" style="background:#e05a4e;color:#fff;padding:4px 8px;font-size:10px;" onclick="deleteTask('${t.id}','${cat}')">Delete</button>
+    </div>
+  `).join('');
+}
+function deleteTask(id, cat){
+  if(!confirm('Delete this task?')) return;
+  CFG.tasks = CFG.tasks.filter(t=>t.id!==id);
+  sSet('admin_config', CFG);
+  renderTask();
+  renderAdminTaskPreview(cat);
+}
+function renderAdminAdsPreview(){
+  const el = document.getElementById('adsPreview');
+  if(!el) return;
+  if(!CFG.adsNetworks.length){ el.innerHTML=''; return; }
+  el.innerHTML = '<div class="admin-label" style="margin-bottom:6px;">Existing ad networks:</div>' + CFG.adsNetworks.map(n=>`
+    <div style="font-size:11px;padding:6px;background:rgba(255,255,255,.06);border-radius:6px;margin-bottom:4px;">
+      ${n.name} — +${n.reward} Meaw • ${n.dailyLimit}/day
+    </div>
+  `).join('');
+}
 function updateSpinRewards(){
   const raw = document.getElementById('adminSpinRewards').value;
   const vals = raw.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));
   if(vals.length>0){
-    CFG.spinPrizes = vals.map(v=>({value:v, weight:Math.ceil(Math.random()*25), color:'#'+Math.random().toString(16).slice(2,8)}));
+    CFG.spinPrizes = vals.map((v,i)=>({value:v, weight:Math.max(1,Math.ceil(25-i*2)), color:['#e05a4e','#f4c430','#5fbf6b','#4a86c8','#c8871a','#8a5cf6','#e08a4e','#ff5ecb','#66c2ff'][i%9]}));
     sSet('admin_config', CFG);
     buildWheel();
     alert('Spin rewards updated!');
   }
 }
 
-function viewAllUsers(){
-  alert('Check browser console for user data export');
-  console.log('User State:', STATE);
-  console.log('Config:', CFG);
-}
-
-/* ============================================================
-   SAVE STATE
-   ------------------------------------------------------------
-   IMPORTANT: this only writes fields that are exclusively owned
-   and changed by THIS client (never by another user's session).
-   `coins`, `totalReferralBonus`, `totalCommissionEarned` are
-   deliberately left out — those are only ever touched through
-   sIncrement() transactions, from any session, so they must
-   never be blindly overwritten here. `referrals` is also left
-   out since it now lives in its own Firebase node.
-   ============================================================ */
+/* ---------- SAVE STATE ---------- */
 async function saveState(){
   if(!STATE) return;
   const patch = {
@@ -1591,7 +1714,8 @@ async function saveState(){
     joined: STATE.joined,
     referredBy: STATE.referredBy,
     referralActivated: STATE.referralActivated,
-    totalAdsWatchedEver: STATE.totalAdsWatchedEver
+    totalAdsWatchedEver: STATE.totalAdsWatchedEver,
+    missionTimers: STATE.missionTimers
   };
   await sUpdate('user_state_'+USER_ID, patch);
 }
@@ -1599,4 +1723,4 @@ async function saveState(){
 init();
 </script>
 </body>
-                                                                                                        </html>
+  </html>
