@@ -10,7 +10,7 @@
 
 <!-- ✅ Monetag Reward Ad SDK -->
 <script src='//libtl.com/sdk.js' data-zone='11782670' data-sdk='show_11782670'></script>
-<!-- ✅ Gigapub Reward Ad SDK -->
+<!-- ✅ Gigapub Reward Ad SDK — PERMANENT -->
 <script src="https://ad.gigapub.tech/script?id=8142"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -482,9 +482,9 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Real Reward Ads (Monetag + Gigapub)
-   SDK nijei countdown + overlay handle kore
-   Amra shudhu show_11782670() / showGiga() call kori
+   MEAW QUEST — Gigapub + Monetag Reward Ads
+   Gigapub SDK <head> e permanently loaded
+   Watch click → showGiga() / show_11782670() direct call
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -534,8 +534,8 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'},
-    {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'}
+    {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'},
+    {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}
   ],
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
@@ -587,37 +587,9 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
-   ✅ REAL REWARD ADS — Monetag + Gigapub
+   ✅ REAL REWARD ADS — Gigapub + Monetag
    SDK nijei countdown + overlay handle kore
    ============================================================ */
-
-/* ✅ MONETAG — Real Reward Ad */
-function showMonetagRewardAd(){
-  return new Promise((resolve) => {
-    console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
-
-    if(typeof window.show_11782670 !== 'function'){
-      console.warn('[Monetag] SDK not loaded');
-      resolve(true);
-      return;
-    }
-
-    try{
-      const result = window.show_11782670();
-      console.log('[Monetag] Called — Monetag overlay should appear');
-
-      if(result && typeof result.then === 'function'){
-        result.then(()=>{ console.log('[Monetag] Promise resolved'); resolve(true); })
-              .catch(err=>{ console.warn('[Monetag] Promise rejected', err); resolve(true); });
-      } else {
-        setTimeout(()=>{ console.log('[Monetag] 15s elapsed → reward'); resolve(true); }, 15000);
-      }
-    }catch(e){
-      console.warn('[Monetag] Call exception:', e);
-      resolve(true);
-    }
-  });
-}
 
 /* ✅ GIGAPUB — Real Reward Ad */
 function showGigapubRewardAd(){
@@ -625,7 +597,7 @@ function showGigapubRewardAd(){
     console.log('[Gigapub] typeof showGiga:', typeof window.showGiga);
 
     if(typeof window.showGiga !== 'function'){
-      console.warn('[Gigapub] SDK not loaded');
+      console.warn('[Gigapub] SDK not loaded, resolving immediately');
       resolve(true);
       return;
     }
@@ -642,6 +614,34 @@ function showGigapubRewardAd(){
       }
     }catch(e){
       console.warn('[Gigapub] Call exception:', e);
+      resolve(true);
+    }
+  });
+}
+
+/* ✅ MONETAG — Real Reward Ad */
+function showMonetagRewardAd(){
+  return new Promise((resolve) => {
+    console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
+
+    if(typeof window.show_11782670 !== 'function'){
+      console.warn('[Monetag] SDK not loaded, resolving immediately');
+      resolve(true);
+      return;
+    }
+
+    try{
+      const result = window.show_11782670();
+      console.log('[Monetag] Called — Monetag overlay should appear');
+
+      if(result && typeof result.then === 'function'){
+        result.then(()=>{ console.log('[Monetag] Promise resolved'); resolve(true); })
+              .catch(err=>{ console.warn('[Monetag] Promise rejected', err); resolve(true); });
+      } else {
+        setTimeout(()=>{ console.log('[Monetag] 15s elapsed → reward'); resolve(true); }, 15000);
+      }
+    }catch(e){
+      console.warn('[Monetag] Call exception:', e);
       resolve(true);
     }
   });
@@ -688,12 +688,12 @@ async function init(){
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
-    // Ensure both Monetag and Gigapub exist
-    if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
-      CFG.adsNetworks.unshift({name:'Monetag', reward:12, dailyLimit:20, type:'monetag'});
-    }
+    // Ensure Gigapub + Monetag exist (Gigapub first)
     if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
-      CFG.adsNetworks.push({name:'Gigapub', reward:15, dailyLimit:20, type:'giga'});
+      CFG.adsNetworks.unshift({name:'Gigapub', reward:15, dailyLimit:20, type:'giga'});
+    }
+    if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
+      CFG.adsNetworks.push({name:'Monetag', reward:12, dailyLimit:20, type:'monetag'});
     }
 
     STATE = await sGet('user_state_'+USER_ID);
@@ -727,8 +727,8 @@ async function init(){
 
     setTimeout(()=>{
       console.log('=== SDK Status ===');
-      console.log('show_11782670 (Monetag):', typeof window.show_11782670);
       console.log('showGiga (Gigapub):', typeof window.showGiga);
+      console.log('show_11782670 (Monetag):', typeof window.show_11782670);
     }, 3000);
   }catch(err){
     console.error('Init error:', err);
@@ -921,7 +921,7 @@ async function addCoins(amount){
 function renderTask(){
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
-    const icon = net.type === 'monetag' ? '🎬' : net.type === 'giga' ? '🎮' : '📡';
+    const icon = net.type === 'giga' ? '🎮' : net.type === 'monetag' ? '🎬' : '📡';
     let dashHtml = '';
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
@@ -988,7 +988,7 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad — Direct SDK call (Monetag or Gigapub) */
+/* ✅ Watch Ad — Direct SDK call (Gigapub or Monetag) */
 async function watchAd(netName, btnEl){
   if(adInProgress) return;
 
@@ -1003,14 +1003,12 @@ async function watchAd(netName, btnEl){
   adInProgress = true;
 
   try{
-    // ✅ Direct SDK call — SDK nijer Reward Ad dekhabe
-    if(net.type === 'monetag'){
-      await showMonetagRewardAd();
-    } else if(net.type === 'giga'){
+    if(net.type === 'giga'){
       await showGigapubRewardAd();
+    } else if(net.type === 'monetag'){
+      await showMonetagRewardAd();
     }
 
-    // Reward
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
     STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
     await addCoins(net.reward);
@@ -1204,7 +1202,7 @@ async function watchWithdrawAd(){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading Ad...'; btn.disabled=true;
   try{
-    await showMonetagRewardAd();
+    await showGigapubRewardAd();
   }catch(e){}
   btn.textContent = old; btn.disabled=false;
   STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
@@ -1279,7 +1277,7 @@ async function watchAdForSpin(){
   if(STATE.lastSpinAdDate === today) return;
   const btn = document.getElementById('btnWatchAdSpin');
   btn.textContent='Loading Ad...'; btn.disabled=true;
-  try{ await showMonetagRewardAd(); }catch(e){}
+  try{ await showGigapubRewardAd(); }catch(e){}
   STATE.lastSpinAdDate = today;
   STATE.spinsAvailable += 1;
   await saveState();
@@ -1406,4 +1404,4 @@ async function saveState(){
 init();
 </script>
 </body>
-          </html>
+            </html>
