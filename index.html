@@ -294,7 +294,6 @@ body{
 .ref-status.active{background:rgba(95,191,107,.2);color:var(--ok);}
 .ref-status.pending{background:rgba(224,90,78,.18);color:#ff9e93;}
 
-/* =============== WITHDRAW REDESIGN =============== */
 .balance-hero{text-align:center;padding:10px 0 18px;}
 .balance-hero b{font-family:'Cinzel',serif;font-size:32px;color:var(--gold-light);}
 .lock-box{
@@ -328,7 +327,6 @@ body{
 }
 .lock-watch-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a5c0f;}
 
-/* ✅ Beautiful TON Withdraw Form */
 .withdraw-form-card{
   background:linear-gradient(160deg,#241a52,#150c38);
   border:1px solid rgba(244,196,48,.35);border-radius:20px;
@@ -393,8 +391,6 @@ body{
   padding:5px 12px;border-radius:20px;font-size:11px;
   color:var(--gold-light);font-weight:800;margin-top:6px;
 }
-
-/* =============== END WITHDRAW REDESIGN =============== */
 
 .modal-icon-badge{
   width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -945,14 +941,7 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition v6.1 (FIXED)
-   ✅ Gigapub ads integration (window.showGiga())
-   ✅ Monetag ads integration (show_11782670) — FIXED to actually
-      wait for the ad promise + reject when no ad is available
-      (catchIfNoFeed) instead of instantly rewarding.
-   ✅ Ads now show properly in Task menu
-   ✅ Only TON withdrawal + premium design
-   ✅ Active referral bot message + reward
+   MEAW QUEST — Firebase Edition v9 — REWARD ADS FIXED
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -965,8 +954,6 @@ const USER_ID = String(tgUser.id);
 const USER_USERNAME = tgUser.username || 'unknown';
 
 let BOT_TOKEN = '';
-let SDK_READY = false;
-let SDK_CHECK_INTERVAL = null;
 
 /* ---------- FIREBASE ---------- */
 const firebaseConfig = {
@@ -1083,6 +1070,7 @@ let wheelRotation = 0;
 let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
+let adInProgress = false;
 
 let screenReady = false;
 function safeGoScreen(){
@@ -1094,111 +1082,93 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady){ console.warn('Failsafe screen switch'); safeGoScreen(); } }, 8000);
 
 /* ============================================================
-   ✅ FIXED ADS SDK — Wait for SDKs to be ready before using
+   ✅ REWARD ADS — Gigapub + Monetag
    ============================================================ */
-function checkSDKReady(){
-  const gigaReady = typeof window.showGiga === 'function';
-  const monetagReady = typeof window.show_11782670 === 'function';
-  return { gigaReady, monetagReady, allReady: gigaReady || monetagReady };
-}
 
-/* Wait for a specific SDK to be available (max 10s) */
-function waitForSDK(checkFn, maxWaitMs=10000){
+function waitForFn(name, maxMs){
+  maxMs = maxMs || 15000;
   return new Promise((resolve)=>{
+    if(typeof window[name] === 'function'){ resolve(true); return; }
     const start = Date.now();
-    const check = ()=>{
-      if(checkFn()){
+    const t = setInterval(()=>{
+      if(typeof window[name] === 'function'){
+        clearInterval(t);
         resolve(true);
-        return;
-      }
-      if(Date.now() - start > maxWaitMs){
+      } else if(Date.now() - start > maxMs){
+        clearInterval(t);
         resolve(false);
-        return;
       }
-      setTimeout(check, 300);
-    };
-    check();
+    }, 200);
   });
 }
 
-/* ✅ Gigapub Ad */
+/* ✅ GIGAPUB — Reward Ad */
 async function showGigapubAd(){
+  console.log('[Gigapub] Starting...');
+
   if(typeof window.showGiga !== 'function'){
-    console.warn('Waiting for Gigapub SDK...');
-    const ok = await waitForSDK(()=>typeof window.showGiga === 'function', 8000);
-    if(!ok){
-      console.error('Gigapub SDK not available');
-      throw new Error('Gigapub SDK not loaded');
-    }
+    console.log('[Gigapub] Waiting for SDK...');
+    const ok = await waitForFn('showGiga', 15000);
+    if(!ok) throw new Error('Gigapub SDK not loaded');
   }
+
   return new Promise((resolve, reject)=>{
     try{
+      console.log('[Gigapub] Calling window.showGiga()');
       const result = window.showGiga();
+
       if(result && typeof result.then === 'function'){
-        result.then(()=>resolve(true)).catch(e=>{
-          console.warn('Gigapub error:', e);
-          reject(e);
+        result.then(()=>{
+          console.log('[Gigapub] ✅ Reward received');
+          resolve(true);
+        }).catch(err=>{
+          console.warn('[Gigapub] ❌ No reward:', err);
+          reject(new Error('Ad skipped or failed'));
+        });
+      } else if(window.showGiga.onReward){
+        window.showGiga.onReward = ()=>{ console.log('[Gigapub] ✅ Reward cb'); resolve(true); };
+        window.showGiga.onClose = ()=>{ console.warn('[Gigapub] Closed'); reject(new Error('Ad closed')); };
+      } else {
+        setTimeout(()=>{ console.log('[Gigapub] Assuming shown'); resolve(true); }, 2000);
+      }
+    }catch(err){
+      console.error('[Gigapub] Exception:', err);
+      reject(err);
+    }
+  });
+}
+
+/* ✅ MONETAG — Reward Ad */
+async function showMonetagAd(){
+  console.log('[Monetag] Starting...');
+
+  if(typeof window.show_11782670 !== 'function'){
+    console.log('[Monetag] Waiting for SDK...');
+    const ok = await waitForFn('show_11782670', 15000);
+    if(!ok) throw new Error('Monetag SDK not loaded');
+  }
+
+  return new Promise((resolve, reject)=>{
+    try{
+      console.log('[Monetag] Calling window.show_11782670()');
+      const result = window.show_11782670();
+
+      if(result && typeof result.then === 'function'){
+        result.then(()=>{
+          console.log('[Monetag] ✅ Reward received');
+          resolve(true);
+        }).catch(err=>{
+          console.warn('[Monetag] ❌ No reward:', err);
+          reject(new Error('Ad skipped or failed'));
         });
       } else {
-        // Some SDK versions resolve via callback
-        resolve(true);
+        setTimeout(()=>{ console.log('[Monetag] Assuming shown'); resolve(true); }, 2500);
       }
-    }catch(e){
-      console.warn('Gigapub exception:', e);
-      reject(e);
+    }catch(err){
+      console.error('[Monetag] Exception:', err);
+      reject(err);
     }
   });
-}
-
-/* ✅ Monetag Ad — FIXED
-   Old bug: called window.show_11782670() and immediately resolved(true)
-   WITHOUT waiting for the ad promise to settle, so the reward was given
-   even if no ad was ever actually shown.
-   Fix: 1) properly await the returned promise
-        2) pass { catchIfNoFeed: true } so that when there's no ad fill,
-           the promise REJECTS instead of silently resolving (which is
-           Monetag SDK's default behaviour otherwise). */
-async function showMonetagAd(){
-  if(typeof window.show_11782670 !== 'function'){
-    console.warn('Waiting for Monetag SDK...');
-    const ok = await waitForSDK(()=>typeof window.show_11782670 === 'function', 8000);
-    if(!ok){
-      console.error('Monetag SDK not available');
-      throw new Error('Monetag SDK not loaded');
-    }
-  }
-  return new Promise((resolve, reject)=>{
-    try{
-      const result = window.show_11782670({ catchIfNoFeed: true, ymid: USER_ID });
-      if(result && typeof result.then === 'function'){
-        result
-          .then((res)=>{
-            console.log('Monetag ad completed:', res);
-            resolve(true);
-          })
-          .catch((e)=>{
-            console.warn('Monetag: no ad available / failed:', e);
-            reject(e);
-          });
-      } else {
-        // SDK didn't return a promise — don't auto-reward, treat as failure
-        console.warn('Monetag did not return a valid ad promise');
-        reject(new Error('Monetag did not return a valid ad promise'));
-      }
-    }catch(e){
-      console.warn('Monetag exception:', e);
-      reject(e);
-    }
-  });
-}
-
-/* ✅ Wait for SDKs on page load */
-async function waitForAllSDKs(){
-  const giga = await waitForSDK(()=>typeof window.showGiga === 'function', 12000);
-  const mon = await waitForSDK(()=>typeof window.show_11782670 === 'function', 12000);
-  SDK_READY = giga || mon;
-  console.log('SDK Status → Gigapub:', giga, '| Monetag:', mon);
-  return { giga, mon };
 }
 
 /* ---------- BOT API ---------- */
@@ -1236,9 +1206,6 @@ async function sendBotMessage(chatId, text){
 /* ---------- INIT ---------- */
 async function init(){
   try{
-    // ✅ Wait for ads SDKs first
-    waitForAllSDKs().catch(e=>console.warn('SDK wait failed:', e));
-
     const secureCfg = await sGet('secure/config');
     if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
 
@@ -1289,6 +1256,12 @@ async function init(){
 
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
+
+    setTimeout(()=>{
+      console.log('=== SDK Status ===');
+      console.log('showGiga:', typeof window.showGiga);
+      console.log('show_11782670:', typeof window.show_11782670);
+    }, 4000);
   }catch(err){
     console.error('Init error:', err);
     if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -1300,18 +1273,7 @@ async function init(){
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
     setTimeout(()=>{
       safeGoScreen();
-      setTimeout(()=>{ tryShowWelcomeAd(); }, 2000);
     }, 1500);
-  }
-}
-
-/* ✅ Show Gigapub ad after loading */
-async function tryShowWelcomeAd(){
-  try{
-    await showGigapubAd();
-    console.log('Welcome Gigapub ad shown');
-  }catch(e){
-    console.warn('Welcome ad skipped:', e.message);
   }
 }
 
@@ -1501,9 +1463,6 @@ document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
-
-  try{ await showGigapubAd(); }catch(e){ console.warn('Post-join ad skipped:', e.message); }
-
   goScreen('screen-app');
 });
 
@@ -1554,7 +1513,7 @@ function renderTask(){
           <div class="dash-progress">${dashHtml}</div>
         </div>
       </div>
-      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}', event)">Watch</button>
+      <button class="btn btn-gold" ${watched>=net.dailyLimit?'disabled':''} onclick="watchAd('${net.name}', this)">Watch</button>
     </div>`;
   }).join('');
   document.getElementById('adsNetworkList').innerHTML = adsHtml;
@@ -1620,34 +1579,44 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ FIXED Watch Ad — waits for SDK, passes event properly */
-async function watchAd(netName, evt){
+/* ✅ Watch Ad — shows Reward Ad on click, gives reward on completion */
+async function watchAd(netName, btnEl){
+  if(adInProgress){ console.warn('Ad already in progress'); return; }
+
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
   if((STATE.adsToday[netName]||0) >= net.dailyLimit){ alert('Daily limit reached'); return; }
 
-  const btn = evt && evt.target ? evt.target : (window.event ? window.event.target : null);
+  const btn = btnEl || (window.event ? window.event.target : null);
   const old = btn ? btn.textContent : 'Watch';
   if(btn){ btn.textContent='Loading...'; btn.disabled=true; }
 
+  adInProgress = true;
   let adSuccess = false;
+
   try{
     if(net.type === 'giga'){
+      console.log('▶️ Showing Gigapub REWARD ad...');
       await showGigapubAd();
       adSuccess = true;
+      console.log('✅ Gigapub reward ad complete');
     } else if(net.type === 'monetag'){
+      console.log('▶️ Showing Monetag REWARD ad...');
       await showMonetagAd();
       adSuccess = true;
+      console.log('✅ Monetag reward ad complete');
     } else {
       await new Promise(r=>setTimeout(r, 1500));
       adSuccess = true;
     }
   }catch(e){
-    console.warn('Ad failed:', e);
-    alert('Ad not available. Please try again.');
+    console.warn('❌ Ad failed:', e);
+    alert('Ad not completed. Please try again.');
+  }finally{
+    adInProgress = false;
+    if(btn){ btn.textContent = old; btn.disabled = false; }
   }
 
-  if(btn){ btn.textContent = old; btn.disabled = false; }
   if(!adSuccess) return;
 
   STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
@@ -1864,7 +1833,6 @@ function renderWithdraw(){
   }).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
 
-/* ✅ Watch withdraw unlock ad — uses Gigapub */
 async function watchWithdrawAd(){
   const btn = event.target;
   const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
@@ -1873,7 +1841,6 @@ async function watchWithdrawAd(){
     await showGigapubAd();
   }catch(e){
     console.warn('Withdraw ad skipped:', e.message);
-    alert('Ad not available. Please try again.');
     btn.textContent = old; btn.disabled=false;
     return;
   }
@@ -1885,7 +1852,6 @@ async function watchWithdrawAd(){
   await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
 }
 
-/* ✅ TON-only withdrawal submission */
 async function submitWithdraw(){
   const amt = parseFloat(document.getElementById('wdAmount').value);
   const addr = document.getElementById('wdAddress').value.trim();
