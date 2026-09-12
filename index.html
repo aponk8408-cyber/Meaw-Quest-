@@ -587,6 +587,38 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
+   ✅ CORE / PERMANENT AD NETWORKS
+   Gigapub (and Monetag) must ALWAYS be present in the Task
+   list, no matter what the admin panel writes to
+   admin_config/adsNetworks. Admin can still edit the reward
+   amount / daily limit for these networks — but they can never
+   be deleted or replaced from the list, and the "type" (which
+   decides which SDK is called) is always locked correctly.
+   ============================================================ */
+const CORE_AD_NETWORKS = [
+  {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'},
+  {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}
+];
+function ensureCoreAdNetworks(cfg){
+  cfg.adsNetworks = Array.isArray(cfg.adsNetworks) ? cfg.adsNetworks : [];
+  CORE_AD_NETWORKS.forEach((core, idx)=>{
+    const existing = cfg.adsNetworks.find(n=>n.name===core.name);
+    if(existing){
+      // Admin panel is allowed to change reward / dailyLimit only.
+      // The "type" is force-locked so the correct SDK always fires.
+      existing.type = core.type;
+      if(typeof existing.reward !== 'number') existing.reward = core.reward;
+      if(typeof existing.dailyLimit !== 'number') existing.dailyLimit = core.dailyLimit;
+    } else {
+      // Missing from admin config entirely → re-insert permanently.
+      if(idx===0) cfg.adsNetworks.unshift({...core});
+      else cfg.adsNetworks.push({...core});
+    }
+  });
+  return cfg;
+}
+
+/* ============================================================
    ✅ REAL REWARD ADS — Gigapub + Monetag
    SDK nijei countdown + overlay handle kore
    ============================================================ */
@@ -688,13 +720,8 @@ async function init(){
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
-    // Ensure Gigapub + Monetag exist (Gigapub first)
-    if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
-      CFG.adsNetworks.unshift({name:'Gigapub', reward:15, dailyLimit:20, type:'giga'});
-    }
-    if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
-      CFG.adsNetworks.push({name:'Monetag', reward:12, dailyLimit:20, type:'monetag'});
-    }
+    // Gigapub (+ Monetag) are PERMANENT — always present, reward stays admin-editable
+    ensureCoreAdNetworks(CFG);
 
     STATE = await sGet('user_state_'+USER_ID);
     if(!STATE){ STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
@@ -734,6 +761,7 @@ async function init(){
     console.error('Init error:', err);
     if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     if(!STATE) STATE = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    ensureCoreAdNetworks(CFG);
   }finally{
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
     setTimeout(()=>{ safeGoScreen(); }, 1500);
@@ -772,6 +800,11 @@ function attachAdminConfigListener(){
     merged.tasks = (merged.tasks||[]).map(t=>({...t, category: t.category||'telegram', seconds: t.seconds||0}));
     merged.boosts = merged.boosts || DEFAULT_CONFIG.boosts;
     merged.redeemCodes = merged.redeemCodes || DEFAULT_CONFIG.redeemCodes;
+
+    // Live admin updates can never remove Gigapub / Monetag — only their
+    // reward/dailyLimit values (admin-editable) are picked up from `remote`.
+    ensureCoreAdNetworks(merged);
+
     CFG = merged;
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
@@ -1404,4 +1437,4 @@ async function saveState(){
 init();
 </script>
 </body>
-            </html>
+  </html>
