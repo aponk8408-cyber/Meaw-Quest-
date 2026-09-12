@@ -8,9 +8,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-<!-- ✅ ADS SDKs — PRE-LOADED (Jackfruit style) -->
+<!-- ✅ Monetag Reward Ad SDK -->
 <script src='//libtl.com/sdk.js' data-zone='11782670' data-sdk='show_11782670'></script>
-<script src="https://ad.gigapub.tech/script?id=8142"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -481,9 +480,10 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Ads system (Jackfruit style — proven to work)
-   SDK pre-loaded in <head>
-   Click Watch → direct SDK call → 12s wait → reward
+   MEAW QUEST — Monetag REAL Reward Ads
+   Monetag SDK ei zone e real Reward Ad dekhay
+   Amra shudhu show_11782670() call korbo — Monetag nijei
+   nijer countdown + overlay dekhabe
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -533,8 +533,7 @@ const DEFAULT_CONFIG = {
     {name:'Meaw Quest Payout',   link:'https://t.me/MeawQuestPayout'}
   ],
   adsNetworks: [
-    {name:'Gigapub', reward:15, dailyLimit:10, type:'giga'},
-    {name:'Monetag', reward:12, dailyLimit:10, type:'monetag'}
+    {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}
   ],
   tasks: [
     {id:'tg_default_1', category:'telegram', name:'Join Meaw Quest Official', reward:50, link:'https://t.me/MeawQuestOfficial', seconds:0},
@@ -586,70 +585,40 @@ function safeGoScreen(){
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
 /* ============================================================
-   ✅ ADS SYSTEM — Jackfruit style
-   Direct SDK call → 12 second wait → reward
+   ✅ MONETAG REAL REWARD AD — show_11782670()
+   Monetag SDK nijei countdown + overlay handle kore
+   Amra shudhu call kori ar reward wait kori
    ============================================================ */
 
-function showAdOverlay(rewardAmount, networkName){
-  // Create overlay if not exists
-  let ov = document.getElementById('meawAdOverlay');
-  if(!ov){
-    ov = document.createElement('div');
-    ov.id = 'meawAdOverlay';
-    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(10px);';
-    ov.innerHTML = `
-      <div style="background:linear-gradient(180deg,#1c1444,#100a2a);border:2px solid #f4c430;border-radius:22px;padding:28px 24px;text-align:center;min-width:280px;box-shadow:0 0 60px rgba(244,196,48,.5);">
-        <div style="font-size:44px;margin-bottom:14px;">📺</div>
-        <div style="font-family:'Cinzel',serif;color:#ffe08a;font-size:16px;font-weight:800;margin-bottom:8px;">${networkName}</div>
-        <div style="font-size:11px;color:#b8a8e8;margin-bottom:16px;">Ad is playing...</div>
-        <div id="meawAdTimer" style="font-family:'Cinzel',serif;font-size:36px;font-weight:900;color:#f4c430;margin-bottom:14px;">30</div>
-        <div style="height:6px;background:rgba(255,255,255,.15);border-radius:6px;overflow:hidden;margin-bottom:16px;">
-          <div id="meawAdBar" style="height:100%;background:linear-gradient(90deg,#c8871a,#ffe08a);width:100%;transition:width 1s linear;"></div>
-        </div>
-        <div style="background:rgba(244,196,48,.14);border:1px solid rgba(244,196,48,.4);border-radius:12px;padding:10px;font-size:15px;font-weight:800;color:#ffe08a;">💎 +${rewardAmount} Meaw</div>
-      </div>`;
-    document.body.appendChild(ov);
-  }
-  ov.style.display = 'flex';
-}
+function showMonetagRewardAd(){
+  return new Promise((resolve) => {
+    console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
 
-function hideAdOverlay(){
-  const ov = document.getElementById('meawAdOverlay');
-  if(ov) ov.style.display = 'none';
-}
-
-async function showMonetagAd(){
-  console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
-  if(typeof window.show_11782670 === 'function'){
-    try{
-      window.show_11782670();
-      console.log('[Monetag] ✓ Ad triggered');
-    }catch(e){
-      console.warn('[Monetag] Call error:', e);
+    if(typeof window.show_11782670 !== 'function'){
+      console.warn('[Monetag] SDK not loaded, resolving immediately');
+      resolve(true);  // Monetag er SDK na thakle bhi resolve kori jate flow atke na jay
+      return;
     }
-  } else {
-    console.warn('[Monetag] SDK not loaded');
-  }
-}
 
-async function showGigapubAd(){
-  console.log('[Gigapub] typeof showGiga:', typeof window.showGiga);
-  if(typeof window.showGiga === 'function'){
     try{
-      const p = window.showGiga();
-      if(p && typeof p.then === 'function'){
-        return p; // Promise — resolves on reward
+      // ✅ Monetag SDK nijer countdown/overlay handle korbe
+      // Amra shudhu call kori
+      const result = window.show_11782670();
+      console.log('[Monetag] Called — Monetag overlay should appear now');
+
+      // Monetag API promise na return korle 15 sec por reward dey
+      if(result && typeof result.then === 'function'){
+        result.then(()=>{ console.log('[Monetag] Promise resolved'); resolve(true); })
+              .catch(err=>{ console.warn('[Monetag] Promise rejected', err); resolve(true); });
+      } else {
+        // Standard: 15 sec wait — Monetag overlay nijei dekhay
+        setTimeout(()=>{ console.log('[Monetag] 15s elapsed → reward'); resolve(true); }, 15000);
       }
-      console.log('[Gigapub] ✓ Ad triggered');
-      return Promise.resolve();
     }catch(e){
-      console.warn('[Gigapub] Call error:', e);
-      return Promise.resolve();
+      console.warn('[Monetag] Call exception:', e);
+      resolve(true);
     }
-  } else {
-    console.warn('[Gigapub] SDK not loaded');
-    return Promise.resolve();
-  }
+  });
 }
 
 /* ---------- BOT API ---------- */
@@ -693,11 +662,9 @@ async function init(){
     CFG.boosts = CFG.boosts || DEFAULT_CONFIG.boosts;
     CFG.redeemCodes = CFG.redeemCodes || DEFAULT_CONFIG.redeemCodes;
 
-    if(!CFG.adsNetworks.find(n=>n.name === 'Gigapub')){
-      CFG.adsNetworks.unshift({name:'Gigapub', reward:15, dailyLimit:10, type:'giga'});
-    }
+    // Monetag-only network
     if(!CFG.adsNetworks.find(n=>n.name === 'Monetag')){
-      CFG.adsNetworks.push({name:'Monetag', reward:12, dailyLimit:10, type:'monetag'});
+      CFG.adsNetworks = [{name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}];
     }
 
     STATE = await sGet('user_state_'+USER_ID);
@@ -729,10 +696,8 @@ async function init(){
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
 
-    // Log SDK status
     setTimeout(()=>{
       console.log('=== SDK Status ===');
-      console.log('showGiga:', typeof window.showGiga);
       console.log('show_11782670:', typeof window.show_11782670);
     }, 3000);
   }catch(err){
@@ -926,7 +891,7 @@ async function addCoins(amount){
 function renderTask(){
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
-    const icon = net.type === 'giga' ? '🎮' : net.type === 'monetag' ? '🎬' : '📡';
+    const icon = net.type === 'monetag' ? '🎬' : '📡';
     let dashHtml = '';
     for(let i=0;i<Math.min(net.dailyLimit,20);i++){
       dashHtml += `<div class="dash ${i<watched?'filled':''}"></div>`;
@@ -935,7 +900,7 @@ function renderTask(){
       <div class="ads-left">
         <div class="ads-logo">${icon}</div>
         <div>
-          <div class="ads-name">${net.name}</div>
+          <div class="ads-name">${net.name} Reward Ads</div>
           <div class="ads-sub">${watched} / ${net.dailyLimit} today</div>
           <div class="ads-reward-tag">+${net.reward} Meaw / ad</div>
           <div class="dash-progress">${dashHtml}</div>
@@ -993,7 +958,7 @@ function renderTask(){
   }).join('');
 }
 
-/* ✅ Watch Ad — JACKFRUIT STYLE (12 sec wait → reward) */
+/* ✅ Watch Ad — Real Monetag Reward Ad */
 async function watchAd(netName, btnEl){
   if(adInProgress) return;
 
@@ -1003,44 +968,15 @@ async function watchAd(netName, btnEl){
 
   const btn = btnEl || window.event?.target;
   const old = btn ? btn.textContent : 'Watch';
-  if(btn){ btn.textContent='Loading...'; btn.disabled=true; }
+  if(btn){ btn.textContent='Loading Ad...'; btn.disabled=true; }
 
   adInProgress = true;
 
   try{
-    // 1. Show overlay immediately (user sees countdown)
-    showAdOverlay(net.reward, net.type === 'giga' ? '🎮 GIGAPUB AD' : '🎬 MONETAG AD');
+    // ✅ Direct Monetag call — SDK nijer Reward Ad dekhabe
+    await showMonetagRewardAd();
 
-    // 2. Call SDK directly (may open its own overlay)
-    if(net.type === 'giga'){
-      await showGigapubAd();
-    } else if(net.type === 'monetag'){
-      await showMonetagAd();
-    }
-
-    // 3. Wait 12 seconds (Jackfruit style — proven to work)
-    //    User sees countdown timer while ad plays
-    await new Promise(resolve => {
-      let sec = 30;
-      const timerEl = document.getElementById('meawAdTimer');
-      const barEl = document.getElementById('meawAdBar');
-      if(timerEl) timerEl.textContent = sec;
-      if(barEl) barEl.style.width = '100%';
-      const int = setInterval(()=>{
-        sec--;
-        if(timerEl) timerEl.textContent = sec;
-        if(barEl) barEl.style.width = (sec/30*100)+'%';
-        if(sec <= 0){
-          clearInterval(int);
-          resolve();
-        }
-      }, 1000);
-    });
-
-    // 4. Hide overlay
-    hideAdOverlay();
-
-    // 5. Give reward
+    // Reward
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
     STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
     await addCoins(net.reward);
@@ -1049,10 +985,9 @@ async function watchAd(netName, btnEl){
     await creditReferrerCommission(net.reward);
     await checkReferralActivation();
     renderAll();
-    console.log(`✅ ${netName} ad reward given: +${net.reward}`);
+    console.log(`✅ Monetag reward: +${net.reward}`);
   }catch(e){
     console.warn('Ad error:', e);
-    hideAdOverlay();
   }finally{
     adInProgress = false;
     if(btn){ btn.textContent = old; btn.disabled = false; }
@@ -1233,26 +1168,10 @@ function renderWithdraw(){
 
 async function watchWithdrawAd(){
   const btn = event.target;
-  const old = btn.textContent; btn.textContent='Loading...'; btn.disabled=true;
-
-  // Use same style as main ad
-  showAdOverlay(0, '🎮 GIGAPUB AD');
+  const old = btn.textContent; btn.textContent='Loading Ad...'; btn.disabled=true;
   try{
-    await showGigapubAd();
-    await new Promise(resolve => {
-      let sec = 30;
-      const timerEl = document.getElementById('meawAdTimer');
-      const barEl = document.getElementById('meawAdBar');
-      if(timerEl) timerEl.textContent = sec;
-      const int = setInterval(()=>{
-        sec--;
-        if(timerEl) timerEl.textContent = sec;
-        if(barEl) barEl.style.width = (sec/30*100)+'%';
-        if(sec <= 0){ clearInterval(int); resolve(); }
-      }, 1000);
-    });
+    await showMonetagRewardAd();
   }catch(e){}
-  hideAdOverlay();
   btn.textContent = old; btn.disabled=false;
   STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
   await saveState();
@@ -1325,25 +1244,8 @@ async function watchAdForSpin(){
   const today = new Date().toDateString();
   if(STATE.lastSpinAdDate === today) return;
   const btn = document.getElementById('btnWatchAdSpin');
-  btn.textContent='Loading...'; btn.disabled=true;
-
-  showAdOverlay(0, '🎮 GIGAPUB AD');
-  try{
-    await showGigapubAd();
-    await new Promise(resolve => {
-      let sec = 30;
-      const timerEl = document.getElementById('meawAdTimer');
-      const barEl = document.getElementById('meawAdBar');
-      if(timerEl) timerEl.textContent = sec;
-      const int = setInterval(()=>{
-        sec--;
-        if(timerEl) timerEl.textContent = sec;
-        if(barEl) barEl.style.width = (sec/30*100)+'%';
-        if(sec <= 0){ clearInterval(int); resolve(); }
-      }, 1000);
-    });
-  }catch(e){}
-  hideAdOverlay();
+  btn.textContent='Loading Ad...'; btn.disabled=true;
+  try{ await showMonetagRewardAd(); }catch(e){}
   STATE.lastSpinAdDate = today;
   STATE.spinsAvailable += 1;
   await saveState();
