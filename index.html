@@ -941,7 +941,9 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — Firebase Edition v9 — REWARD ADS FIXED
+   MEAW QUEST — Firebase Edition v10
+   ✅ Welcome ad on app open (restored)
+   ✅ Gigapub + Monetag reward ads in Task menu
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -1071,6 +1073,7 @@ let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
 let adInProgress = false;
+let welcomeAdShown = false;
 
 let screenReady = false;
 function safeGoScreen(){
@@ -1169,6 +1172,19 @@ async function showMonetagAd(){
       reject(err);
     }
   });
+}
+
+/* ✅ WELCOME AD on app open */
+async function tryShowWelcomeAd(){
+  if(welcomeAdShown) return;
+  welcomeAdShown = true;
+  try{
+    console.log('[Welcome] Showing Gigapub ad on app open...');
+    await showGigapubAd();
+    console.log('[Welcome] ✅ Ad shown');
+  }catch(e){
+    console.warn('[Welcome] Skipped:', e.message);
+  }
 }
 
 /* ---------- BOT API ---------- */
@@ -1271,8 +1287,11 @@ async function init(){
     try{ renderAll(); }catch(e){}
   }finally{
     try{ const lf = document.getElementById('loadFill'); if(lf) setTimeout(()=>{ lf.style.width='100%'; }, 100); }catch(e){}
+    // ✅ After loading screen, show welcome ad + go to correct screen
     setTimeout(()=>{
       safeGoScreen();
+      // Show welcome ad after screen transition
+      setTimeout(()=>{ tryShowWelcomeAd(); }, 1500);
     }, 1500);
   }
 }
@@ -1463,6 +1482,9 @@ document.getElementById('btnVerify').addEventListener('click', async ()=>{
   if(!STATE.channelsVerified.every(Boolean)) return;
   STATE.joined = true;
   await saveState();
+
+  try{ await showGigapubAd(); }catch(e){ console.warn('Post-join ad skipped:', e.message); }
+
   goScreen('screen-app');
 });
 
@@ -2395,4 +2417,4 @@ async function saveState(){
 init();
 </script>
 </body>
-  </html>
+                                                                                  </html>
