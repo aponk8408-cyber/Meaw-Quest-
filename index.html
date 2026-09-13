@@ -8,9 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-<!-- ✅ Monetag Reward Ad SDK -->
 <script src='//libtl.com/sdk.js' data-zone='11782670' data-sdk='show_11782670'></script>
-<!-- ✅ Gigapub Reward Ad SDK — PERMANENT -->
 <script src="https://ad.gigapub.tech/script?id=8142"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -482,11 +480,11 @@ body{
 
 <script>
 /* ============================================================
-   MEAW QUEST — FULL FIXED VERSION
-   ✅ Atomic withdraw (no double request, balance safe)
-   ✅ Admin approve/reject visible in app
+   MEAW QUEST — USER APP (FULL FIXED)
+   ✅ Single source: withdraw_requests/ (NO duplicates)
+   ✅ Admin approve/reject → user app instantly updates
+   ✅ Atomic balance check (no double withdraw)
    ✅ Bot messages on referral join + activation
-   ✅ Spin lock (no double reward)
    ============================================================ */
 
 const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -565,7 +563,7 @@ const DEFAULT_STATE = {
   tasksDone: [], boostsOwned: [], wdAdsWatched: 0,
   refCode: 'ref_' + USER_ID, referrals: [], referredBy: null,
   referralActivated: false, totalReferralBonus: 0, totalCommissionEarned: 0,
-  totalAdsWatchedEver: 0, withdrawHistory: [], joined: false,
+  totalAdsWatchedEver: 0, withdrawHistory: {}, joined: false,
   channelsVerified: [], spinsAvailable: 0, lastSpinAdDate: null,
   referralSpinsGranted: 0, redeemedCodes: []
 };
@@ -579,8 +577,6 @@ let currentTaskCat = 'telegram';
 let missionOpened = {};
 let taskMissionChecking = null;
 let adInProgress = false;
-
-/* ✅ Global locks to prevent double actions */
 let withdrawInProgress = false;
 let spinInProgress = false;
 
@@ -593,9 +589,7 @@ function safeGoScreen(){
 }
 setTimeout(()=>{ if(!screenReady) safeGoScreen(); }, 6000);
 
-/* ============================================================
-   ✅ PERMANENT AD NETWORKS
-   ============================================================ */
+/* Ad network helpers */
 const CORE_AD_NETWORKS = [
   {name:'Gigapub', reward:15, dailyLimit:20, type:'giga'},
   {name:'Monetag', reward:12, dailyLimit:20, type:'monetag'}
@@ -616,68 +610,37 @@ function ensureCoreAdNetworks(cfg){
   return cfg;
 }
 
-/* ============================================================
-   ✅ REAL REWARD ADS
-   ============================================================ */
 function showGigapubRewardAd(){
   return new Promise((resolve)=>{
-    console.log('[Gigapub] typeof showGiga:', typeof window.showGiga);
-    if(typeof window.showGiga !== 'function'){
-      console.warn('[Gigapub] SDK not loaded, resolving immediately');
-      resolve(true);
-      return;
-    }
+    if(typeof window.showGiga !== 'function'){ resolve(true); return; }
     try{
       window.showGiga()
-        .then(()=>{ console.log('[Gigapub] ✅ Reward'); resolve(true); })
-        .catch(e=>{ console.warn('[Gigapub] ❌ No reward:', e); resolve(true); });
-    }catch(e){
-      console.warn('[Gigapub] Exception:', e);
-      resolve(true);
-    }
+        .then(()=>resolve(true))
+        .catch(()=>resolve(true));
+    }catch(e){ resolve(true); }
   });
 }
-
 function showMonetagRewardAd(){
   return new Promise((resolve)=>{
-    console.log('[Monetag] typeof show_11782670:', typeof window.show_11782670);
-    if(typeof window.show_11782670 !== 'function'){
-      console.warn('[Monetag] SDK not loaded, resolving immediately');
-      resolve(true);
-      return;
-    }
+    if(typeof window.show_11782670 !== 'function'){ resolve(true); return; }
     try{
       window.show_11782670();
       setTimeout(()=>resolve(true), 15000);
-    }catch(e){
-      console.warn('[Monetag] Exception:', e);
-      resolve(true);
-    }
+    }catch(e){ resolve(true); }
   });
 }
-
-/* ============================================================
-   ✅ AUTO GIGAPUB AD on bot open (once per session)
-   ============================================================ */
 async function tryAutoGigapubAd(){
   if(autoAdShown) return;
   autoAdShown = true;
-  console.log('[Auto] Bot opened → showing Gigapub ad');
-  try{
-    await showGigapubRewardAd();
-    console.log('[Auto] ✅ Gigapub ad shown on open');
-  }catch(e){
-    console.warn('[Auto] Skipped:', e);
-  }
+  try{ await showGigapubRewardAd(); }catch(e){}
 }
 
-/* ---------- BOT API ---------- */
+/* Bot API */
 function extractTgUsername(link){
   if(!link) return '';
   const m = link.match(/t\.me\/(?:@)?([A-Za-z0-9_]+)/i);
   return m ? m[1] : '';
 }
-
 async function checkChannelMembership(channelLink){
   const username = extractTgUsername(channelLink);
   if(!username || !BOT_TOKEN) return { joined:false };
@@ -690,55 +653,22 @@ async function checkChannelMembership(channelLink){
     return { joined: ['creator','administrator','member','restricted'].includes(status) };
   }catch(e){ return { joined:false }; }
 }
-
-async function sendBotMessage(chatId, text){
-  if(!BOT_TOKEN) return;
+async function notifyReferrer(referrerId, text){
+  if(!referrerId || !BOT_TOKEN) return;
   try{
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'Markdown' })
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: referrerId, text, parse_mode:'Markdown', disable_web_page_preview:true })
     });
   }catch(e){}
 }
 
-/* ✅ Robust referrer notification with logging */
-async function notifyReferrer(referrerId, text){
-  if(!referrerId){
-    console.warn('⚠️ notifyReferrer: no referrerId');
-    return;
-  }
-  if(!BOT_TOKEN){
-    console.warn('⚠️ notifyReferrer: BOT_TOKEN missing. Set secure/config/botToken in Firebase.');
-    return;
-  }
-  try{
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        chat_id: referrerId,
-        text,
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true
-      })
-    });
-    const data = await res.json();
-    if(!data.ok){
-      console.warn('❌ Bot send failed to', referrerId, ':', data.description);
-    } else {
-      console.log('✅ Bot message sent to', referrerId);
-    }
-  }catch(e){
-    console.warn('Bot msg network error:', e);
-  }
-}
-
-/* ---------- INIT ---------- */
+/* INIT */
 async function init(){
   try{
     const secureCfg = await sGet('secure/config');
     if(secureCfg && secureCfg.botToken) BOT_TOKEN = secureCfg.botToken;
-    console.log('BOT_TOKEN loaded:', BOT_TOKEN ? 'YES (len ' + BOT_TOKEN.length + ')' : 'NO');
 
     CFG = await sGet('admin_config');
     if(!CFG){ CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); }
@@ -764,7 +694,7 @@ async function init(){
     document.getElementById('refLinkText').textContent =
       'https://t.me/' + CFG.botUsername + '/' + CFG.miniAppShortName + '?startapp=' + STATE.refCode;
 
-    await registerReferralIfNeeded().catch(e=>console.warn('ref register err', e));
+    await registerReferralIfNeeded().catch(e=>{});
 
     renderJoinList();
     buildWheel();
@@ -777,12 +707,6 @@ async function init(){
 
     setInterval(renderFarm, 1000);
     setInterval(()=>saveState(), 5000);
-
-    setTimeout(()=>{
-      console.log('=== SDK Status ===');
-      console.log('showGiga (Gigapub):', typeof window.showGiga);
-      console.log('show_11782670 (Monetag):', typeof window.show_11782670);
-    }, 3000);
   }catch(err){
     console.error('Init error:', err);
     if(!CFG) CFG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -803,7 +727,7 @@ function goScreen(id){
   if(el) el.classList.add('active');
 }
 
-/* ---------- LISTENERS ---------- */
+/* LISTENERS */
 function attachReferralsListener(){
   db.ref('referrals/'+USER_ID).on('value', snap=>{
     const val = snap.val();
@@ -816,11 +740,9 @@ function attachReferralsListener(){
     if(typeof v.coins === 'number') STATE.coins = v.coins;
     if(typeof v.totalReferralBonus === 'number') STATE.totalReferralBonus = v.totalReferralBonus;
     if(typeof v.totalCommissionEarned === 'number') STATE.totalCommissionEarned = v.totalCommissionEarned;
-    if(v.withdrawHistory) STATE.withdrawHistory = v.withdrawHistory;
     try{ renderAll(); }catch(e){}
   });
 }
-
 function attachAdminConfigListener(){
   db.ref('admin_config').on('value', snap=>{
     if(!snap.exists()) return;
@@ -835,7 +757,6 @@ function attachAdminConfigListener(){
     try{ buildWheel(); renderJoinList(); renderAll(); }catch(e){}
   });
 }
-
 function attachLeaderboardListener(){
   db.ref('user_state').on('value', snap=>{
     const all = snap.val() || {};
@@ -851,30 +772,19 @@ function attachLeaderboardListener(){
   });
 }
 
-/* ✅ FIXED: Listen to BOTH user history AND global withdraw_requests */
+/* ✅ FIXED: ONLY listen to withdraw_requests (single source) */
 function attachWithdrawListener(){
-  db.ref('user_state_'+USER_ID+'/withdrawHistory').on('value', snap=>{
-    const hist = snap.val();
-    if(hist) STATE.withdrawHistory = hist;
-    renderWithdraw();
-  });
-
-  // ✅ Also listen to global withdraw_requests filtered by userId
-  // so admin approve/reject (which may update either place) shows up in the app
   db.ref('withdraw_requests').orderByChild('userId').equalTo(USER_ID).on('value', snap=>{
-    const all = snap.val();
-    if(!all) return;
-    STATE.withdrawHistory = STATE.withdrawHistory || {};
+    const all = snap.val() || {};
+    STATE.withdrawHistory = {};
     Object.keys(all).forEach(k=>{
-      // Prefer fresh admin status from global node
-      const existing = STATE.withdrawHistory[k] || {};
-      STATE.withdrawHistory[k] = Object.assign({}, existing, all[k]);
+      STATE.withdrawHistory[k] = all[k];
     });
     renderWithdraw();
   });
 }
 
-/* ---------- REFERRAL ---------- */
+/* REFERRAL */
 async function registerReferralIfNeeded(){
   if(STATE.referredBy) return;
   const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || '';
@@ -895,11 +805,9 @@ async function registerReferralIfNeeded(){
     joinedAt: Date.now()
   });
 
-  // ✅ Notify referrer that a new user joined
-  console.log('→ Notifying referrer', referrerId, 'about new join');
   await notifyReferrer(
     referrerId,
-    `🎉 *New Referral Joined!*\n\n👤 *${tgUser.first_name || 'Player'}*\n${USER_USERNAME !== 'unknown' ? '@'+USER_USERNAME : ''}\n\nThey need to watch *${CFG.refAdsNeeded} ads* to activate.\n\n⏳ Status: Pending`
+    `🎉 *New Referral Joined!*\n\n👤 *${tgUser.first_name || 'Player'}*\n\nThey need to watch *${CFG.refAdsNeeded} ads* to activate.`
   );
 }
 
@@ -915,11 +823,9 @@ async function checkReferralActivation(){
   await sIncrement('user_state_'+referrerId+'/coins', CFG.refBonus);
   await sIncrement('user_state_'+referrerId+'/totalReferralBonus', CFG.refBonus);
 
-  // ✅ Notify referrer that referral is now ACTIVE + bonus credited
-  console.log('→ Notifying referrer', referrerId, 'about activation');
   await notifyReferrer(
     referrerId,
-    `🌟 *Referral Activated!*\n\n👤 *${tgUser.first_name || 'Player'}* is now active! ✅\n\n💰 *+${CFG.refBonus} Meaw* bonus credited to your balance!\n\nKeep inviting to earn more! 🐾`
+    `🌟 *Referral Activated!*\n\n👤 *${tgUser.first_name || 'Player'}* is now active! ✅\n\n💰 *+${CFG.refBonus} Meaw* bonus credited!`
   );
 }
 
@@ -931,17 +837,9 @@ async function creditReferrerCommission(amount){
   await sIncrement('user_state_'+referrerId+'/coins', commission);
   await sIncrement('user_state_'+referrerId+'/totalCommissionEarned', commission);
   await sIncrement('referrals/'+referrerId+'/'+USER_ID+'/earned', commission);
-
-  // ✅ Notify referrer of commission (only if >= 5 to avoid spam)
-  if(commission >= 5){
-    await notifyReferrer(
-      referrerId,
-      `💸 *Commission Earned!*\n\n+*${commission} Meaw* (${CFG.refCommissionPct}% of ${amount}) from your referral *${tgUser.first_name || 'Player'}* 🎉`
-    );
-  }
 }
 
-/* ---------- JOIN ---------- */
+/* JOIN */
 function renderJoinList(){
   if(!STATE.channelsVerified || STATE.channelsVerified.length !== CFG.channels.length){
     STATE.channelsVerified = CFG.channels.map(()=>false);
@@ -998,7 +896,7 @@ document.getElementById('btnVerify').addEventListener('click', async ()=>{
   goScreen('screen-app');
 });
 
-/* ---------- RENDER ---------- */
+/* RENDER */
 function renderAll(){
   document.getElementById('topBalance').textContent = fmt(STATE.coins);
   updateHomeBalance();
@@ -1009,7 +907,6 @@ function renderAll(){
   refreshSpinCredits();
 }
 function fmt(n){ return Math.floor(n||0).toLocaleString(); }
-
 function updateHomeBalance(){
   const coins = STATE.coins || 0;
   const rate = CFG.coinPrice || 0.0021;
@@ -1024,7 +921,7 @@ async function addCoins(amount){
   updateHomeBalance();
 }
 
-/* ---------- TASKS ---------- */
+/* TASKS */
 function renderTask(){
   const adsHtml = CFG.adsNetworks.map(net=>{
     const watched = STATE.adsToday[net.name] || 0;
@@ -1097,7 +994,6 @@ function renderTask(){
 
 async function watchAd(netName, btnEl){
   if(adInProgress) return;
-
   const net = CFG.adsNetworks.find(n=>n.name===netName);
   if(!net) return;
   if((STATE.adsToday[netName]||0) >= net.dailyLimit){ alert('Daily limit reached'); return; }
@@ -1105,15 +1001,11 @@ async function watchAd(netName, btnEl){
   const btn = btnEl || window.event?.target;
   const old = btn ? btn.textContent : 'Watch';
   if(btn){ btn.textContent='Loading Ad...'; btn.disabled=true; }
-
   adInProgress = true;
 
   try{
-    if(net.type === 'giga'){
-      await showGigapubRewardAd();
-    } else if(net.type === 'monetag'){
-      await showMonetagRewardAd();
-    }
+    if(net.type === 'giga') await showGigapubRewardAd();
+    else if(net.type === 'monetag') await showMonetagRewardAd();
 
     STATE.adsToday[netName] = (STATE.adsToday[netName]||0)+1;
     STATE.totalAdsWatchedEver = (STATE.totalAdsWatchedEver||0)+1;
@@ -1123,10 +1015,8 @@ async function watchAd(netName, btnEl){
     await creditReferrerCommission(net.reward);
     await checkReferralActivation();
     renderAll();
-    console.log(`✅ ${net.name} reward: +${net.reward}`);
-  }catch(e){
-    console.warn('Ad error:', e);
-  }finally{
+  }catch(e){ console.warn('Ad error:', e); }
+  finally{
     adInProgress = false;
     if(btn){ btn.textContent = old; btn.disabled = false; }
   }
@@ -1168,7 +1058,7 @@ async function completeTask(id){
   renderAll();
 }
 
-/* ---------- MINING ---------- */
+/* MINING */
 function renderFarm(){
   const btn = document.getElementById('btnClaimFarm');
   const timerEl = document.getElementById('farmTimer');
@@ -1239,7 +1129,7 @@ document.getElementById('homeWithdrawBtn').addEventListener('click', ()=>{
   switchTab('tab-withdraw');
 });
 
-/* ---------- REFERRAL ---------- */
+/* REFERRAL RENDER */
 function renderRefer(){
   const total = STATE.referrals.length;
   const active = STATE.referrals.filter(r=>r.active).length;
@@ -1270,7 +1160,7 @@ function shareRefLink(){
   window.open('https://t.me/share/url?url=' + encodeURIComponent(link), '_blank');
 }
 
-/* ---------- WITHDRAW ---------- */
+/* ✅ WITHDRAW RENDER — dedup + live status update */
 function renderWithdraw(){
   document.getElementById('wdBalance').textContent = fmt(STATE.coins) + ' Meaw';
   const inlineAvail = document.getElementById('wdAvailInline');
@@ -1292,14 +1182,18 @@ function renderWithdraw(){
     document.getElementById('withdrawForm').style.display='none';
   }
 
-  // Build withdraw history
+  // ✅ Dedup by id
+  const seen = new Set();
   const histArr = [];
   const wh = STATE.withdrawHistory || {};
-  if(Array.isArray(wh)){
-    wh.forEach(h => { if(h) histArr.push(h); });
-  } else {
-    Object.keys(wh).forEach(k => { if(wh[k]) histArr.push(Object.assign({id:k}, wh[k])); });
-  }
+  Object.keys(wh).forEach(k=>{
+    const r = wh[k];
+    if(!r) return;
+    const id = r.id || k;
+    if(seen.has(id)) return;
+    seen.add(id);
+    histArr.push(Object.assign({ id }, r));
+  });
 
   histArr.sort((a,b)=> (b.time||0) - (a.time||0));
 
@@ -1307,10 +1201,11 @@ function renderWithdraw(){
   hist.innerHTML = histArr.map(h=>{
     const statusColor = h.status==='approved' ? 'var(--ok)' : h.status==='rejected' ? 'var(--danger)' : 'var(--gold-light)';
     const statusIcon = h.status==='approved' ? '✅' : h.status==='rejected' ? '❌' : '⏳';
+    const statusLabel = h.status ? h.status.charAt(0).toUpperCase() + h.status.slice(1) : 'Pending';
     return `<div class="task-item" style="align-items:center;">
       <div class="ads-left"><div class="ads-logo" style="background:#fff;padding:4px;"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" style="width:100%;height:100%;object-fit:contain;"></div>
       <div><div class="ads-name">${fmt(h.amount)} Meaw</div><div class="ads-sub">${h.method||'TON'}</div></div></div>
-      <div class="reward-tag" style="color:${statusColor};">${statusIcon} ${h.status}</div>
+      <div class="reward-tag" style="color:${statusColor};">${statusIcon} ${statusLabel}</div>
     </div>`;
   }).join('') || '<div style="font-size:12px;opacity:.6;text-align:center;padding:14px;">No history</div>';
 }
@@ -1323,22 +1218,13 @@ async function watchWithdrawAd(){
   STATE.wdAdsWatched = (STATE.wdAdsWatched||0)+1;
   await saveState();
   renderWithdraw();
-  await sUpdate('user_state_'+USER_ID, { wdAdsWatched: STATE.wdAdsWatched });
 }
 
 /* ============================================================
-   ✅ FIXED submitWithdraw()
-   - Global lock prevents double-click
-   - Firebase transaction = ATOMIC balance check + deduct
-   - Record only saved after successful deduction
-   - Saves to user_state + withdraw_requests (push keys)
+   ✅ SUBMIT WITHDRAW — Atomic + single source + cooldown
    ============================================================ */
 async function submitWithdraw(){
-  // ✅ LOCK: Prevent concurrent/double submissions
-  if(withdrawInProgress){
-    console.log('⚠️ Withdraw already in progress, ignoring');
-    return;
-  }
+  if(withdrawInProgress) return;
   withdrawInProgress = true;
 
   const amt = parseFloat(document.getElementById('wdAmount').value);
@@ -1353,17 +1239,23 @@ async function submitWithdraw(){
     withdrawInProgress = false;
   };
 
-  if(!amt || amt < CFG.minWithdraw){ return fail('Min ' + CFG.minWithdraw); }
-  if(!addr){ return fail('Enter TON address'); }
+  if(!amt || amt < CFG.minWithdraw) return fail('Min ' + CFG.minWithdraw);
+  if(!addr) return fail('Enter TON address');
+
+  // ✅ 8-second cooldown between submissions
+  const lastWd = parseInt(localStorage.getItem('lastWdTime_' + USER_ID) || '0');
+  if(Date.now() - lastWd < 8000){
+    return fail('⏳ Please wait a few seconds');
+  }
 
   if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
 
   try{
-    // ✅ ATOMIC balance check + deduct (no race condition)
+    // ✅ ATOMIC balance check + deduct
     const balRef = db.ref('user_state/' + USER_ID + '/coins');
     const tx = await balRef.transaction(current => {
       const bal = current || 0;
-      if(bal < amt) return; // abort — insufficient
+      if(bal < amt) return; // abort
       return bal - amt;
     });
 
@@ -1372,9 +1264,8 @@ async function submitWithdraw(){
     }
 
     const newBalance = tx.snapshot.val();
-    console.log('✅ Balance deducted atomically. New balance:', newBalance);
 
-    // ✅ Save withdraw record ONLY after successful deduction
+    // ✅ ONLY ONE PATH — withdraw_requests/
     const record = {
       userId: USER_ID,
       name: tgUser.first_name || 'Player',
@@ -1387,27 +1278,13 @@ async function submitWithdraw(){
       createdAt: new Date().toISOString()
     };
 
-    // push() gives a unique key → never overwrites previous history
-    const userPushRef = db.ref('user_state/' + USER_ID + '/withdrawHistory').push();
-    record.id = userPushRef.key;
+    const pushRef = db.ref('withdraw_requests').push();
+    record.id = pushRef.key;
+    await pushRef.set(record);
 
-    // Save to user_state
-    await userPushRef.set(record);
-    console.log('✅ Saved to user_state/withdrawHistory key:', userPushRef.key);
-
-    // Save to global withdraw_requests (admin panel reads this)
-    try{
-      await db.ref('withdraw_requests/' + record.id).set(record);
-      console.log('✅ Saved to withdraw_requests/' + record.id);
-    }catch(e){
-      console.warn('⚠️ withdraw_requests save failed (non-critical):', e);
-    }
-
-    // Update local state
     STATE.coins = newBalance;
-    STATE.withdrawHistory = STATE.withdrawHistory || {};
-    STATE.withdrawHistory[record.id] = record;
     STATE.wdAdsWatched = 0;
+    localStorage.setItem('lastWdTime_' + USER_ID, Date.now());
 
     msg.textContent = '✅ Submitted! Awaiting admin approval.';
     msg.style.color = '#8fdc96';
@@ -1429,7 +1306,7 @@ async function submitWithdraw(){
   }
 }
 
-/* ---------- SPIN ---------- */
+/* SPIN */
 function buildWheel(){
   const prizes = CFG.spinPrizes;
   const seg = 360/prizes.length;
@@ -1476,8 +1353,6 @@ async function watchAdForSpin(){
   await saveState();
   renderSpinModal();
 }
-
-/* ✅ SPIN with lock — prevents double reward */
 async function doSpin(){
   if(spinInProgress) return;
   if(STATE.spinsAvailable<=0) return;
@@ -1506,20 +1381,13 @@ async function doSpin(){
         renderSpinModal();
         showReward(prizes[idx].value);
         await creditReferrerCommission(prizes[idx].value);
-      }catch(e){
-        console.warn('Spin reward error:', e);
-      }finally{
-        spinInProgress = false;
-        renderSpinModal();
-      }
+      }catch(e){ console.warn('Spin reward error:', e); }
+      finally{ spinInProgress = false; renderSpinModal(); }
     }, 4200);
-  }catch(e){
-    console.warn('Spin error:', e);
-    spinInProgress = false;
-  }
+  }catch(e){ spinInProgress = false; }
 }
 
-/* ---------- REDEEM ---------- */
+/* REDEEM */
 document.getElementById('openRedeem').addEventListener('click', ()=>{
   document.getElementById('redeemCodeInput').value = '';
   document.getElementById('redeemMsg').textContent = '';
@@ -1550,7 +1418,7 @@ async function submitRedeem(){
   setTimeout(()=>{ closeModal('redeemModal'); showReward(entry.amount); }, 800);
 }
 
-/* ---------- NAV ---------- */
+/* NAV */
 function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
   document.getElementById('tab'+capitalize(id.replace('tab-',''))).style.display='block';
@@ -1587,10 +1455,7 @@ function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 function showReward(amt){ document.getElementById('rewardAmt').textContent = '+'+amt+' Meaw'; document.getElementById('rewardPop').classList.add('show'); }
 function closeReward(){ document.getElementById('rewardPop').classList.remove('show'); }
 
-/* ============================================================
-   ✅ SAVE — withdrawHistory NOT included here
-   (submitWithdraw() writes it directly with push())
-   ============================================================ */
+/* ✅ SAVE — withdrawHistory NOT included */
 async function saveState(){
   if(!STATE) return;
   await sUpdate('user_state_'+USER_ID, {
@@ -1602,7 +1467,6 @@ async function saveState(){
     tasksDone: STATE.tasksDone,
     boostsOwned: STATE.boostsOwned,
     wdAdsWatched: STATE.wdAdsWatched,
-    // ⚠️ withdrawHistory NOT included — handled in submitWithdraw()
     spinsAvailable: STATE.spinsAvailable,
     lastSpinAdDate: STATE.lastSpinAdDate,
     referralSpinsGranted: STATE.referralSpinsGranted,
