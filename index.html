@@ -1335,7 +1335,7 @@ async function submitWithdraw(){
 
   try{
     // ✅ STEP 1: Read fresh balance from Firebase
-    const balSnap = await db.ref('user_state/' + USER_ID + '/coins').once('value');
+    const balSnap = await db.ref('user_state_' + USER_ID + '/coins').once('value');
     const rawVal = balSnap.val();
     const currentBalance = Math.max(0, Math.floor(Number(rawVal) || 0));
 
@@ -1348,7 +1348,7 @@ async function submitWithdraw(){
     // ✅ AUTO-FIX: If Firebase value is string/null, write it back as number
     if(typeof rawVal !== 'number' || rawVal !== currentBalance){
       console.log('🔧 Auto-fixing balance type in Firebase');
-      await db.ref('user_state/' + USER_ID + '/coins').set(currentBalance);
+      await db.ref('user_state_' + USER_ID + '/coins').set(currentBalance);
     }
 
     // ✅ STEP 2: Numeric-safe comparison
@@ -1359,7 +1359,7 @@ async function submitWithdraw(){
     if(submitBtn){ submitBtn.textContent = 'Deducting...'; }
 
     // ✅ STEP 3: Atomic deduction (numeric-safe)
-    const balRef = db.ref('user_state/' + USER_ID + '/coins');
+    const balRef = db.ref('user_state_' + USER_ID + '/coins');
     const tx = await balRef.transaction(current => {
       const bal = Math.max(0, Math.floor(Number(current) || 0));
       const amount = Math.floor(Number(amt));
